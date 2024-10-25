@@ -499,7 +499,9 @@
                                 'Content-Type': 'multipart/form-data'
                             }
                         })
-                        imgPath = path + uploadResponse.data.filePath; // Store the file path from the response
+                        console.log("--------------------")
+                        console.log(uploadResponse)
+                        imgPath = uploadResponse.data.fileName; // Store the file path from the response
                     } catch (error) {
                         console.error("Error uploading image:", error);
                         alert("Image upload failed.");
@@ -562,8 +564,10 @@
                 }
 
                 if (data.img_path) {
+                    console.log("------------$$$")
+                    console.log(data.img_path)
                     const imgElement = document.createElement("img");
-                    imgElement.src = data.img_path;
+                    imgElement.src = `http://localhost:3000/uploads/${data.img_path}`;
                     imgElement.classList.add("w-full", "rounded-md", "mb-2");
                     messageElement.appendChild(imgElement);
                 }

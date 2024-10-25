@@ -5,7 +5,8 @@ const { getMembers, getExercises,
 const { getAllTrainers, getGymTrainers, insertGymTrainers, insertWorkoutTemplates,
     insertWorkoutTemplateExercise, getGymTrainersById, updateWorkoutTemplateExercise,
     removeTemplateExercise, inputFilter, insertMealTemplates, insertMealTemplatesItems,
-    insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity } = require('../models/trainers');
+    insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity,
+    assignMealPlan, insertStudentMeals } = require('../models/trainers');
 
 module.exports = {
 
@@ -208,6 +209,36 @@ module.exports = {
         try {
             const id = await insertStudentWorkouts(plan_id, template_id);
             res.status(200).json({ message: "Student workouts assigned successfully!", plan_id: id });
+
+        } catch (error) {
+            console.error("Error assigning student:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    assignMealPlan: async (req, res) => {
+        const { trainer_id, member_id, meal_template_id, status } = req.body;
+        console.log("meal plan controller data: ")
+        console.log(trainer_id)
+        console.log(member_id)
+        console.log(meal_template_id)
+        console.log(status)
+        try {
+            const plan_id = await assignMealPlan(trainer_id, member_id, meal_template_id, status);
+            res.status(200).json({ message: "Meal Template assigned successfully!", plan_id: plan_id });
+
+        } catch (error) {
+            console.error("Error assigning student:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    insertStudentMeals: async (req, res) => {
+        const { plan_id, meal_template_id } = req.body;
+        console.log("meal plan meals controller data: ")
+        console.log(plan_id)
+        console.log(meal_template_id)
+        try {
+            const id = await insertStudentMeals(plan_id, meal_template_id);
+            res.status(200).json({ message: "Student meals assigned successfully!", plan_id: id });
 
         } catch (error) {
             console.error("Error assigning student:", error);

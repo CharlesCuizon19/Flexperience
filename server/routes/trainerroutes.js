@@ -27,6 +27,8 @@ router.post("/insertNotification", trainerController.insertNotification);
 router.post("/createWorkoutTemplateExercises",validation(exerciseSchema), trainerController.insertWorkoutTemplateExercise); 
 router.post("/assignWorkoutPlan", trainerController.assignWorkoutPlan); 
 router.post("/insertStudentWorkouts", trainerController.insertStudentWorkouts); 
+router.post("/assignMealPlan", trainerController.assignMealPlan); 
+router.post("/insertStudentMeals", trainerController.insertStudentMeals); 
 router.put("/ModifyWorkoutTemplateExercises", trainerController.updateWorkoutTemplateExercise); 
 router.delete("/RemoveWorkoutTemplateExercises", trainerController.removeTemplateExercise); 
 
