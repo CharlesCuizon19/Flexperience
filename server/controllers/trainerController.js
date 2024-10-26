@@ -6,7 +6,7 @@ const { getAllTrainers, getGymTrainers, insertGymTrainers, insertWorkoutTemplate
     insertWorkoutTemplateExercise, getGymTrainersById, updateWorkoutTemplateExercise,
     removeTemplateExercise, inputFilter, insertMealTemplates, insertMealTemplatesItems,
     insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity,
-    assignMealPlan, insertStudentMeals } = require('../models/trainers');
+    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals } = require('../models/trainers');
 
 module.exports = {
 
@@ -54,11 +54,20 @@ module.exports = {
     getTemplateId: async (req, res) => {
         try {
             const { template_name, table } = req.query;
-            console.log(table)
             const data = await getTemplateId(template_name, table);
             res.json(data);
         } catch (error) {
             console.error("Error fetching id:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    getPremadeMeals: async (req, res) => {
+        try {
+            const { trainer_id } = req.query;
+            const data = await getPremadeMeals(trainer_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching pre-made meals:", error.message);
             res.status(500).send("Internal Server Error");
         }
     },
@@ -292,10 +301,10 @@ module.exports = {
     },
 
     insertMealTemplateItems: async (req, res) => {
-        const { meal_template_id, meal_name, classification, protein, carbohydrates, fats, week_no, day_no } = req.body;
+        const { meal_template_id, pre_made_meal_id, classification, week_no, day_no } = req.body;
         try {
             // Capture the returned insertId
-            const insertedMealItemId = await insertMealTemplatesItems(meal_template_id, meal_name, classification, protein, carbohydrates, fats, week_no, day_no);
+            const insertedMealItemId = await insertMealTemplatesItems(meal_template_id, pre_made_meal_id, classification, week_no, day_no);
 
             // Respond with a success message and the inserted ID
             res.status(200).json({ message: "Meal template item added successfully!", mealItemId: insertedMealItemId });
@@ -305,10 +314,24 @@ module.exports = {
             res.status(500).send("Internal Server Error");
         }
     },
-    insertMealTemplateSteps: async (req, res) => {
-        const { template_item_id, step_number, instruction } = req.body;
+    insertPremadeMeals: async (req, res) => {
+        const { trainer_id, meal_name, carbs, fats, protein } = req.body;
         try {
-            await insertMealTemplatesSteps(template_item_id, step_number, instruction);
+            // Capture the returned insertId
+            const pre_made_meal_id = await insertPremadeMeals(trainer_id, meal_name, carbs, fats, protein);
+
+            // Respond with a success message and the inserted ID
+            res.status(200).json({ message: "Pre made meal added successfully!", pre_made_meal_id: pre_made_meal_id });
+
+        } catch (error) {
+            console.error("Error adding meal template items:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    insertMealTemplateSteps: async (req, res) => {
+        const { pre_made_meal_id, step_number, instruction } = req.body;
+        try {
+            await insertMealTemplatesSteps(pre_made_meal_id, step_number, instruction);
             res.status(200).send("Meal template item steps added successfully!");
 
         } catch (error) {

@@ -77,10 +77,10 @@ const insertMealTemplates = async (trainer_id, template_name, description) => {
     // Return only the insertId
     return rows.insertId;
 };
-const insertMealTemplatesItems = async (meal_template_id, meal_name, classification, protein, carbohydrates, fats, week_no, day_no) => {
+const insertMealTemplatesItems = async (meal_template_id, pre_made_meal_id, classification, week_no, day_no) => {
     const [result] = await pool.query(
-        'INSERT INTO meal_template_items (meal_template_id, meal_name, classification, protein, carbohydrates, fats, week_no, day_no) VALUES(?,?,?,?,?,?,?,?)',
-        [meal_template_id, meal_name, classification, protein, carbohydrates, fats, week_no, day_no]
+        'INSERT INTO meal_template_items (meal_template_id, pre_made_meal_id, classification, week_no, day_no) VALUES(?,?,?,?,?)',
+        [meal_template_id, pre_made_meal_id, classification, week_no, day_no]
     );
 
     // Log the insertId to confirm
@@ -90,10 +90,10 @@ const insertMealTemplatesItems = async (meal_template_id, meal_name, classificat
     return result.insertId;  // This will return the auto-incremented ID
 };
 
-const insertMealTemplatesSteps = async (template_item_id, step_number, instruction) => {
+const insertMealTemplatesSteps = async (pre_made_meal_id, step_number, instruction) => {
     const [rows] = await pool.query(
-        'INSERT INTO meal_item_steps (template_item_id, step_number, instruction) VALUES(?,?,?)',
-        [template_item_id, step_number, instruction]
+        'INSERT INTO meal_item_steps (pre_made_meal_id, step_number, instruction) VALUES(?,?,?)',
+        [pre_made_meal_id, step_number, instruction]
     );
     return rows.length > 0 ? rows : null;
 };
@@ -260,9 +260,26 @@ const getProgressOftheDay = async (trainer_id) => {
     );
     return rows.length > 0 ? [rows] : null;
 };
-
+const insertPremadeMeals = async (trainer_id, meal_name, carbs, fats, protein) => {
+    const [rows] = await pool.query(
+       `INSERT INTO pre_made_meals (trainer_id, meal_name, carbs, fats, protein)
+        VALUES (?,?,?,?,?)`,
+        [trainer_id, meal_name, carbs, fats, protein]
+    );
+    // Return only the insertId
+    return rows.insertId;
+};
+const getPremadeMeals = async (trainer_id) => {
+    const [rows] = await pool.query(
+        'SELECT * FROM pre_made_meals WHERE trainer_id = ?',
+        [trainer_id]
+    );
+    return rows.length > 0 ? [rows] : null;
+};
 
 module.exports = {
+    getPremadeMeals,
+    insertPremadeMeals,
     assignMealPlan,
     insertStudentMeals,
     getStudentActivity,

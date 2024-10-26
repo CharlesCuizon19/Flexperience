@@ -17,6 +17,7 @@ router.get("/getByQuery", trainerController.inputFilter);
 router.get("/getTrainerStudents", trainerController.getStudents); 
 router.get("/getProgressOftheDay", trainerController.getProgressOftheDay); 
 router.get("/getStudentActivity", trainerController.getStudentActivity); 
+router.get("/getPremadeMeals", trainerController.getPremadeMeals); 
 router.post("/createGymTrainer",validation(trainerSchema), trainerController.createGymTrainer); 
 router.post("/createWorkoutTemplate",validation(templateSchema), trainerController.insertWorkoutTemplate); 
 router.post("/createMealTemplate", trainerController.insertMealTemplate); 
@@ -28,6 +29,7 @@ router.post("/createWorkoutTemplateExercises",validation(exerciseSchema), traine
 router.post("/assignWorkoutPlan", trainerController.assignWorkoutPlan); 
 router.post("/insertStudentWorkouts", trainerController.insertStudentWorkouts); 
 router.post("/assignMealPlan", trainerController.assignMealPlan); 
+router.post("/insertPremadeMeals", trainerController.insertPremadeMeals); 
 router.post("/insertStudentMeals", trainerController.insertStudentMeals); 
 router.put("/ModifyWorkoutTemplateExercises", trainerController.updateWorkoutTemplateExercise); 
 router.delete("/RemoveWorkoutTemplateExercises", trainerController.removeTemplateExercise); 
