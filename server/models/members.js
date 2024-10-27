@@ -15,6 +15,13 @@ const getPlan = async (member_id) => {
     );
     return rows.length > 0 ? rows : null;
 };
+const getMealPlanId = async (member_id) => {
+    const [rows] = await pool.query(
+        'SELECT plan_id, trainer_id FROM member_meal_plan WHERE member_id = ?',
+        [member_id]
+    );
+    return rows.length > 0 ? rows : null;
+};
 const getProposals = async (member_id, proposal_id) => {
     const [rows] = await pool.query(
         'SELECT * FROM proposals WHERE member_id = ? AND proposal_id = ?',
@@ -82,6 +89,68 @@ const getWorkoutoftheDay = async (member_id, plan_id) => {
     );
     return rows.length > 0 ? [rows] : null;
 };
+const getMealoftheDay = async (member_id, plan_id) => {
+    const [rows] = await pool.query(
+       `WITH CTE_CURRENT_DAY AS (
+        SELECT 
+            m.member_id,
+            meal_template_id,
+            m.date_started,
+            CASE 
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 1 AND DATEDIFF(CURRENT_DATE, m.date_started) < 7 THEN 1
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 7 AND DATEDIFF(CURRENT_DATE, m.date_started) < 14 THEN 2
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 14 AND DATEDIFF(CURRENT_DATE, m.date_started) < 21 THEN 3
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 21 AND DATEDIFF(CURRENT_DATE, m.date_started) < 28 THEN 4
+                ELSE 0
+            END AS Week_Number,
+            -- Reset Day_number to always be between 1 and 7
+            MOD(DATEDIFF(CURRENT_DATE, m.date_started), 7) + 1 AS Day_number
+        FROM 
+            member_meal_plan m
+    	WHERE m.member_id = ?
+        ),
+        CTE_MEAL AS (
+            SELECT 
+                me.member_id,
+                (SELECT CONCAT(lastname, ', ', firstname) FROM members WHERE member_id = me.member_id) AS member_name,
+                mes.status_id,
+                mes.plan_id,
+                wte.template_item_id,
+                p.meal_name,
+                p.carbs,
+                p.fats,
+            	p.protein,
+                wte.classification,
+                wte.week_no,
+                wte.day_no,
+                mes.status,
+                me.date_started,
+                mes.updated_at,
+            	c.Week_Number,
+            	c.Day_number
+            FROM 
+                member_meal_status mes
+            JOIN 
+                meal_template_items wte ON mes.template_item_id = wte.template_item_id
+            JOIN 
+                member_meal_plan me ON me.plan_id = mes.plan_id
+            JOIN 
+                CTE_CURRENT_DAY c ON c.meal_template_id = wte.meal_template_id
+			JOIN
+				pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id	
+            WHERE 
+                mes.plan_id = ?
+            AND 
+                c.Day_number = wte.day_no
+            AND
+                c.Week_Number = wte.week_no
+        )
+        SELECT * FROM CTE_MEAL;
+        `,
+        [member_id, plan_id]
+    );
+    return rows.length > 0 ? [rows] : null;
+};
 
 const insertContract = async (proposal_id, weeks, status) => {
     const [response] = await pool.query(
@@ -113,7 +182,9 @@ module.exports = {
     insertActivity,
     updateExerciseStatus,
     getPlan,
+    getMealPlanId,
     getWorkoutoftheDay,
+    getMealoftheDay,
     getNotifications,
     getProposals,
     insertContract

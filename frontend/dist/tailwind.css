@@ -946,6 +946,9 @@ video {
 .h-5 {
   height: 1.25rem;
 }
+.h-52 {
+  height: 13rem;
+}
 .h-56 {
   height: 14rem;
 }
@@ -987,9 +990,6 @@ video {
 }
 .h-\[400px\] {
   height: 400px;
-}
-.h-\[500px\] {
-  height: 500px;
 }
 .h-\[55px\] {
   height: 55px;
@@ -1158,6 +1158,9 @@ video {
 }
 .max-w-7xl {
   max-width: 80rem;
+}
+.max-w-full {
+  max-width: 100%;
 }
 .max-w-lg {
   max-width: 32rem;
@@ -1455,6 +1458,9 @@ video {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.whitespace-normal {
+  white-space: normal;
+}
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -1643,6 +1649,10 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(234 88 12 / var(--tw-border-opacity));
 }
+.border-slate-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(226 232 240 / var(--tw-border-opacity));
+}
 .border-slate-600 {
   --tw-border-opacity: 1;
   border-color: rgb(71 85 105 / var(--tw-border-opacity));
@@ -1825,6 +1835,10 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
+.bg-yellow-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
+}
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1887,9 +1901,15 @@ video {
 .to-yellow-500 {
   --tw-gradient-to: #eab308 var(--tw-gradient-to-position);
 }
+.bg-cover {
+  background-size: cover;
+}
 .bg-clip-text {
   -webkit-background-clip: text;
           background-clip: text;
+}
+.bg-center {
+  background-position: center;
 }
 .stroke-current {
   stroke: currentColor;
@@ -2319,6 +2339,9 @@ video {
 .text-yellow-500 {
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
+}
+.line-through {
+  text-decoration-line: line-through;
 }
 .opacity-50 {
   opacity: 0.5;
@@ -3396,6 +3419,10 @@ header .icons span:last-child {
     border-top-right-radius: 1rem;
   }
 
+  .sm\:p-6 {
+    padding: 1.5rem;
+  }
+
   .sm\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
@@ -3479,10 +3506,6 @@ header .icons span:last-child {
 
   .md\:h-12 {
     height: 3rem;
-  }
-
-  .md\:h-\[550px\] {
-    height: 550px;
   }
 
   .md\:w-1\/2 {

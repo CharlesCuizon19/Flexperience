@@ -1,5 +1,5 @@
 const { getWorkoutOftheWeek, GetMemberInfo, retrieveTrainerchatLog} = require('../models/database');
-const { getNotifications,getProposals,insertContract,getWorkoutoftheDay,getPlan, updateExerciseStatus,insertActivity } = require('../models/members');
+const { getNotifications,getProposals,insertContract,getWorkoutoftheDay,getPlan, updateExerciseStatus,insertActivity,getMealPlanId,getMealoftheDay } = require('../models/members');
 
 module.exports = {
     GetTodaysMeal: async (req, res) => {
@@ -16,6 +16,16 @@ module.exports = {
         try {
             const { member_id, plan_id } = req.query;
             const data = await getWorkoutoftheDay(member_id, plan_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    getMealoftheDay: async (req, res) => {
+        try {
+            const { member_id, plan_id } = req.query;
+            const data = await getMealoftheDay(member_id, plan_id);
             res.json(data);
         } catch (error) {
             console.error("Error fetching users:", error);
@@ -73,6 +83,17 @@ module.exports = {
             const { member_id } = req.query;
             console.log("received data: ", member_id)
             const data = await getPlan(member_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching members plan ID:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    getMealPlanId: async (req, res) => {
+        try {
+            const { member_id } = req.query;
+            console.log("received data: ", member_id)
+            const data = await getMealPlanId(member_id);
             res.json(data);
         } catch (error) {
             console.error("Error fetching members plan ID:", error.message);

@@ -8,8 +8,9 @@ const pool = mysql.createPool({
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
 }).promise()
-console.log(process.env.MYSQL_HOST)
-
+console.log("----------------------------------")
+console.log("DATABASE HOST: " + process.env.MYSQL_HOST + "  |")
+console.log("----------------------------------")
 async function getGymInfo() {
     const [rows] = await pool.query(
         `   SELECT 

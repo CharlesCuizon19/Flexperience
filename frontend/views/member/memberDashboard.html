@@ -221,196 +221,280 @@
                 <span class="greetChange text-[12px]">You've done a great job today!</span>
             </h1>
         </div>
-        <div class="flex flex-col gap-4 md:flex-row  m-4 p-4">
-            <div class="flex flex-col md:flex-row">
-                <div class="flex flex-col md:flex-col">
-                    <!--Progress Bar-->
-                    <div
-                        class="flex flex-row gap-4 justify-between md:gap-4 md:justify-center bg-[#373D41] p-6 rounded-tl-lg shadow-custom text-center border border-[#464646]">
-                        <div class="flex flex-col text-left justify-center">
-                            <h2 class="text-md font-semibold">Today's Plan</h2>
-                            <h3 class="text-[10px] font-light mt-1">Let's be productive!</h3>
-                            <h3 class="text-[10px] font-light mt-1" id="WorkoutsFinished"></h3>
-                        </div>
-
-                        <!-- Gauge Component -->
-                        <div class="relative w-24 h-24">
-                            <svg class="rotate-[135deg] w-full h-full" viewBox="0 0 36 36"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!-- Background Circle (Gauge) -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#343639]"
-                                    stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
-
-                                <!-- Gauge Progress -->
-                                <circle id="gauge-progress" cx="18" cy="18" r="16" fill="none"
-                                    class="stroke-current text-orange-600" stroke-width="1.5" stroke-dasharray="0 100"
-                                    stroke-linecap="round"></circle>
-                            </svg>
-
-                            <!-- Value Text -->
-                            <div
-                                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                <span id="gauge-value" class="text-1xl font-bold text-white">0%</span>
+        <div class="flex flex-col md:flex-col">
+            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4">
+                <!--Workout tasks-->
+                <div class="flex flex-col md:flex-row">
+                    <div class="flex flex-col md:flex-col">
+                        <!--Progress Bar-->
+                        <div
+                            class="flex flex-row gap-4 justify-between md:gap-4 md:justify-center bg-[#373D41] p-6 rounded-tl-lg shadow-custom text-center border border-[#464646]">
+                            <div class="flex flex-col text-left justify-center">
+                                <h2 class="text-md font-semibold">Today's Workout Plan</h2>
+                                <h3 class="text-[10px] font-light mt-1">Let's be productive!</h3>
+                                <h3 class="text-[10px] font-light mt-1" id="WorkoutsFinished"></h3>
                             </div>
-                        </div>
-                        <!-- End Gauge Component -->
 
-                    </div>
+                            <!-- Gauge Component -->
+                            <div class="relative w-24 h-24">
+                                <svg class="rotate-[135deg] w-full h-full" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background Circle (Gauge) -->
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#343639]"
+                                        stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                    <!-- Daily Tasks -->
-                    <div class="bg-[#373D41] rounded-bl-lg p-5 shadow-inner">
-                        <div class="max-w-lg mx-auto">
-                            <div class="flex flex-row md:flex-row justify-between items-center">
-                                <div>
-                                    <h1 class="text-md font-medium">Tasks list</h1>
+                                    <!-- Gauge Progress -->
+                                    <circle id="gauge-progress" cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-orange-600" stroke-width="1.5"
+                                        stroke-dasharray="0 100" stroke-linecap="round"></circle>
+                                </svg>
+
+                                <!-- Value Text -->
+                                <div
+                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                    <span id="gauge-value" class="text-1xl font-bold text-white">0%</span>
                                 </div>
-                                <div class="inline-flex space-x-2 items-center">
-                                    <div class="inline-flex space-x-1 items-center text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span id="current-date" class="text-sm font-normal md:block"></span>
+                            </div>
+                            <!-- End Gauge Component -->
+
+                        </div>
+
+                        <!-- Daily Tasks -->
+                        <div class="bg-[#373D41] rounded-bl-lg p-5 shadow-inner max-w-lg mx-auto">
+                            <div class="max-w-lg mx-auto">
+                                <div class="flex flex-row md:flex-row justify-between items-center">
+                                    <div>
+                                        <h1 class="text-md font-medium">Tasks list</h1>
+                                    </div>
+                                    <div class="inline-flex space-x-2 items-center">
+                                        <div class="inline-flex space-x-1 items-center text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span id="current-date" class="text-sm font-normal md:block"></span>
+                                        </div>
                                     </div>
                                 </div>
+                                <!--tasks-->
+                                <div id="tasks"
+                                    class="my-6 md:my-6 lg:my-6 xl:my-10 overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900">
+                                    <!-- Task cards will be populated here -->
+                                </div>
+                                <p class="text-xs text-slate-500 text-center">Last updated just now</p>
                             </div>
-                            <!--tasks-->
-                            <div id="tasks" class="my-6 md:my-6 lg:my-6 xl:my-10">
-                                <!-- Task cards will be populated here -->
-                            </div>
-                            <p class="text-xs text-slate-500 text-center">Last updated just now</p>
+                        </div>
+                    </div>
+
+                    <div class="max-w-lg mx-auto bg-div_color" id="workout-container">
+                        <div class="mt-5 ml-2 p-2 text-xl font-medium">
+                            <h1>Today's workout</h1>
+                        </div>
+                        <!-- Workouts Section -->
+                        <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] bg-div_color overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900"
+                            id="workouts-section">
+                            <!-- Workout cards will be dynamically added here -->
                         </div>
                     </div>
                 </div>
 
-                <div class="h-[500px] md:h-[550px] overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900"
-                    id="workout-container">
-                    <div class="mt-5 ml-2 p-2 text-xl font-medium">
-                        <h1>Today's workout</h1>
+                <!-- Calendar Component -->
+                <div class="flex-1 md:w-1/2 bg-[#373D41] shadow-custom border border-[#464646] rounded-md">
+                    <div class="p-3">
+                        <div class="px-2 flex items-center justify-between">
+                            <span tabindex="0" class="focus:outline-none text-sm font-bold text-white"
+                                id="monthYear">October 2020</span>
+                            <div class="flex items-center">
+                                <button aria-label="calendar backward" id="prevButton"
+                                    class="focus:text-gray-400 hover:text-gray-400 text-gray-800 dark:text-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-chevron-left" width="20" height="20"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="15 6 9 12 15 18" />
+                                    </svg>
+                                </button>
+                                <button aria-label="calendar forward" id="nextButton"
+                                    class="focus:text-gray-400 hover:text-gray-400 ml-2 text-gray-800 dark:text-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-chevron-right" width="20" height="20"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="9 6 15 12 9 18" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-8 overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Mo</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-whie">
+                                                    Tu</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    We</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Th</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Fr</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Sa</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Su</p>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendarBody">
+                                    <!-- Days will be generated here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <!-- Workouts Section -->
-                    <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4" id="workouts-section">
-                        <!-- Workout cards will be dynamically added here -->
+                    <div id="eventDetails" class="py-3 md:px-4 px-4 bg-[#373D41] border-t border-[#464646] rounded-b">
+                        <div class="px-2">
+                            <!-- Example Events -->
+                            <div class="border-b pb-2 border-gray-400">
+                                <p class="text-xl font-semibold pt-1 leading-4 text-gray-600 dark:text-gray-300">
+                                    Workouts
+                                    for this day</p>
+                            </div><br>
+                            <div class="border-b pb-2 border-gray-400">
+                                <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
+                                <a tabindex="0"
+                                    class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Test</a>
+                                <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Test details
+                                </p>
+                            </div>
+                            <div class="border-b pb-2 border-gray-400 pt-3">
+                                <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
+                                <a tabindex="0"
+                                    class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Lorem
+                                    Ipsum</a>
+                                <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Details
+                                    about Lorem Ipsum</p>
+                            </div>
+                            <div class="border-b pb-2 border-gray-400 pt-3">
+                                <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
+                                <a tabindex="0"
+                                    class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Lorem
+                                    Ipsum</a>
+                                <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Details
+                                    about Lorem Ipsum</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- Calendar Component -->
-            <div class="flex-1 md:w-1/2 bg-[#373D41] shadow-custom border border-[#464646] rounded-md">
-                <div class="p-3">
-                    <div class="px-2 flex items-center justify-between">
-                        <span tabindex="0" class="focus:outline-none text-sm font-bold text-white"
-                            id="monthYear">October 2020</span>
-                        <div class="flex items-center">
-                            <button aria-label="calendar backward" id="prevButton"
-                                class="focus:text-gray-400 hover:text-gray-400 text-gray-800 dark:text-gray-100">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="icon icon-tabler icon-tabler-chevron-left" width="20" height="20"
-                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <polyline points="15 6 9 12 15 18" />
+            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4">
+                <!--Meal tasks-->
+                <div class="flex flex-col md:flex-row">
+                    <div class="flex flex-col md:flex-col">
+                        <!--Progress Bar-->
+                        <div
+                            class="flex flex-row gap-4 justify-between md:gap-4 md:justify-center bg-[#373D41] p-6 rounded-tl-lg shadow-custom text-center border border-[#464646]">
+                            <div class="flex flex-col text-left justify-center">
+                                <h2 class="text-md font-semibold">Today's Meal Plan</h2>
+                                <h3 class="text-[10px] font-light mt-1">Let's be healthy!</h3>
+                                <h3 class="text-[10px] font-light mt-1" id="MealsFinished"></h3>
+                            </div>
+
+                            <!-- Gauge Component -->
+                            <div class="relative w-24 h-24">
+                                <svg class="rotate-[135deg] w-full h-full" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background Circle (Gauge) -->
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#343639]"
+                                        stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <!-- Gauge Progress for Meals -->
+                                    <circle id="meal-gauge-progress" cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-orange-600" stroke-width="1.5"
+                                        stroke-dasharray="0 100" stroke-linecap="round"></circle>
                                 </svg>
-                            </button>
-                            <button aria-label="calendar forward" id="nextButton"
-                                class="focus:text-gray-400 hover:text-gray-400 ml-2 text-gray-800 dark:text-gray-100">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="icon icon-tabler icon-tabler-chevron-right" width="20" height="20"
-                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <polyline points="9 6 15 12 9 18" />
-                                </svg>
-                            </button>
+
+                                <!-- Value Text for Meals -->
+                                <div
+                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                    <span id="meal-gauge-value" class="text-1xl font-bold text-white">0%</span>
+                                </div>
+                            </div>
+
+                            <!-- End Gauge Component -->
+
+                        </div>
+
+                        <!-- Daily Meals -->
+                        <div class="bg-[#373D41] h-full rounded-bl-lg p-5 shadow-inner max-w-lg">
+                            <div class="max-w-lg mx-auto">
+                                <div class="flex flex-row md:flex-row justify-between items-center">
+                                    <div>
+                                        <h1 class="text-md font-medium">Meal list</h1>
+                                    </div>
+                                    <div class="inline-flex space-x-2 items-center">
+                                        <div class="inline-flex space-x-1 items-center text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span id="current-date" class="text-sm font-normal md:block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--meals-->
+                                <div id="meals-tasks"
+                                    class="my-6 md:my-6 lg:my-6 xl:my-10 overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900">
+                                    <!-- Task cards will be populated here -->
+                                </div>
+                                <p class="text-xs text-slate-500 text-center">Last updated just now</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between pt-8 overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-white">
-                                                Mo</p>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-whie">
-                                                Tu</p>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-white">
-                                                We</p>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-white">
-                                                Th</p>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-white">
-                                                Fr</p>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-white">
-                                                Sa</p>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        <div class="w-full flex justify-center">
-                                            <p class="text-sm font-medium text-center text-white">
-                                                Su</p>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody id="calendarBody">
-                                <!-- Days will be generated here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div id="eventDetails" class="py-3 md:px-4 px-4 bg-[#373D41] border-t border-[#464646] rounded-b">
-                    <div class="px-2">
-                        <!-- Example Events -->
-                        <div class="border-b pb-2 border-gray-400">
-                            <p class="text-xl font-semibold pt-1 leading-4 text-gray-600 dark:text-gray-300">Workouts
-                                for this day</p>
-                        </div><br>
-                        <div class="border-b pb-2 border-gray-400">
-                            <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
-                            <a tabindex="0"
-                                class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Test</a>
-                            <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Test details
-                            </p>
+
+                    <div class="max-w-full mx-auto bg-div_color">
+                        <div class="mt-5 ml-2 p-2 text-xl font-medium">
+                            <h1>Today's meal</h1>
                         </div>
-                        <div class="border-b pb-2 border-gray-400 pt-3">
-                            <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
-                            <a tabindex="0"
-                                class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Lorem
-                                Ipsum</a>
-                            <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Details
-                                about Lorem Ipsum</p>
-                        </div>
-                        <div class="border-b pb-2 border-gray-400 pt-3">
-                            <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
-                            <a tabindex="0"
-                                class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Lorem
-                                Ipsum</a>
-                            <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Details
-                                about Lorem Ipsum</p>
+                        <!-- Meals Section -->
+                        <div id="meal-container"
+                            class="p-2 grid grid-cols-1 md:grid-cols-3 gap-4 h-auto bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900">
+                            <!-- Dynamic cards will be injected here -->
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -484,6 +568,7 @@
         let Price;
         let Proposal_id;
         let planId;
+        let mealPlanId
         let trainer_id;
         const currentDate = new Date();
 
@@ -526,29 +611,52 @@
 
 
         function fetchMemberPlanInfo(member_id) {
-            console.log("here")
+            console.log("Fetching workout and meal plan info...");
+
+            // First call to get workout plan info
             axios.get('http://localhost:3000/getPlan', {
-                params: {
-                    member_id: member_id
-                }
+                params: { member_id: member_id }
             })
                 .then(response => {
-                    const memberData = response.data[0].plan_id; // Assuming the response data contains the member info
+                    if (response.data && response.data.length > 0) { // Check if data exists and has elements
+                        planId = response.data[0].plan_id;
+                        trainer_id = response.data[0].trainer_id;
 
-                    trainer_id = response.data[0].trainer_id;
-                    console.log("trainer id:")
-                    console.log(trainer_id)
-                    console.log("plan id:")
-                    console.log(memberData)
-                    planId = memberData;
-                    populateWorkoutCards(member_id);
-                    populateTaskList(planId, member_id);
-                    updateGauge(planId);
+                        console.log("Workout trainer id:", trainer_id);
+                        console.log("Workout plan id:", planId);
+
+                        // Call functions related to workout plan
+                        populateWorkoutCards(member_id);
+                        populateTaskList(planId, member_id);
+                        updateGauge(planId);
+                    } else {
+                        console.log("No workout plan found for this member.");
+                    }
+
+                    // Second call to get meal plan info
+                    return axios.get('http://localhost:3000/getMealPlanId', {
+                        params: { member_id: member_id }
+                    });
+                })
+                .then(response => {
+                    if (response.data && response.data.length > 0) { // Check if data exists and has elements
+                        const mealPlanId = response.data[0].plan_id;
+                        console.log("Meal plan id:", mealPlanId);
+
+                        //populateMealCards(mealPlanId, member_id);
+                        populateMeals(mealPlanId, member_id)
+                        populateMealTaskList(mealPlanId, member_id)
+                        updateMealGauge(mealPlanId)
+                    } else {
+                        console.log("No meal plan found for this member.");
+                    }
                 })
                 .catch(error => {
-                    console.error('Error fetching member info:', error);
+                    console.error('Error fetching plan info:', error);
                 });
         }
+
+
 
         const notificationButton = document.getElementById('notificationButton');
         const notificationDropdown = document.getElementById('notificationDropdown');
@@ -732,6 +840,74 @@
                 return [];
             }
         };
+        const fetchMealOfTheDay = async (planId, memberId) => {
+            try {
+                const response = await axios.get(`http://localhost:3000/getMealoftheDay`, {
+                    params: { plan_id: planId, member_id: memberId }
+                });
+                console.log("Response data:", response.data); // Log entire response
+                return response.data;
+            } catch (error) {
+                console.error("Error fetching meal data:", error);
+                return [];
+            }
+        };
+
+        const populateMeals = async (planId, memberId) => {
+            const mealData = await fetchMealOfTheDay(planId, memberId);
+            console.log("Meal Data:", mealData);
+
+            // Check if mealData is structured correctly
+            if (!mealData || !Array.isArray(mealData[0])) {
+                console.error("Invalid meal data structure.");
+                return;
+            }
+
+            const meals = mealData[0]; // Assuming meal data is the first item
+            const mealsContainer = document.querySelector('#meal-container');
+            mealsContainer.innerHTML = ''; // Clear previous content
+
+            meals.forEach(meal => {
+                console.log("Meal item:", meal);
+
+                const mealCard = document.createElement('div');
+                mealCard.className = 'bg-div_color rounded-3xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col'; // Flexbox for vertical layout
+
+                mealCard.innerHTML = `
+                <div class='h-40 bg-cover bg-center' style='background-image:url(${meal.imageUrl || 'https://img.freepik.com/free-photo/pasta-spaghetti-with-shrimps-sauce_1220-5072.jpg?w=2000&t=st=1678041911~exp=1678042511~hmac=e4aa55e70f8c231d4d23832a611004f86eeb3b6ca067b3fa0c374ac78fe7aba6'});'></div>
+                <div class='flex-1 p-4 sm:p-6 flex flex-col justify-between'>
+                    <div>
+                        <h3 class='font-bold text-white text-lg mb-2'>${meal.meal_name}</h3>
+                        <p class='text-gray-300 text-sm font-medium mb-2'>${meal.classification}</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="flex flex-col items-center p-2 bg-gray-800 rounded-md">
+                                <span class='text-[10px] font-bold text-white'>Calories</span>
+                                <p class='text-lg text-white'>259</p>
+                            </div>
+                            <div class="flex flex-col items-center p-2 bg-green-500 rounded-md">
+                                <span class='text-[10px] font-bold text-white'>Protein</span>
+                                <p class='text-lg text-white'>${meal.protein}g</p>
+                            </div>
+                            <div class="flex flex-col items-center p-2 bg-yellow-500 rounded-md">
+                                <span class='text-[10px] font-bold text-white'>Carbs</span>
+                                <p class='text-lg text-white'>${meal.carbs}g</p>
+                            </div>
+                            <div class="flex flex-col items-center p-2 bg-red-500 rounded-md">
+                                <span class='text-[10px] font-bold text-white'>Fat</span>
+                                <p class='text-lg text-white'>${meal.fats}g</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+
+                mealsContainer.appendChild(mealCard);
+            });
+        };
+
+        // Call the populateMeals function with the appropriate planId and memberId
+        // populateMeals(planId, memberId); // Uncomment and use the actual IDs as needed
 
         // Modal HTML structure (initially without dynamic content)
         const createWorkoutCard = async (exercise) => {
@@ -832,6 +1008,17 @@
                 tasksContainer.innerHTML += taskCard; // Add each task card to the container
             });
         };
+        const populateMealTaskList = async (planId, member_id) => {
+            const tasksContainer = document.getElementById('meals-tasks');
+            tasksContainer.innerHTML = ''; // Clear the existing tasks
+
+            const mealData = await fetchMealOfTheDay(planId, member_id);
+            console.log("------------")
+            mealData[0].forEach(meal => {
+                const taskCard = createMealTaskCard(meal, member_id);
+                tasksContainer.innerHTML += taskCard; // Add each task card to the container
+            });
+        };
         // Function to create task card dynamically
         const createTaskCard = (exercise, member_id) => {
             const { exercise_name, repetitions, sets, status } = exercise;
@@ -869,6 +1056,42 @@
                 </div>
             `;
         };
+        const createMealTaskCard = (meals, member_id) => {
+            const { meal_name, classification, status } = meals;
+            // Set icon based on status
+            console.log("zzzzz")
+            console.log(meals)
+
+            const statusIcon = status === "completed" ? `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    class="w-6 h-6 text-green-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ` : `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    class="w-6 h-6 text-slate-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                </svg>
+            `;
+
+            // Create task HTML
+            return `
+                <div class="flex justify-between items-center border-b border-[#343639] py-3 px-2 border-l-4 border-l-transparent">
+                    <div class="inline-flex items-center space-x-2">
+                        <div>${statusIcon}</div>
+                        <div>
+                            <p class="font-medium">${meal_name}</p>
+                            <p class="text-sm text-slate-400">Classification: ${classification}</p>
+                        </div>
+                    </div>
+                    <button class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600" onclick="">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </button>
+                </div>
+            `;
+        };
         // Fetch workout status and update the gauge
         async function updateGauge(planId) {
             try {
@@ -897,6 +1120,42 @@
             }
         }
 
+        async function updateMealGauge(planId) {
+            console.log(`Updating meal gauge for plan ID: ${planId}`); // Confirm function is called
+            try {
+                // Use Axios to fetch data
+                const response = await axios.get(`http://localhost:3000/getMealoftheDay`, {
+                    params: {
+                        member_id: member_id,
+                        plan_id: planId
+                    }
+                });
+
+                // Access the first inner array to get the meals
+                const meals = response.data[0]; // Accessing the first array which contains meal objects
+                const totalMeals = meals.length;
+                const completedMeals = meals.filter(meal => meal.status === "completed").length; // Count completed meals
+
+                console.log(`Total meals: ${totalMeals}, Completed meals: ${completedMeals}`);
+
+                // Update text showing meals progress
+                document.getElementById("MealsFinished").textContent = `${completedMeals}/${totalMeals} meals completed`;
+
+                // Calculate percentage
+                const percentage = totalMeals > 0 ? (completedMeals / totalMeals) * 100 : 0;
+
+                // Update gauge
+                const mealGaugeProgress = document.getElementById('meal-gauge-progress');
+                const mealGaugeValue = document.getElementById('meal-gauge-value');
+
+                // Update SVG stroke-dasharray and inner text
+                mealGaugeProgress.style.strokeDasharray = `${percentage} 100`;
+                mealGaugeValue.innerText = `${Math.round(percentage)}%`;
+
+            } catch (error) {
+                console.error('Error fetching meal data:', error);
+            }
+        }
     });
 
     const markAsDone = async (status_id, workout, member_id, member_name, trainer_id) => {
