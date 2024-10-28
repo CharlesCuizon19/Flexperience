@@ -6,7 +6,7 @@ const { getAllTrainers, getGymTrainers, insertGymTrainers, insertWorkoutTemplate
     insertWorkoutTemplateExercise, getGymTrainersById, updateWorkoutTemplateExercise,
     removeTemplateExercise, inputFilter, insertMealTemplates, insertMealTemplatesItems,
     insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity,
-    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals } = require('../models/trainers');
+    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay } = require('../models/trainers');
 
 module.exports = {
 
@@ -38,6 +38,16 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error fetching today's progress:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    getMealProgressOftheDay: async (req, res) => {
+        try {
+            const { trainer_id } = req.query;
+            const data = await getMealProgressOftheDay(trainer_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching today's meal progress:", error.message);
             res.status(500).send("Internal Server Error");
         }
     },

@@ -283,7 +283,8 @@
           console.log(response.data[0])
           console.log(trainerid)
           document.getElementById("user-name").textContent = response.data[0].firstname
-          fetchStudentActivity(trainerid)
+          fetchStudentActivity(trainerid);
+          fetchStudentProgress();
         })
         .catch(error => {
           console.error('Error fetching trainer info:', error);
@@ -340,54 +341,82 @@
     });
   });
 
-
-  // Function to fetch data and populate the progress
   // Function to fetch data and populate the progress
   async function fetchStudentProgress() {
     try {
-      const response = await axios.get('http://localhost:3000/getProgressOftheDay?trainer_id=6');
-      const students = response.data;
-      console.log("----------------");
-      console.log(students);
-      console.log(students)
+      // Fetch workout progress
+      const workoutResponse = await axios.get(`http://localhost:3000/getProgressOftheDay?trainer_id=${trainerid}`);
+      const workoutData = workoutResponse.data;
+
+      // Fetch meal progress
+      const mealResponse = await axios.get(`http://localhost:3000/getMealProgressOftheDay?trainer_id=${trainerid}`);
+      const mealData = mealResponse.data;
+
+
       // Container for the progress bars
       const progressContainer = document.getElementById('progress-container');
       progressContainer.innerHTML = '';  // Clear any existing content
 
-      // Flatten the array and handle each student object
-      students.flat().forEach(student => {
+      // Combine workout and meal data by member ID
+      workoutData.flat().forEach(student => {
+        const mealProgress = mealData.flat().find(meal => meal.member_id === student.member_id);
+        // Calculate workout progress
         const totalExercises = student.total_workouts;
         const completedExercises = student.finished_workouts;
-        const progressPercentage = Math.round((completedExercises / totalExercises) * 100);
+        const workoutProgressPercentage = Math.round((completedExercises / totalExercises) * 100);
 
+        // Calculate meal progress if available
+        let mealProgressPercentage = 0;
+        let mealPlanId = 0
+        if (mealProgress) {
+          const totalMeals = mealProgress.total_meals;
+          const completedMeals = mealProgress.finished_meals;
+          mealPlanId = mealProgress.plan_id;
+          mealProgressPercentage = Math.round((completedMeals / totalMeals) * 100);
+        }
+
+        // Create the HTML for the student workout and meal progress bars
         const studentDiv = `
-        <div class="flex py-5 mx-10 px-5 hover:border dark:border-gray-500 hover:shadow-md cursor-pointer"
-          onclick="studentProgress(this, ${student.member_id}, ${student.plan_id})">
-          <div class="w-full">
-             <h2 class="student-name">
-              ${student.member_name}
-            </h2>
-          </div>
-          <div class='relative w-full bg-customOrange bg-opacity-50 rounded-3xl h-5'>
-            <div class='bg-customOrange h-5 rounded-3xl text-white text-xs text-center' role='progressbar'
-              aria-valuenow='${progressPercentage}' aria-valuemin='0' aria-valuemax='100' style='width: ${progressPercentage}%'>
+          <div class="flex flex-col py-5 mx-10 px-5 hover:border dark:border-gray-500 hover:shadow-md cursor-pointer"
+            onclick="studentProgress(this, ${student.member_id}, ${student.plan_id}, ${mealPlanId})">
+            <div class="w-full">
+               <h2 class="student-name">
+                ${student.member_name}
+              </h2>
+              <br>
             </div>
-            <span class='absolute inset-0 flex items-center justify-center text-white'>
-              ${progressPercentage}%
-            </span>
+  
+            <!-- Workout Progress Bar -->
+            <div class='relative w-full bg-customOrange bg-opacity-50 rounded-3xl h-5 mb-2'>
+              <div class='bg-customOrange h-5 rounded-3xl text-white text-xs text-center' role='progressbar'
+                aria-valuenow='${workoutProgressPercentage}' aria-valuemin='0' aria-valuemax='100' style='width: ${workoutProgressPercentage}%;'>
+              </div>
+              <span class='absolute inset-0 flex items-center justify-center text-white'>
+                Workout Progress: ${workoutProgressPercentage}%
+              </span>
+            </div>
+  
+            <!-- Meal Progress Bar -->
+            <div class='relative w-full bg-teal-400 bg-opacity-50 rounded-3xl h-5'>
+              <div class='bg-teal-400 h-5 rounded-3xl text-white text-xs text-center' role='progressbar'
+                aria-valuenow='${mealProgressPercentage}' aria-valuemin='0' aria-valuemax='100' style='width: ${mealProgressPercentage}%;'>
+              </div>
+              <span class='absolute inset-0 flex items-center justify-center text-white'>
+                Meal Progress: ${mealProgressPercentage}%
+              </span>
+            </div>
           </div>
-        </div>
-      `;
+        `;
 
-
-
-        // Append the newly created progress bar to the container
+        // Append the newly created progress bars to the container
         progressContainer.innerHTML += studentDiv;
       });
     } catch (error) {
       console.error('Error fetching student progress:', error);
     }
   }
+
+
 
   // Function to format date (mm/dd/yyyy)
   function formatDate(dateString) {
@@ -404,12 +433,12 @@
       const response = await axios.get(`http://localhost:3000/getStudentActivity?trainer_id=${trainerid}`);
       const activities = response.data;
 
-      
+
       const dateNow = document.getElementById('dateNow');
       const currentDate = new Date().toISOString();
       dateNow.innerText = formatDate(currentDate);
 
-      
+
       const activityContainer = document.getElementById('activity-container');
       activityContainer.innerHTML = '';
 
@@ -444,19 +473,19 @@
   }
 
   // Get tab elements
-  var workoutTab = document.getElementById("workout-tab");
-  var mealTab = document.getElementById("meal-tab");
-
-  // Get tab content elements
   var workoutTabContent = document.getElementById("workout");
   var mealTabContent = document.getElementById("meal");
 
-  async function studentProgress(element, member_id, plan_id) {
+  async function studentProgress(element, member_id, plan_id, meal_plan_id) {
     try {
-
       // Fetch workout data from the API
-      const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${plan_id}&member_id=${member_id}`);
-      const workoutData = await response.json();
+      workoutTabContent.innerHTML = "";
+      mealTabContent.innerHTML = "";
+      // Handle the student name and update the header
+      const studentName = element.querySelector('.student-name').innerText;
+      document.getElementById('student').innerHTML = `${studentName} progress`;
+      const workoutResponse = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${plan_id}&member_id=${member_id}`);
+      const workoutData = await workoutResponse.json();
 
       const exercises = workoutData[0]; // Access the array of exercises
 
@@ -472,7 +501,7 @@
       exercises.forEach(exercise => {
         const statusIcon = exercise.status === 'not started'
           ? '<i class="fas fa-times-circle text-red-500 text-xl"></i>'
-          : '<i class="fas fa-check-circle text-green-500 text-xl"></i>';
+          : '<i class="fas fa-check-circle text-green-400 text-xl"></i>';
 
         workoutHTML += `
           <div class="flex items-center p-4 bg-gray-700 shadow-md rounded-lg hover:bg-gray-600 transition ease-in-out duration-150">
@@ -485,51 +514,80 @@
       });
 
       workoutHTML += `</div>`; // Close the main container
+      workoutTabContent.innerHTML = workoutHTML; // Populate workout tab content
 
-      // Close the div
-      workoutHTML += '</div>';
+      // Fetch meal data from the API
+      const mealResponse = await fetch(`http://localhost:3000/getMealoftheDay?member_id=${member_id}&plan_id=${meal_plan_id}`);
+      const mealData = await mealResponse.json();
 
-      // Populate the workout tab content with the dynamic HTML
-      workoutTabContent.innerHTML = workoutHTML;
+      const meals = mealData[0]; // Access the array of meals
 
-      // Handle the student name and update the header
-      const studentName = element.querySelector('.student-name').innerText;
-      document.getElementById('student').innerHTML = `${studentName} progress`;
+      // Initialize a string to hold the dynamic content for the meal tab
+      let mealHTML = `
+        <span>
+          <div class="text-white font-semibold text-lg">${new Date().toLocaleDateString()}</div>
+        </span><br>
+        <div class="space-y-4"> <!-- Spacing between meals -->
+      `;
 
-      // Activate workout tab and hide meal tab
-      workoutTab.classList.add("bg-[#5F6163]");
-      workoutTabContent.classList.add("h-64");
+      // Loop through each meal and build the meal list dynamically
+      meals.forEach(meal => {
+        const statusIcon = meal.status === 'not started'
+          ? '<i class="fas fa-times-circle text-red-500 text-xl"></i>'
+          : '<i class="fas fa-check-circle text-green-400 text-xl"></i>';
+
+        mealHTML += `
+          <div class="flex items-center p-4 bg-gray-700 shadow-md rounded-lg hover:bg-gray-600 transition ease-in-out duration-150">
+              <div class="flex items-center space-x-4">
+              ${statusIcon}
+              <span class="text-white text-base font-medium">${meal.meal_name}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      mealHTML += `</div>`; // Close the main container
+      mealTabContent.innerHTML = mealHTML; // Populate meal tab content
+
+      // Set initial visibility for tabs: Show workout, hide meal
+      workoutTabContent.classList.add("bg-[#5F6163]");
       workoutTabContent.classList.remove("hidden");
-      mealTabContent.classList.add("h-64", "hidden");
-      mealTab.classList.remove("bg-[#5F6163]");
+      mealTabContent.classList.add("hidden");
 
     } catch (error) {
-      console.error('Error fetching workout data:', error);
+      console.error('Error fetching data:', error);
     }
   }
-
-
 
   // Function to handle tab switching
   function tabChange(tabType) {
     if (tabType === 'meal') {
-      // Activate meal tab and hide workout tab
-      workoutTab.classList.remove("bg-[#5F6163]");
+      // Activate meal tab and hide workout content
       workoutTabContent.classList.add("hidden");
+      workoutTabContent.classList.remove("bg-[#5F6163]");
       mealTabContent.classList.remove("hidden");
-      mealTab.classList.add("bg-[#5F6163]");
+      mealTabContent.classList.add("bg-[#5F6163]");
+
+      // Update tab button styles
+      document.getElementById('meal-tab').classList.add("bg-[#5F6163]");
+      document.getElementById('workout-tab').classList.remove("bg-[#5F6163]");
+
     } else if (tabType === 'workout') {
-      // Activate workout tab and hide meal tab
-      mealTab.classList.remove("bg-[#5F6163]");
-      workoutTabContent.classList.remove("hidden");
+      // Activate workout tab and hide meal content
       mealTabContent.classList.add("hidden");
-      workoutTab.classList.add("bg-[#5F6163]");
+      mealTabContent.classList.remove("bg-[#5F6163]");
+      workoutTabContent.classList.remove("hidden");
+      workoutTabContent.classList.add("bg-[#5F6163]");
+
+      // Update tab button styles
+      document.getElementById('workout-tab').classList.add("bg-[#5F6163]");
+      document.getElementById('meal-tab').classList.remove("bg-[#5F6163]");
     }
   }
 
 
-  // Fetch student progress data on page load
-  window.onload = fetchStudentProgress;
+
+
 
 </script>
 

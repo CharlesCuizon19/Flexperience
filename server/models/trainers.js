@@ -260,6 +260,69 @@ const getProgressOftheDay = async (trainer_id) => {
     );
     return rows.length > 0 ? [rows] : null;
 };
+const getMealProgressOftheDay = async (trainer_id) => {
+    const [rows] = await pool.query(
+       `WITH CTE_CURRENT_DAY AS (
+        SELECT 
+            m.member_id,
+            m.meal_template_id,
+            m.date_started,
+            DATEDIFF(CURRENT_DATE, m.date_started) AS days_since_start,
+            CASE 
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 1 AND DATEDIFF(CURRENT_DATE, m.date_started) < 7 THEN 1
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 7 AND DATEDIFF(CURRENT_DATE, m.date_started) < 14 THEN 2
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 14 AND DATEDIFF(CURRENT_DATE, m.date_started) < 21 THEN 3
+                WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 21 AND DATEDIFF(CURRENT_DATE, m.date_started) < 28 THEN 4
+                ELSE 0
+            END AS Week_Number,
+            -- Reset Day_number to always be between 1 and 7
+            MOD(DATEDIFF(CURRENT_DATE, m.date_started), 7) + 1 AS Day_number
+        FROM 
+            member_meal_plan m
+        WHERE 
+            m.trainer_id = ?),
+    CTE_MEAL AS (
+            SELECT
+                mes.plan_id, 
+                me.member_id,
+                (SELECT CONCAT(lastname, ', ', firstname) FROM members WHERE member_id = me.member_id) AS member_name,
+                p.meal_name,
+                mes.status,
+                wte.week_no,
+                wte.day_no,
+                c.Week_Number,
+                c.Day_number
+            FROM 
+                member_meal_status mes
+        JOIN 
+            meal_template_items wte ON mes.template_item_id = wte.template_item_id
+        JOIN 
+             member_meal_plan me ON me.plan_id = mes.plan_id
+        -- Make sure you join on both the template_id and the member_id
+        JOIN 
+            CTE_CURRENT_DAY c ON c.meal_template_id = wte.meal_template_id 
+                            AND c.member_id = me.member_id  -- Ensure exercises are fetched for the correct member
+        JOIN
+			pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id
+        WHERE 
+            wte.week_no = c.Week_Number
+        AND 
+            wte.day_no = c.Day_number)
+    SELECT
+        plan_id,
+        member_id,
+        member_name,
+        COUNT(*) AS total_meals,
+        SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) AS finished_meals
+    FROM 
+        CTE_MEAL
+    GROUP BY 
+        member_name;
+        `,
+        [trainer_id]
+    );
+    return rows.length > 0 ? [rows] : null;
+};
 const insertPremadeMeals = async (trainer_id, meal_name, carbs, fats, protein) => {
     const [rows] = await pool.query(
        `INSERT INTO pre_made_meals (trainer_id, meal_name, carbs, fats, protein)
@@ -278,6 +341,7 @@ const getPremadeMeals = async (trainer_id) => {
 };
 
 module.exports = {
+    getMealProgressOftheDay,
     getPremadeMeals,
     insertPremadeMeals,
     assignMealPlan,
