@@ -292,10 +292,13 @@
                             <h1>Today's workout</h1>
                         </div>
                         <!-- Workouts Section -->
-                        <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] bg-div_color overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900"
+                        <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900"
                             id="workouts-section">
                             <!-- Workout cards will be dynamically added here -->
                         </div>
+
+
+
                     </div>
                 </div>
 
@@ -490,10 +493,13 @@
                         </div>
                         <!-- Meals Section -->
                         <div id="meal-container"
-                            class="p-2 grid grid-cols-1 md:grid-cols-3 gap-4 h-auto bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900">
-                            <!-- Dynamic cards will be injected here -->
+                            class="p-2 grid grid-cols-1 md:grid-cols-3 gap-4 h-auto bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900"
+                            style="min-height: 200px; width: 100%;">
+                            <!-- Dynamic cards will be injected here, or a placeholder message when empty -->
                         </div>
+
                     </div>
+
 
                 </div>
             </div>
@@ -571,8 +577,6 @@
         let mealPlanId
         let trainer_id;
         const currentDate = new Date();
-
-
         // Fetch and assign member information when the page loads
         fetchMemberInfo();
 
@@ -628,7 +632,7 @@
                         // Call functions related to workout plan
                         populateWorkoutCards(member_id);
                         populateTaskList(planId, member_id);
-                        updateGauge(planId);
+                        updateGauge(planId, member_id);
                     } else {
                         console.log("No workout plan found for this member.");
                     }
@@ -649,6 +653,11 @@
                         updateMealGauge(mealPlanId)
                     } else {
                         console.log("No meal plan found for this member.");
+                        const mealsContainer = document.querySelector('#meal-container');
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'text-center text-gray-300 text-lg';
+                        placeholder.innerText = "No meal plan assigned";
+                        mealsContainer.appendChild(placeholder);
                     }
                 })
                 .catch(error => {
@@ -831,80 +840,99 @@
         };
 
 
-        const fetchWorkoutData = async (planId) => {
+        const fetchWorkoutData = async (planId, memberId) => {
             try {
-                const response = await axios.get(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${member_id}`);
+                const response = await axios.get(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${memberId}`);
+                console.log(planId + " " + memberId)
+                console.log("responeee")
+                console.log(response.data)
+                // Check if response data exists and has content
+                if (!response.data || response.data.length === 0) {
+                    console.warn('No workout data available for the given plan and member.');
+                    return []; // Return empty array if no data is available
+                }
+
                 return response.data[0]; // Adjust if needed, based on your response structure
             } catch (error) {
                 console.error('Error fetching workout data:', error);
-                return [];
+                return []; // Return empty array on error
             }
         };
+
         const fetchMealOfTheDay = async (planId, memberId) => {
             try {
                 const response = await axios.get(`http://localhost:3000/getMealoftheDay`, {
                     params: { plan_id: planId, member_id: memberId }
                 });
-                console.log("Response data:", response.data); // Log entire response
-                return response.data;
+                // Check if response data is null
+                return response.data === null ? null : response.data;
             } catch (error) {
                 console.error("Error fetching meal data:", error);
-                return [];
+                return null; // Return null on error as well
             }
         };
+
 
         const populateMeals = async (planId, memberId) => {
             const mealData = await fetchMealOfTheDay(planId, memberId);
             console.log("Meal Data:", mealData);
 
-            // Check if mealData is structured correctly
-            if (!mealData || !Array.isArray(mealData[0])) {
-                console.error("Invalid meal data structure.");
-                return;
-            }
-
-            const meals = mealData[0]; // Assuming meal data is the first item
             const mealsContainer = document.querySelector('#meal-container');
             mealsContainer.innerHTML = ''; // Clear previous content
 
+            // Check if mealData is structured correctly
+            if (!mealData || !Array.isArray(mealData[0]) || mealData[0].length === 0) {
+                // Change class list to flex for centering the message
+                mealsContainer.className = "flex justify-center items-center h-auto bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+
+                // Placeholder message
+                const placeholder = document.createElement('div');
+                placeholder.className = 'text-center bg-50 p-2 mx-10 text-white rounded-lg text-lg';
+                placeholder.innerText = "No meal plan available for today.";
+                mealsContainer.appendChild(placeholder);
+
+                return; // Exit function if no data
+            }
+
+            const meals = mealData[0]; // Assuming meal data is the first item
             meals.forEach(meal => {
                 console.log("Meal item:", meal);
 
                 const mealCard = document.createElement('div');
-                mealCard.className = 'bg-div_color rounded-3xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col'; // Flexbox for vertical layout
+                mealCard.className = 'bg-div_color rounded-3xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col';
 
                 mealCard.innerHTML = `
-                <div class='h-40 bg-cover bg-center' style='background-image:url(${meal.imageUrl || 'https://img.freepik.com/free-photo/pasta-spaghetti-with-shrimps-sauce_1220-5072.jpg?w=2000&t=st=1678041911~exp=1678042511~hmac=e4aa55e70f8c231d4d23832a611004f86eeb3b6ca067b3fa0c374ac78fe7aba6'});'></div>
-                <div class='flex-1 p-4 sm:p-6 flex flex-col justify-between'>
-                    <div>
-                        <h3 class='font-bold text-white text-lg mb-2'>${meal.meal_name}</h3>
-                        <p class='text-gray-300 text-sm font-medium mb-2'>${meal.classification}</p>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="flex flex-col items-center p-2 bg-gray-800 rounded-md">
-                                <span class='text-[10px] font-bold text-white'>Calories</span>
-                                <p class='text-lg text-white'>259</p>
-                            </div>
-                            <div class="flex flex-col items-center p-2 bg-green-500 rounded-md">
-                                <span class='text-[10px] font-bold text-white'>Protein</span>
-                                <p class='text-lg text-white'>${meal.protein}g</p>
-                            </div>
-                            <div class="flex flex-col items-center p-2 bg-yellow-500 rounded-md">
-                                <span class='text-[10px] font-bold text-white'>Carbs</span>
-                                <p class='text-lg text-white'>${meal.carbs}g</p>
-                            </div>
-                            <div class="flex flex-col items-center p-2 bg-red-500 rounded-md">
-                                <span class='text-[10px] font-bold text-white'>Fat</span>
-                                <p class='text-lg text-white'>${meal.fats}g</p>
+                    <div class='h-40 bg-cover bg-center' style='background-image:url(${meal.imageUrl || 'https://img.freepik.com/free-photo/pasta-spaghetti-with-shrimps-sauce_1220-5072.jpg?w=2000&t=st=1678041911~exp=1678042511~hmac=e4aa55e70f8c231d4d23832a611004f86eeb3b6ca067b3fa0c374ac78fe7aba6'});'></div>
+                    <div class='flex-1 p-4 sm:p-6 flex flex-col justify-between'>
+                        <div>
+                            <h3 class='font-bold text-white text-lg mb-2'>${meal.meal_name}</h3>
+                            <p class='text-gray-300 text-sm font-medium mb-2'>${meal.classification}</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex flex-col items-center p-2 bg-gray-800 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Calories</span>
+                                    <p class='text-lg text-white'>${meal.calories || 'N/A'}</p>
+                                </div>
+                                <div class="flex flex-col items-center p-2 bg-green-500 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Protein</span>
+                                    <p class='text-lg text-white'>${meal.protein}g</p>
+                                </div>
+                                <div class="flex flex-col items-center p-2 bg-yellow-500 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Carbs</span>
+                                    <p class='text-lg text-white'>${meal.carbs}g</p>
+                                </div>
+                                <div class="flex flex-col items-center p-2 bg-red-500 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Fat</span>
+                                    <p class='text-lg text-white'>${meal.fats}g</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-
-
+                `;
                 mealsContainer.appendChild(mealCard);
             });
         };
+
+
 
         // Call the populateMeals function with the appropriate planId and memberId
         // populateMeals(planId, memberId); // Uncomment and use the actual IDs as needed
@@ -975,33 +1003,71 @@
 
 
         const populateWorkoutCards = async (member_id) => {
-            const workoutData = await fetchWorkoutData(planId);
-            console.log(workoutData)
+            const workoutData = await fetchWorkoutData(planId, member_id);
+            console.log("-------------");
+            console.log(workoutData);
+
             const workoutsSection = document.getElementById('workouts-section');
             workoutsSection.innerHTML = ''; // Clear previous content
 
-            for (const exercise of workoutData) {
-                const workoutCard = await createWorkoutCard(exercise);
-                workoutsSection.innerHTML += workoutCard;
+            // Check if workoutData is null or empty
+            if (!workoutData || workoutData.length === 0) {
+                // Change class list to flex for centering the message
+                workoutsSection.className = "flex justify-center items-center h-[600px] bg-div_color overflow-y-auto scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+                workoutsSection.innerHTML = '<p class="text-center bg-50 p-2 mx-10 text-white rounded-lg">No workouts available for today.</p>';
+            } else {
+                // Reset the class list to grid layout when there are workouts
+                workoutsSection.className = "p-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] bg-div_color overflow-y-auto scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+
+                // If workoutData exists and has workouts, populate them
+                for (const exercise of workoutData) {
+                    const workoutCard = await createWorkoutCard(exercise);
+                    workoutsSection.innerHTML += workoutCard;
+                }
             }
         };
+
+
+
+
+
+
         // Function to fetch workout of the day data
-        const fetchWorkoutOfTheDay = async (planId) => {
+        const fetchWorkoutOfTheDay = async (planId, memberId) => {
             try {
-                const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${member_id}`);
+                const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${memberId}`);
+
+                // Check if the fetch was successful
+                if (!response.ok) {
+                    console.error("Network response was not ok.");
+                    return [];
+                }
+
                 const data = await response.json();
+
+                // Check if data exists and is non-empty
+                if (!data || data.length === 0) {
+                    console.warn("No workout data available for the given plan and member.");
+                    return [];
+                }
+
                 return data[0]; // Assuming you only need the first array of exercises
             } catch (error) {
                 console.error("Error fetching workout data:", error);
-                return [];
+                return []; // Return an empty array on error
             }
         };
+
         // Function to populate the task cards dynamically
         const populateTaskList = async (planId, member_id) => {
             const tasksContainer = document.getElementById('tasks');
             tasksContainer.innerHTML = ''; // Clear the existing tasks
 
-            const workoutData = await fetchWorkoutOfTheDay(planId);
+            const workoutData = await fetchWorkoutOfTheDay(planId, member_id);
+            if (!workoutData || !workoutData[0] || workoutData[0].length === 0) {
+                tasksContainer.innerHTML = '<p class="text-center bg-50 mx-12 rounded-lg text-white p-2">No workouts for this day.</p>';
+                return;
+            }
 
             workoutData.forEach(exercise => {
                 const taskCard = createTaskCard(exercise, member_id);
@@ -1013,12 +1079,20 @@
             tasksContainer.innerHTML = ''; // Clear the existing tasks
 
             const mealData = await fetchMealOfTheDay(planId, member_id);
-            console.log("------------")
+
+            // Check if mealData is null or empty
+            if (!mealData || !mealData[0] || mealData[0].length === 0) {
+                tasksContainer.innerHTML = '<p class="text-center bg-50 mx-12 rounded-lg text-white p-2">No tasks for this day.</p>';
+                return;
+            }
+
+            // If mealData exists and has tasks, populate them
             mealData[0].forEach(meal => {
                 const taskCard = createMealTaskCard(meal, member_id);
                 tasksContainer.innerHTML += taskCard; // Add each task card to the container
             });
         };
+
         // Function to create task card dynamically
         const createTaskCard = (exercise, member_id) => {
             const { exercise_name, repetitions, sets, status } = exercise;
@@ -1040,7 +1114,7 @@
 
             // Create task HTML
             return `
-                <div class="flex justify-between items-center border-b border-[#343639] py-3 px-2 border-l-4 border-l-transparent">
+                <div class="flex justify-between items-center border-b border-[#343639] py-3 mx-12 px-2 border-l-4 border-l-transparent">
                     <div class="inline-flex items-center space-x-2">
                         <div>${statusIcon}</div>
                         <div>
@@ -1093,31 +1167,46 @@
             `;
         };
         // Fetch workout status and update the gauge
-        async function updateGauge(planId) {
+        async function updateGauge(planId, memberId) {
             try {
-                const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${member_id}`);
+                const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${memberId}`);
+
+                // Check if the fetch was successful
+                if (!response.ok) {
+                    console.error("Network response was not ok.");
+                    updateGaugeUI(0, 0); // Update UI to show 0% if the request fails
+                    return;
+                }
+
                 const data = await response.json();
-                // Assuming the data structure you've provided
-                const workouts = data[0]; // Access the first item in the returned array
+                const workouts = data && Array.isArray(data) && data[0] ? data[0] : [];
+
                 const totalWorkouts = workouts.length;
-                const completedWorkouts = workouts.filter(workout => workout.status === "completed").length; // Count completed workouts
-                console.log(workouts)
-                console.log(`${completedWorkouts}/${totalWorkouts} completed`)
-                // Calculate percentage
-                document.getElementById("WorkoutsFinished").textContent = `${completedWorkouts}/${totalWorkouts} completed`
+                const completedWorkouts = workouts.filter(workout => workout.status === "completed").length;
+                console.log("workouts");
+                console.log(`${completedWorkouts}/${totalWorkouts} completed`);
+
+                // Update the UI to reflect workout completion status
+                document.getElementById("WorkoutsFinished").textContent = `${completedWorkouts}/${totalWorkouts} completed`;
                 const percentage = totalWorkouts > 0 ? (completedWorkouts / totalWorkouts) * 100 : 0;
 
-                // Update gauge
-                const gaugeProgress = document.getElementById('gauge-progress');
-                const gaugeValue = document.getElementById('gauge-value');
-
-                // Update SVG stroke-dasharray and inner text
-                gaugeProgress.style.strokeDasharray = `${percentage} 100`;
-                gaugeValue.innerText = `${Math.round(percentage)}%`;
+                // Update the gauge display
+                updateGaugeUI(percentage);
 
             } catch (error) {
                 console.error('Error fetching workout data:', error);
+                updateGaugeUI(0); // Set gauge to 0% on error
             }
+        }
+
+        // Function to handle gauge UI updates
+        function updateGaugeUI(percentage) {
+            const gaugeProgress = document.getElementById('gauge-progress');
+            const gaugeValue = document.getElementById('gauge-value');
+
+            // Update SVG stroke-dasharray and gauge percentage text
+            gaugeProgress.style.strokeDasharray = `${percentage} 100`;
+            gaugeValue.innerText = `${Math.round(percentage)}%`;
         }
 
         async function updateMealGauge(planId) {
@@ -1131,15 +1220,17 @@
                     }
                 });
 
-                // Access the first inner array to get the meals
-                const meals = response.data[0]; // Accessing the first array which contains meal objects
+                // Access the first inner array to get the meals, handle null or empty response
+                const meals = response.data && response.data[0] ? response.data[0] : [];
                 const totalMeals = meals.length;
                 const completedMeals = meals.filter(meal => meal.status === "completed").length; // Count completed meals
 
                 console.log(`Total meals: ${totalMeals}, Completed meals: ${completedMeals}`);
 
                 // Update text showing meals progress
-                document.getElementById("MealsFinished").textContent = `${completedMeals}/${totalMeals} meals completed`;
+                document.getElementById("MealsFinished").textContent = totalMeals > 0
+                    ? `${completedMeals}/${totalMeals} meals completed`
+                    : "No meals planned for today";
 
                 // Calculate percentage
                 const percentage = totalMeals > 0 ? (completedMeals / totalMeals) * 100 : 0;
@@ -1154,8 +1245,13 @@
 
             } catch (error) {
                 console.error('Error fetching meal data:', error);
+                // Display fallback UI message on error
+                document.getElementById("MealsFinished").textContent = "Unable to load meal data";
+                document.getElementById('meal-gauge-value').innerText = "0%";
+                document.getElementById('meal-gauge-progress').style.strokeDasharray = "0 100";
             }
         }
+
     });
 
     const markAsDone = async (status_id, workout, member_id, member_name, trainer_id) => {

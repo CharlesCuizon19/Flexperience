@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Portal</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"></script> -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/frontend/scripts/auth.js"></script>
+    <style>
+        /* Additional modal styles for enhanced UI/UX */
+        #proposalModal .rounded-full {
+            border-radius: 9999px;
+        }
+
+        #proposalModal .shadow-md {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #proposalModal .transform {
+            transform: translateY(0);
+        }
+
+        #proposalModal .transition-all {
+            transition: all 0.2s ease-in-out;
+        }
+
+        #proposalModal .hover\\:scale-105:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen font-[Poppins] bg-customGray text-white">
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-whibg-transparent0 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:bg-gradient-to-br from-white to-customOrange bg-clip-text text-transparent">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="relative mr-6 mt-1">
+                            <button id="notificationButton">
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div id="notificationDropdown"
+                                class="hidden absolute right-0 mt-2 w-80 bg-transparent rounded-lg shadow-lg overflow-hidden z-50">
+                                <div class="py-2 px-4 bg-gray-300 border-b border-gray-200 text-gray-700 font-bold">
+                                    Notifications
+                                </div>
+                                <div id="notificationList" class="max-h-80 overflow-y-auto">
+                                    <!-- Notification Items will be dynamically populated here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-transparent divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-white dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-white truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="memberDashboard.html" onclick="removeCookie('accessToken');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-transparent dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="memberDashboard.html"
+                        class="flex items-center p-2  text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="maps.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="locate-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Maps</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 bg-customGray text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="barbell-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Workout Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="egg-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Meal Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trainerlist.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="people-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Trainers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="chats.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="chatbubbles-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Chat</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="settings-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Content -->
+    <div class="sm:ml-64">
+        <section class="relative ">
+            <div class="w-full py-24 relative z-10 backdrop-blur-3xl">
+              <div class="w-full max-w-7xl mx-auto px-2 lg:px-8">
+                <div class=" flex flex-col md:flex-row gap-10 m-4 p-4">
+                    <div class="col-span-12 xl:col-span-5">
+                        <h2 class="font-manrope text-3xl leading-tight text-white mb-1.5">Upcoming Workouts</h2>
+                        <p class="text-lg font-normal text-gray-400 mb-8">Don’t miss schedule</p>
+                        <div class="flex gap-5 flex-col">
+                          <div class="p-6 rounded-xl bg-div_color">
+                            <div class="flex items-center justify-between mb-3">
+                              <div class="flex items-center gap-2.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-50"></span>
+                                <p id="dateClicked" class="text-base font-medium text-gray-400"></p>
+                              </div>
+                            </div>
+                            <h6 id="workout" class="text-xl leading-8 font-semibold text-white mb-1">Push-up</h6>
+                            <p id="work_desc" class="text-base font-normal text-gray-400">Guniti imong liog tapos kumuta</p>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- Calendar Component -->
+                    <div class="flex-1 md:w-1/2 shadow-lg bg-div_color dark:bg-div_color col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 xl:bg-div_color rounded-2xl max-xl:row-start-1">
+                        <div class="p-3 rounded-lg">
+                            <div class="px-2 flex items-center justify-between rounded-lg pb-8">
+                                <span tabindex="0" class="focus:outline-none text-2xl font-bold dark:text-gray-100 text-gray-800"
+                                    id="monthYear">October 2020</span>
+                                <div class="flex items-center">
+                                    <button aria-label="calendar backward" id="prevButton"
+                                        class="focus:text-gray-400 hover:text-gray-400 text-gray-800 dark:text-gray-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-chevron-left" width="20" height="20"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <polyline points="15 6 9 12 15 18" />
+                                        </svg>
+                                    </button>
+                                    <button aria-label="calendar forward" id="nextButton"
+                                        class="focus:text-gray-400 hover:text-gray-400 ml-2 text-gray-800 dark:text-gray-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            class="icon icon-tabler icon-tabler-chevron-right" width="20" height="20"
+                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <polyline points="9 6 15 12 9 18" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between overflow-x-auto border border-50 rounded-lg ">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        Su</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        Mo</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        Tu</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        We</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        Th</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        Fr</p>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row">
+                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                        Sa</p>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="calendarBody">
+                                        <!-- Days will be generated here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </section>
+        </div>
+
+
+
+    </div>
+
+
+</body>
+
+<script src="../../scripts/memberWP_Calendar.js"></script>
+<script src="../../scripts/member.js"></script>
+<script src="../../scripts/trainer.js">//paras responsive sa sidebar og header</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const uid = userId;
+        let firstname = null;
+        let lastname = null;
+        let weight = null;
+        let bodytype = null;
+        let member_id = 0
+        let Duration;
+        let plan_type;
+        let Price;
+        let Proposal_id;
+
+        // Fetch and assign member information when the page loads
+        fetchMemberInfo();
+        function fetchMemberInfo() {
+            axios.get('http://localhost:3000/getMemberInfo', {
+                params: {
+                    account_id: uid
+                }
+            })
+                .then(response => {
+                    const memberData = response.data[0]; // Assuming the response data contains the member info
+                    console.log(memberData)
+                    // Assign the data to variables
+                    firstname = memberData.firstname;
+                    lastname = memberData.lastname;
+                    weight = memberData.weight;
+                    bodytype = memberData.bodytype;
+                    member_id = memberData.member_id
+
+
+                    // Optionally, update the DOM with the fetched data
+                    document.querySelector('.nameChange').textContent = `${firstname} ${lastname}`;
+                    console.log(`Member: ${firstname} ${lastname}, Weight: ${weight}, Bodytype: ${bodytype}, ID: ${member_id}`);
+                })
+                .catch(error => {
+                    console.error('Error fetching member info:', error);
+                });
+        }
+
+        const notificationButton = document.getElementById('notificationButton');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationList = document.getElementById('notificationList');
+
+        function fetchNotifications() {
+            axios.get(`http://localhost:3000/retrieveNotifications?member_id=${member_id}`)
+                .then(response => {
+                    // Display message if no notifications are available
+                    if (!response.data || response.data === "null" || (Array.isArray(response.data) && response.data.length === 0)) {
+                        notificationList.innerHTML = '<div class="py-2 px-4 text-sm text-whibg-transparent0">No new notifications</div>';
+                    } else {
+                        const notifications = response.data[0];
+                        notificationList.innerHTML = ''; // Clear existing notifications
+
+                        notifications.forEach(notification => {
+                            const notificationItem = document.createElement('div');
+                            notificationItem.classList.add('py-2', 'px-4', 'hover:bg-orange-300', 'cursor-pointer', 'border-b', 'border-gray-200');
+
+                            notificationItem.innerHTML = `
+                    <div class="text-sm font-medium text-gray-800">${notification.message}</div>
+                    <div class="text-xs text-whibg-transparent0">${formatDate(notification.created_at)}</div>
+                `;
+
+                            // Optional: Mark the notification as read on click
+                            notificationItem.addEventListener('click', () => {
+                                Proposal_id = notification.proposal_id;
+                                markNotificationAsRead(notification.proposal_id);
+                            });
+
+                            notificationList.appendChild(notificationItem);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching notifications:', error));
+        }
+        // Function to format the date as "Month Day, Year - Time"
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+
+            // Format the date part
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString(undefined, options);
+
+            // Format the time part
+            const formattedTime = date.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            return `${formattedDate} - ${formattedTime}`;
+        }
+        // Function to mark notification as read and show proposal details in a modal
+        async function markNotificationAsRead(proposalId) {
+            try {
+                // Fetch the proposal data using the member_id from the notification
+                const response = await fetch(`http://localhost:3000/retrieveProposals?member_id=${member_id}&proposal_id=${proposalId}`);
+
+                const data = await response.json();
+
+                if (data && data.length > 0 && data[0].length > 0) {
+                    const proposal = data[0][0]; // Access the first proposal in the array
+
+                    // Populate the modal with relevant proposal details
+                    document.getElementById('proposalPlanType').textContent = `Plan Type: ${proposal.plan_type}`;
+                    document.getElementById('proposalPrice').textContent = `Price: ${proposal.price} PHP`;
+                    document.getElementById('proposalDuration').textContent = `Duration: ${proposal.duration} weeks`;
+                    Duration = proposal.duration
+                    plan_type = proposal.plan_type
+                    Price = proposal.price
+
+                    // Show the modal
+                    document.getElementById('proposalModal').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error retrieving proposal:', error);
+            }
+        }
+
+        // Event listener to close the proposal modal
+        document.getElementById('closeProposalModal').addEventListener('click', () => {
+            document.getElementById('proposalModal').classList.add('hidden');
+        });
+
+        notificationButton.addEventListener('click', () => {
+            notificationDropdown.classList.toggle('hidden');
+            // Only fetch notifications when the dropdown is opened
+            if (!notificationDropdown.classList.contains('hidden')) {
+                fetchNotifications();
+            }
+        });
+
+
+        // Close the dropdown if clicked outside
+        document.addEventListener('click', (event) => {
+            if (!notificationDropdown.contains(event.target) && !notificationButton.contains(event.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+        function removeCookie(name) {
+            document.cookie = name + '=; Max-Age=0; path=/';
+        }
+
+        document.getElementById('acceptProposalBtn').addEventListener('click', async () => {
+            try {
+                const price = Price;
+                const planType = plan_type;
+                const duration = Duration;
+
+                console.log(price);
+                console.log(planType);
+                console.log(duration);
+
+                // Insert the contract and wait for the response
+                const response = await axios.post('http://localhost:3000/insertContracts', {
+                    proposal_id: Proposal_id,
+                    weeks: duration,
+                    status: 'On going'
+                });
+
+                const contract_id = response.data.contract_id;
+
+                // After the contract is successfully inserted, call the insertClientPayment function
+                await insertClientPayment(contract_id);
+
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                alert('There was an error processing your payment. Please try again.');
+            }
+        });
+
+
+        async function insertClientPayment(Contract_id) {
+            try {
+                const contract_id = Contract_id; // Replace with actual contract ID
+                const price = Price;
+                const planType = plan_type
+                const duration = Duration
+                console.log(price)
+                console.log(planType)
+                console.log(duration)
+
+                const response = await axios.post('http://localhost:3000/clientPayment', {
+                    contract_id: contract_id,
+                    price: price,
+                    planType: planType,
+                    duration: duration
+                });
+
+                const result = response.data;
+                window.location.href = result; // Redirect to PayPal
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                alert('There was an error processing your payment. Please try again.');
+            }
+        }
+
+    });
+</script>
+
+</html>

@@ -346,12 +346,11 @@
     try {
       // Fetch workout progress
       const workoutResponse = await axios.get(`http://localhost:3000/getProgressOftheDay?trainer_id=${trainerid}`);
-      const workoutData = workoutResponse.data;
+      const workoutData = workoutResponse.data || []; // Default to empty array if null
 
       // Fetch meal progress
       const mealResponse = await axios.get(`http://localhost:3000/getMealProgressOftheDay?trainer_id=${trainerid}`);
-      const mealData = mealResponse.data;
-
+      const mealData = mealResponse.data || []; // Default to empty array if null
 
       // Container for the progress bars
       const progressContainer = document.getElementById('progress-container');
@@ -360,19 +359,23 @@
       // Combine workout and meal data by member ID
       workoutData.flat().forEach(student => {
         const mealProgress = mealData.flat().find(meal => meal.member_id === student.member_id);
-        // Calculate workout progress
-        const totalExercises = student.total_workouts;
-        const completedExercises = student.finished_workouts;
-        const workoutProgressPercentage = Math.round((completedExercises / totalExercises) * 100);
+
+        // Calculate workout progress if data is available
+        let workoutProgressPercentage = 0;
+        if (student.total_workouts && student.finished_workouts) {
+          workoutProgressPercentage = Math.round((student.finished_workouts / student.total_workouts) * 100);
+        }
 
         // Calculate meal progress if available
         let mealProgressPercentage = 0;
-        let mealPlanId = 0
+        let mealPlanId = 0;
         if (mealProgress) {
-          const totalMeals = mealProgress.total_meals;
-          const completedMeals = mealProgress.finished_meals;
-          mealPlanId = mealProgress.plan_id;
-          mealProgressPercentage = Math.round((completedMeals / totalMeals) * 100);
+          const totalMeals = mealProgress.total_meals || 0;
+          const completedMeals = mealProgress.finished_meals || 0;
+          mealPlanId = mealProgress.plan_id || 0;
+          if (totalMeals > 0) {
+            mealProgressPercentage = Math.round((completedMeals / totalMeals) * 100);
+          }
         }
 
         // Create the HTML for the student workout and meal progress bars
@@ -415,6 +418,7 @@
       console.error('Error fetching student progress:', error);
     }
   }
+
 
 
 
