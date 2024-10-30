@@ -29,6 +29,39 @@ const getProposals = async (member_id, proposal_id) => {
     );
     return rows.length > 0 ? [rows] : null;
 };
+const getWorkoutByDay = async (member_id, date) => {
+    const [rows] = await pool.query(
+           `SELECT *
+            FROM (
+                SELECT 
+                    m.plan_id, 
+                    (SELECT firstname FROM members WHERE member_id = m.member_id) AS name,
+                    m.trainer_id, 
+                    m.member_id, 
+                    m.template_id, 
+                    t.exercise_name,
+                    t.repetitions,
+    	            t.sets,
+    	            t.target_muscle_group, 
+                    DATE(m.date_started) AS date_started, 
+                    t.week_no, 
+                    t.day_no,
+                    DATE_ADD(DATE(m.date_started), INTERVAL ((t.week_no - 1) * 7 + (t.day_no - 1)) DAY) AS workout_date
+                FROM 
+                    member_workout_plan m
+                LEFT JOIN 
+                    template_exercises t ON t.template_id = m.template_id
+                WHERE 
+                    m.member_id = ?
+            ) AS workout_plans
+            WHERE 
+                workout_date = ?;
+            `,
+        [member_id, date]
+    );
+    return rows.length > 0 ? [rows] : null;
+};
+
 const getWorkoutoftheDay = async (member_id, plan_id) => {
     const [rows] = await pool.query(
        `WITH CTE_CURRENT_DAY AS (
@@ -179,6 +212,7 @@ const updateExerciseStatus = async (status, status_id) => {
 
 
 module.exports = {
+    getWorkoutByDay,
     insertActivity,
     updateExerciseStatus,
     getPlan,

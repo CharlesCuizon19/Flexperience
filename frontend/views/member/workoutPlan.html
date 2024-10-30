@@ -208,113 +208,120 @@
     <div class="sm:ml-64">
         <section class="relative ">
             <div class="w-full py-24 relative z-10 backdrop-blur-3xl">
-              <div class="w-full max-w-7xl mx-auto px-2 lg:px-8">
-                <div class=" flex flex-col md:flex-row gap-10 m-4 p-4">
-                    <div class="col-span-12 xl:col-span-5">
-                        <h2 class="font-manrope text-3xl leading-tight text-white mb-1.5">Upcoming Workouts</h2>
-                        <p class="text-lg font-normal text-gray-400 mb-8">Don’t miss schedule</p>
-                        <div class="flex gap-5 flex-col">
-                          <div class="p-6 rounded-xl bg-div_color">
-                            <div class="flex items-center justify-between mb-3">
-                              <div class="flex items-center gap-2.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-50"></span>
-                                <p id="dateClicked" class="text-base font-medium text-gray-400"></p>
-                              </div>
+                <div class="w-full max-w-7xl mx-auto px-2 lg:px-8">
+                    <div class=" flex flex-col md:flex-row gap-10 m-4 p-4">
+                        <div class="col-span-12 xl:col-span-5">
+                            <h2 class="font-manrope text-3xl leading-tight text-white mb-1.5">Upcoming Workouts</h2>
+                            <p class="text-lg font-normal text-gray-400 mb-8">Don’t miss schedule</p>
+                            <p id="dateClicked" class="text-base font-medium text-gray-400"></p>
+                            <div class="flex gap-5 flex-col" id="workoutContainer">
+                                <!-- Dynamic workout cards will be inserted here -->
                             </div>
-                            <h6 id="workout" class="text-xl leading-8 font-semibold text-white mb-1">Push-up</h6>
-                            <p id="work_desc" class="text-base font-normal text-gray-400">Guniti imong liog tapos kumuta</p>
-                          </div>
                         </div>
-                    </div>
-                    <!-- Calendar Component -->
-                    <div class="flex-1 md:w-1/2 shadow-lg bg-div_color dark:bg-div_color col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 xl:bg-div_color rounded-2xl max-xl:row-start-1">
-                        <div class="p-3 rounded-lg">
-                            <div class="px-2 flex items-center justify-between rounded-lg pb-8">
-                                <span tabindex="0" class="focus:outline-none text-2xl font-bold dark:text-gray-100 text-gray-800"
-                                    id="monthYear">October 2020</span>
-                                <div class="flex items-center">
-                                    <button aria-label="calendar backward" id="prevButton"
-                                        class="focus:text-gray-400 hover:text-gray-400 text-gray-800 dark:text-gray-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="icon icon-tabler icon-tabler-chevron-left" width="20" height="20"
-                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <polyline points="15 6 9 12 15 18" />
-                                        </svg>
-                                    </button>
-                                    <button aria-label="calendar forward" id="nextButton"
-                                        class="focus:text-gray-400 hover:text-gray-400 ml-2 text-gray-800 dark:text-gray-100">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="icon icon-tabler icon-tabler-chevron-right" width="20" height="20"
-                                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <polyline points="9 6 15 12 9 18" />
-                                        </svg>
-                                    </button>
+                        <!-- Calendar Component -->
+                        <div
+                            class="flex-1 md:w-1/2 shadow-lg bg-div_color dark:bg-div_color col-span-12 xl:col-span-7 px-2.5 py-5 sm:p-8 xl:bg-div_color rounded-2xl max-xl:row-start-1">
+                            <div class="p-3 rounded-lg">
+                                <div class="px-2 flex items-center justify-between rounded-lg pb-8">
+                                    <span tabindex="0"
+                                        class="focus:outline-none text-2xl font-bold dark:text-gray-100 text-gray-800"
+                                        id="monthYear">October 2020</span>
+                                    <div class="flex items-center">
+                                        <button aria-label="calendar backward" id="prevButton"
+                                            class="focus:text-gray-400 hover:text-gray-400 text-gray-800 dark:text-gray-100">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-chevron-left" width="20" height="20"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <polyline points="15 6 9 12 15 18" />
+                                            </svg>
+                                        </button>
+                                        <button aria-label="calendar forward" id="nextButton"
+                                            class="focus:text-gray-400 hover:text-gray-400 ml-2 text-gray-800 dark:text-gray-100">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="icon icon-tabler icon-tabler-chevron-right" width="20"
+                                                height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <polyline points="9 6 15 12 9 18" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex items-center justify-between overflow-x-auto border border-50 rounded-lg ">
-                                <table class="w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        Su</p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        Mo</p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        Tu</p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        We</p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        Th</p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        Fr</p>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="w-full bg-50 justify-center p-3.5 sm:flex-row">
-                                                    <p class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
-                                                        Sa</p>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="calendarBody">
-                                        <!-- Days will be generated here -->
-                                    </tbody>
-                                </table>
+                                <div
+                                    class="flex items-center justify-between overflow-x-auto border border-50 rounded-lg ">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <div class="w-full bg-50 justify-center p-3.5 sm:flex-row">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            Su</p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div
+                                                        class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            Mo</p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div
+                                                        class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            Tu</p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div
+                                                        class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            We</p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div
+                                                        class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            Th</p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div
+                                                        class="w-full bg-50 justify-center p-3.5 sm:flex-row border-r border-50">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            Fr</p>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div class="w-full bg-50 justify-center p-3.5 sm:flex-row">
+                                                        <p
+                                                            class="text-sm font-medium text-center text-gray-800 dark:text-gray-100">
+                                                            Sa</p>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="calendarBody">
+                                            <!-- Days will be generated here -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-              </div>
             </div>
         </section>
-        </div>
+    </div>
 
 
 
@@ -328,18 +335,28 @@
 <script src="../../scripts/trainer.js">//paras responsive sa sidebar og header</script>
 
 <script>
+    let member_id = 0
     document.addEventListener('DOMContentLoaded', () => {
         const uid = userId;
         let firstname = null;
         let lastname = null;
         let weight = null;
         let bodytype = null;
-        let member_id = 0
         let Duration;
         let plan_type;
         let Price;
         let Proposal_id;
 
+        const monthYearElement = document.getElementById('monthYear');
+        const calendarBody = document.getElementById('calendarBody');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const dateClickedElement = document.getElementById('dateClicked');
+
+        let currentDate = new Date();
+        let currentDay = currentDate.getDate(); // Get the current day of the month
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
         // Fetch and assign member information when the page loads
         fetchMemberInfo();
         function fetchMemberInfo() {
@@ -357,11 +374,6 @@
                     weight = memberData.weight;
                     bodytype = memberData.bodytype;
                     member_id = memberData.member_id
-
-
-                    // Optionally, update the DOM with the fetched data
-                    document.querySelector('.nameChange').textContent = `${firstname} ${lastname}`;
-                    console.log(`Member: ${firstname} ${lastname}, Weight: ${weight}, Bodytype: ${bodytype}, ID: ${member_id}`);
                 })
                 .catch(error => {
                     console.error('Error fetching member info:', error);
@@ -447,9 +459,9 @@
         }
 
         // Event listener to close the proposal modal
-        document.getElementById('closeProposalModal').addEventListener('click', () => {
-            document.getElementById('proposalModal').classList.add('hidden');
-        });
+        //        document.getElementById('closeProposalModal').addEventListener('click', () => {
+        //            document.getElementById('proposalModal').classList.add('hidden');
+        //        });
 
         notificationButton.addEventListener('click', () => {
             notificationDropdown.classList.toggle('hidden');
@@ -469,62 +481,112 @@
         function removeCookie(name) {
             document.cookie = name + '=; Max-Age=0; path=/';
         }
+        function renderCalendar(month, year) {
+            monthYearElement.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(new Date(year, month));
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            calendarBody.innerHTML = '';
 
-        document.getElementById('acceptProposalBtn').addEventListener('click', async () => {
-            try {
-                const price = Price;
-                const planType = plan_type;
-                const duration = Duration;
-
-                console.log(price);
-                console.log(planType);
-                console.log(duration);
-
-                // Insert the contract and wait for the response
-                const response = await axios.post('http://localhost:3000/insertContracts', {
-                    proposal_id: Proposal_id,
-                    weeks: duration,
-                    status: 'On going'
-                });
-
-                const contract_id = response.data.contract_id;
-
-                // After the contract is successfully inserted, call the insertClientPayment function
-                await insertClientPayment(contract_id);
-
-            } catch (error) {
-                console.error('Error processing payment:', error);
-                alert('There was an error processing your payment. Please try again.');
+            let row = '<tr>';
+            for (let i = 0; i < firstDay; i++) {
+                row += '<td class="border-r border-b border-50"></td>'; // Empty cells for days before the first day of the month
             }
-        });
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === currentDay && month === currentMonth && year === currentYear;
 
+                // Create the cell with an onclick event to set the clicked date
+                row += `<td class="${isToday ? 'bg-customOrange text-white' : ''}" onclick="setClickedDate(${day}, ${month}, ${year})">
+                            <div class="flex flex-col xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-transparent border-r border-b border-50 transition-all duration-300 hover:bg-50 cursor-pointer ${isToday ? 'bg-customOrange text-white rounded-full' : ''}">
+                                <p class="text-base font-semibold">${day}</p>
+                                <br>
+                                <p class="text-xs">10 </p>
+                                <p class="text-xs">workouts</p>
+                            </div>
+                        </td>`;
 
-        async function insertClientPayment(Contract_id) {
-            try {
-                const contract_id = Contract_id; // Replace with actual contract ID
-                const price = Price;
-                const planType = plan_type
-                const duration = Duration
-                console.log(price)
-                console.log(planType)
-                console.log(duration)
-
-                const response = await axios.post('http://localhost:3000/clientPayment', {
-                    contract_id: contract_id,
-                    price: price,
-                    planType: planType,
-                    duration: duration
-                });
-
-                const result = response.data;
-                window.location.href = result; // Redirect to PayPal
-            } catch (error) {
-                console.error('Error processing payment:', error);
-                alert('There was an error processing your payment. Please try again.');
+                if ((day + firstDay) % 7 === 0) {
+                    row += '</tr><tr>'; // New row after every week
+                }
             }
+            row += '</tr>'; // Closing the last row
+            calendarBody.innerHTML = row;
         }
 
+
+
+        prevButton.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        nextButton.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        // Initial render
+        renderCalendar(currentMonth, currentYear);
+
     });
+    function setClickedDate(day, month, year) {
+        const clickedDate = new Date(year, month, day);
+        const formattedDate = `${clickedDate.getFullYear()}/${String(clickedDate.getMonth() + 1).padStart(2, '0')}/${String(clickedDate.getDate()).padStart(2, '0')}`;
+        dateClickedElement.textContent = clickedDate.toDateString(); // Display the clicked date in the "dateClicked" element
+
+        // Make the Axios request to fetch the workout data
+        const endpoint = `http://localhost:3000/getWorkoutByDay?member_id=${member_id}&date=${formattedDate}`;
+        alert(member_id)
+        axios.get(endpoint)
+            .then(response => {
+                const workouts = response.data;
+
+                // Clear existing workout data
+                const workoutContainer = document.getElementById('workoutContainer');
+                workoutContainer.innerHTML = ''; // Clear previous workouts
+
+                // Check if there are workouts available
+                if (workouts && workouts.length > 0) {
+                    // Loop through each workout and create a card
+                    workouts[0].forEach(workout => {
+                        const workoutCard = document.createElement('div');
+                        workoutCard.className = 'p-6 rounded-xl bg-div_color mb-4';
+
+                        workoutCard.innerHTML = `
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-50"></span>
+                                    <h6 class="text-xl leading-8 font-semibold text-white mb-1">${workout.exercise_name}</h6>
+                                </div>
+                            </div>
+                            <p class="text-base font-normal text-gray-400">Target Muscle Group: ${workout.target_muscle_group}</p>
+                            <p class="text-base font-normal text-gray-400">Repetitions: ${workout.repetitions}</p>
+                            <p class="text-base font-normal text-gray-400">Sets: ${workout.sets}</p>
+                        `;
+
+                        // Append the workout card to the container
+                        workoutContainer.appendChild(workoutCard);
+                    });
+                } else {
+                    // Handle case where no workouts are found
+                    const noWorkoutsMsg = document.createElement('p');
+                    noWorkoutsMsg.className = 'text-base font-normal text-gray-400';
+                    noWorkoutsMsg.textContent = 'No workouts scheduled for this day.';
+                    workoutContainer.appendChild(noWorkoutsMsg);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching workouts:', error);
+                alert('Failed to retrieve workouts. Please try again later.');
+            });
+    }
 </script>
 
 </html>
