@@ -111,7 +111,7 @@ async function fetchGyms() {
                 // Create your popup content dynamically
                 const popupContent = `
         <div>
-            <img src="https://capstone-erxk.onrender.com/${gym.img}" alt="Gym Image" style="max-width: 100%; height: auto;">
+            <img src="https://capstone-erxk.onrender.com/uploads/${gym.img}" alt="Gym Image" style="max-width: 100%; height: auto;">
             <h3>${gym.name}</h3>
             <p><strong>Daily rates:</strong> ${gym.dailyRates}</p>
             <p><strong>Monthly rates:</strong> ${gym.monthlyRates}</p>
@@ -231,7 +231,7 @@ function populateGymsList(userCoords) { //? THIS FUNCTION POPULATES THE 3 NEARES
         );
 
         var content = ` 
-        <img src="${nearbyGym.img}" alt="Gym Image" class="w-24 h-24 object-cover rounded-lg mr-4">
+        <img src="https://capstone-erxk.onrender.com/uploads/${nearbyGym.img}" alt="Gym Image" class="w-24 h-24 object-cover rounded-lg mr-4">
         <div class="flex flex-col">
             <div class="al-gym-name text-lg font-bold">${nearbyGym.name}</div>
             <div class="flex items-center text-sm">
@@ -604,7 +604,7 @@ function populateAllGymsList() {
     // Add new list items - ITEMS PARA SA GYMS AROUND THE CITY
     gyms.forEach(function (g, index) {
         console.table(g.img)
-        
+
         var listItem = document.createElement("div");
         listItem.classList.add(
             "gym-item",
@@ -625,7 +625,7 @@ function populateAllGymsList() {
             "text-white"
         );
         var content = ` 
-        <img src="http://localhost:3000/uploads/${g.img}" alt="Gym Image" class="w-24 h-24 object-cover rounded-lg mr-4">
+        <img src="https://capstone-erxk.onrender.com/uploads/${g.img}" alt="Gym Image" class="w-24 h-24 object-cover rounded-lg mr-4">
         <div class="flex flex-col">
             <div class="al-gym-name text-lg font-bold">${g.name}</div>
             <div class="text-sm mb-1">  
@@ -764,26 +764,23 @@ document.getElementById('locateBtn').addEventListener('click', function (event) 
 document.getElementById('trackLocation').addEventListener('click', function (event) {
     var x = "";
     var coordinates = [];
-    const options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0,
-    };
-    function error(err) {
-        console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, error, options);
+        navigator.geolocation.getCurrentPosition(showPosition);
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
     function showPosition(position) {
         removeLastMarker();
+        x = "Latitude: " + position.coords.latitude +
+            " Longitude: " + position.coords.longitude;
+        console.log(x)
         coordinates.push(position.coords.latitude); //* Store latitude in the array
         coordinates.push(position.coords.longitude); //* Store longitude in the array
+        console.log("user coords: ", coordinates)
         map.setView(coordinates, 13); //* Set the map view to the live location of the user
         userMarker = L.marker(coordinates, { icon: customUserIcon }).addTo(map) //*I USED THE ARRAY TO PINPOINT THE EXACT LOCATION OF THE USER 
-        alert(`Latitude: ${position.coords.latitude} Longtitude: ${position.coords.longitude}`)
+        logDistancesToGyms(coordinates, gyms);
+        setStarRatings();
     }
 })
 

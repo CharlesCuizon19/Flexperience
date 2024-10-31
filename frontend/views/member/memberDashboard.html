@@ -120,7 +120,7 @@
                                         role="menuitem">Settings</a>
                                 </li>
                                 <li>
-                                    <a href="memberDashboard.html" onclick="removeCookie('accessToken');"
+                                    <a href="memberDashboard.html" onclick="removeCookie('accessToken', 'meal_template_id', 'member_id');"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                         role="menuitem">Sign out</a>
                                 </li>
@@ -169,7 +169,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a href="memberMealplan.html"
                         class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
                         onclick="setActive(this)">
                         <ion-icon name="egg-outline"
@@ -576,9 +576,22 @@
         let planId;
         let mealPlanId
         let trainer_id;
+
+        //member_id
+        //mealPlanId
         const currentDate = new Date();
         // Fetch and assign member information when the page loads
         fetchMemberInfo();
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Days to milliseconds
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
 
         function fetchMemberInfo() {
             axios.get('http://localhost:3000/getMemberInfo', {
@@ -628,7 +641,8 @@
 
                         console.log("Workout trainer id:", trainer_id);
                         console.log("Workout plan id:", planId);
-
+                        setCookie('workout_template_id', planId, 1);
+                        setCookie('member_id', member_id, 1);
                         // Call functions related to workout plan
                         populateWorkoutCards(member_id);
                         populateTaskList(planId, member_id);
@@ -646,7 +660,8 @@
                     if (response.data && response.data.length > 0) { // Check if data exists and has elements
                         const mealPlanId = response.data[0].plan_id;
                         console.log("Meal plan id:", mealPlanId);
-
+                        setCookie('meal_template_id', mealPlanId, 1);
+                        setCookie('member_id', member_id, 1);
                         //populateMealCards(mealPlanId, member_id);
                         populateMeals(mealPlanId, member_id)
                         populateMealTaskList(mealPlanId, member_id)
@@ -765,8 +780,10 @@
                 notificationDropdown.classList.add('hidden');
             }
         });
-        function removeCookie(name) {
-            document.cookie = name + '=; Max-Age=0; path=/';
+        function removeCookie(token,id,template_item_id) {
+            document.cookie = token + '=; Max-Age=0; path=/';
+            document.cookie = template_item_id + '=; Max-Age=0; path=/';
+            document.cookie = id + '=; Max-Age=0; path=/';
         }
 
         document.getElementById('acceptProposalBtn').addEventListener('click', async () => {
@@ -1297,10 +1314,11 @@
             console.error('Error:', error);
         }
     };
-    function removeCookie(name) {
-        console.log("clicked")
-        document.cookie = name + '=; Max-Age=0; path=/';
-    }
+    function removeCookie(token,id,template_item_id) {
+        document.cookie = token + '=; Max-Age=0; path=/';
+        document.cookie = template_item_id + '=; Max-Age=0; path=/';
+        document.cookie = id + '=; Max-Age=0; path=/';
+    } 
 
 
 

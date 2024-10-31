@@ -12,6 +12,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
 
@@ -179,100 +180,32 @@
     </aside>
 
     <div class="sm:ml-64">
-        <div class="m-4 p-4 mt-20">
-            <h1 class="text-[22px] font-semibold text-center justify-center">Meal Plan</h1>
-            <h1 class="justify-center text-center">
-                <span class="greetChange text-[16px]">Fuel your body for success with a customized plan that nourishes
-                    and energizes.</span>
-            </h1>
+        <div class="relative h-80 p-10 mt-10 bg-cover bg-center text-white text-center"
+            style="background-image: url('https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg');">
+            <!-- Darken effect -->
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+
+            <!-- Text content -->
+            <div class="relative z-10 flex flex-col items-center justify-center h-full">
+                <h1 class="text-5xl font-bold">Meal Plan</h1>
+                <p class="mt-2 text-lg">Fuel your body for success with a customized plan that nourishes and energizes.
+                </p>
+            </div>
         </div>
+
+
         <section class="py-12">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h2 class="font-semibold text-[20px] mb-8 max-lg:text-center">
                     Today's Meal
-                    <span class="text-[16px] font-normal">October 30 2024</span>
+                    <span class="text-[16px] font-normal">October 30, 2024</span>
                 </h2>
 
-                <!--If mag wlaon ang snack nga div kay anue wlaa lng tapos sa paki puli sa lg:grid-cols-4 imbes na 4 kay 3 nana sa grids tapos ang gaps sad salamat-->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <a href="#"
-                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg"
-                        aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-stacked-overlays"
-                        data-hs-overlay="#hs-stacked-overlays">
-                        <div class="">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s"
-                                alt="keto salmon image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
-                        </div>
-                        <div class="mt-2">
-                            <div class="flex items-center justify-between">
-                                <h6 class="font-normal text-[10px] leading-6 ml-3">
-                                    Breakfast
-                                </h6>
-                            </div>
-                            <p
-                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
-                                Keto Salmon</p>
-                        </div>
-                    </a>
-
-                    <a href="javascript:;"
-                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
-                        <div class="">
-                            <img src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg"
-                                alt="cobb salad image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
-                        </div>
-                        <div class="mt-2">
-                            <div class="flex items-center justify-between">
-                                <h6 class="font-normal text-[10px] leading-6 ml-3">
-                                    Lunch
-                                </h6>
-                            </div>
-                            <p
-                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
-                                Cobb Salad</p>
-                        </div>
-                    </a>
-
-                    <a href="javascript:;"
-                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
-                        <div class="">
-                            <img src="https://www.tamingtwins.com/wp-content/uploads/2023/11/image-87.jpeg"
-                                alt="smoked salmon canapes image"
-                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
-                        </div>
-                        <div class="mt-2">
-                            <div class="flex items-center justify-between">
-                                <h6 class="font-normal text-[10px] leading-6 ml-3">
-                                    Snack
-                                </h6>
-                            </div>
-                            <p
-                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
-                                Smoked Salmon Canapes</p>
-                        </div>
-                    </a>
-
-                    <a href="javascript:;"
-                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
-                        <div class="">
-                            <img src="https://www.justataste.com/wp-content/uploads/2018/04/beef-broccoli-sauce-1.jpg"
-                                alt="beef and broccoli stir fry image"
-                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
-                        </div>
-                        <div class="mt-2">
-                            <div class="flex items-center justify-between">
-                                <h6 class="font-normal text-[10px] leading-6 ml-3">
-                                    Dinner
-                                </h6>
-                            </div>
-                            <p
-                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
-                                Beef & Broccoli Stir-fry</p>
-                        </div>
-                    </a>
-                </div>
+                <!-- Container for dynamic meal items -->
+                <div id="mealItemContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             </div>
         </section>
+
 
         <!---->
         <section class="py-10">
@@ -619,94 +552,84 @@
 
         <!-- Modal Structure -->
         <div id="hs-stacked-overlays"
-            class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center">
-            <div class="bg-div_color rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h3 class="text-lg font-semibold">Keto Salmon - Breakfast</h3>
-                    <button type="button" id="modalCloseButton" class="text-white hover:text-gray-700">
+            class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-70 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
+                <div class="flex justify-between items-center p-4 border-b border-gray-300">
+                    <h3 class="text-xl font-semibold text-gray-800">Keto Salmon - Breakfast</h3>
+                    <button type="button" id="modalCloseButton"
+                        class="text-gray-500 hover:text-gray-700 transition-colors">
                         <span class="sr-only">Close</span>
                         &times;
                     </button>
                 </div>
                 <div class="p-4">
                     <img src="https://thebigmansworld.com/wp-content/uploads/2022/01/keto-salmon-recipe.jpeg"
-                        alt="Keto Salmon" class="w-full h-60 object-cover rounded-lg">
+                        alt="Keto Salmon" class="w-full h-60 object-cover rounded-lg mb-4">
 
-                    <div class="flex flex-row gap-4 text-center justify-evenly">
-                        <!-- Gauge Component -->
-                        <div class="relative size-40 mt-4">
-                            <svg class="rotate-[135deg] size-full" viewBox="0 0 36 36"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!-- Background Circle (Gauge) -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current dark:text-neutral-700"
-                                    stroke-width="1" stroke-dasharray="75 100"></circle>
-
-                                <!-- Gauge Progress -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
-                                    stroke-width="2" stroke-dasharray="18.75 100"></circle>
-                            </svg>
-
-                            <!-- Value Text -->
-                            <div
-                                class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                <span class="text-4xl font-bold text-customOrange">25</span>
-                                <span class="text-customOrange block">carbs</span>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Carbs Gauge Component -->
+                        <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow carbs-gauge">
+                            <h4 class="text-gray-600 text-lg mb-2">Carbs</h4>
+                            <div class="relative">
+                                <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
+                                        stroke-width="2" stroke-dasharray="75 100"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
+                                        stroke-width="2" stroke-dasharray="18.75 100"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-xl font-bold text-customOrange">25g</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- End Gauge Component -->
 
-                        <!-- Gauge Component -->
-                        <div class="relative size-40 mt-4">
-                            <svg class="rotate-[135deg] size-full" viewBox="0 0 36 36"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!-- Background Circle (Gauge) -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current dark:text-neutral-700"
-                                    stroke-width="1" stroke-dasharray="75 100"></circle>
-
-                                <!-- Gauge Progress -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
-                                    stroke-width="2" stroke-dasharray="18.75 100"></circle>
-                            </svg>
-
-                            <!-- Value Text -->
-                            <div
-                                class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                <span class="text-4xl font-bold text-customOrange">25</span>
-                                <span class="text-customOrange block">carbs</span>
+                        <!-- Protein Gauge Component -->
+                        <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow protein-gauge">
+                            <h4 class="text-gray-600 text-lg mb-2">Protein</h4>
+                            <div class="relative">
+                                <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
+                                        stroke-width="2" stroke-dasharray="75 100"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
+                                        stroke-width="2" stroke-dasharray="30 100"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-xl font-bold text-customOrange">30g</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- End Gauge Component -->
 
-                        <!-- Gauge Component -->
-                        <div class="relative size-40 mt-4">
-                            <svg class="rotate-[135deg] size-full" viewBox="0 0 36 36"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!-- Background Circle (Gauge) -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current dark:text-neutral-700"
-                                    stroke-width="1" stroke-dasharray="75 100"></circle>
-
-                                <!-- Gauge Progress -->
-                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
-                                    stroke-width="2" stroke-dasharray="18.75 100"></circle>
-                            </svg>
-
-                            <!-- Value Text -->
-                            <div
-                                class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                <span class="text-4xl font-bold text-customOrange">25</span>
-                                <span class="text-customOrange block">carbs</span>
+                        <!-- Fats Gauge Component -->
+                        <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow fats-gauge">
+                            <h4 class="text-gray-600 text-lg mb-2">Fats</h4>
+                            <div class="relative">
+                                <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
+                                        stroke-width="2" stroke-dasharray="75 100"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
+                                        stroke-width="2" stroke-dasharray="10 100"></circle>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-xl font-bold text-customOrange">10g</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- End Gauge Component -->
                     </div>
                 </div>
-                <div class="flex justify-end p-4 border-t">
+                <div class="flex justify-end p-4 border-t border-gray-300">
                     <button type="button" id="viewIngredientsButton"
-                        class="py-2 px-4 bg-customOrange text-white rounded-lg hover:bg-orange-600">View
+                        class="py-2 px-4 bg-customOrange text-white rounded-lg hover:bg-orange-600 transition-colors">View
                         Recipe</button>
                 </div>
             </div>
         </div>
+
+
+
+
 
         <!-- Recipe Modal Structure (Scrollable) -->
         <div id="ingredientsModal"
@@ -755,7 +678,6 @@
         </div>
     </div>
 </body>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("hs-stacked-overlays");
@@ -765,36 +687,120 @@
         const ingredientsModalCloseButton = document.getElementById("ingredientsModalCloseButton");
         const viewIngredientsButton = document.getElementById("viewIngredientsButton");
 
-        // Open Main Modal
-        document.querySelector("a[data-hs-overlay]").addEventListener("click", function (e) {
-            e.preventDefault();
-            modal.classList.remove("hidden");
-        });
+        const mealTitle = document.getElementById("mealTitle");
+        const mealDescription = document.getElementById("mealDescription");
+        const ingredientsContent = document.getElementById("ingredientsContent");
+        const mealItemContainer = document.getElementById("mealItemContainer");
 
-        // Close Main Modal
+        const modalTitle = modal.querySelector("h3");
+        const modalImage = modal.querySelector("img");
+        const carbsGauge = modal.querySelector(".carbs-gauge");
+        const proteinGauge = modal.querySelector(".protein-gauge");
+        const fatsGauge = modal.querySelector(".fats-gauge");
+
+        const memberid = getCookie("member_id")
+        const meal_template_id = getCookie("meal_template_id")
+
+
+        // Fetch meals of the day from the API
+        fetch(`http://localhost:3000/retrieveMealOfTheDay?member_id=${memberid}&plan_id=${meal_template_id}`)
+            .then(response => response.json())
+            .then(data => {
+                const meals = data[0]; // Accessing the main array of meals
+
+                // Group meals by `template_item_id` to combine steps for the same meal
+                const mealGroups = meals.reduce((acc, meal) => {
+                    const key = meal.template_item_id;
+                    if (!acc[key]) {
+                        acc[key] = {
+                            meal_name: meal.meal_name,
+                            carbs: meal.carbs,
+                            fats: meal.fats,
+                            protein: meal.protein,
+                            classification: meal.classification,
+                            steps: [],
+                            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s" // Placeholder image URL
+                        };
+                    }
+                    acc[key].steps.push(`Step ${meal.step_number}: ${meal.instruction}`);
+                    return acc;
+                }, {});
+
+                // Populate meal cards
+                for (const key in mealGroups) {
+                    const meal = mealGroups[key];
+                    const mealCard = document.createElement("a");
+                    mealCard.href = "#";
+                    mealCard.classList.add("mx-auto", "sm:mr-0", "group", "cursor-pointer", "lg:mx-auto", "bg-div_color", "transition-all", "duration-500", "rounded-lg");
+
+                    mealCard.innerHTML = `
+                        <div>
+                            <img src="${meal.img}" alt="${meal.meal_name} image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    ${meal.classification}
+                                </h6>
+                            </div>
+                            <p class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                ${meal.meal_name}
+                            </p>
+                        </div>
+                    `;
+
+                    // Add click event to each card
+                    mealCard.addEventListener("click", function (event) {
+                        event.preventDefault();
+
+                        //Populate modal with meal data
+                        modalTitle.textContent = `${meal.meal_name} - ${meal.classification}`;
+                        modalImage.src = meal.img;
+                        modalImage.alt = `${meal.meal_name} image`;
+
+                        //Update nutritional info
+                        updateGauge(carbsGauge, meal.carbs, 'Carbs');
+                        updateGauge(proteinGauge, meal.protein, 'Protein');
+                        updateGauge(fatsGauge, meal.fats, 'Fats');
+
+                        // Display the modal
+                        modal.classList.remove("hidden");
+                    });
+
+                    mealItemContainer.appendChild(mealCard);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching meal data:", error);
+            });
+
         closeButtons.forEach(button => {
             button.addEventListener("click", function () {
                 modal.classList.add("hidden");
             });
         });
 
-        // Open Ingredients Modal
-        viewIngredientsButton.addEventListener("click", function () {
-            ingredientsModal.classList.remove("hidden");
-        });
+        // Function to update gauge component dynamically
+        function updateGauge(gaugeElement, value, label) {
+            const svg = gaugeElement.querySelector("svg");
+            const textValue = gaugeElement.querySelector("span");
 
-        // Close Ingredients Modal
-        ingredientsModalCloseButton.addEventListener("click", function () {
-            ingredientsModal.classList.add("hidden");
-        });
+            const percentage = (value / 100) * 75; // Assume a max of 75 for the gauge's dash array
+            svg.querySelectorAll("circle")[1].setAttribute("stroke-dasharray", `${percentage} 100`);
+            textValue.textContent = `${value}g`;
+        }
 
-        // Close modal when clicking outside
-        window.addEventListener("click", function (e) {
-            if (e.target === modal) modal.classList.add("hidden");
-            if (e.target === ingredientsModal) ingredientsModal.classList.add("hidden");
-        });
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
     });
-
 </script>
+
 
 </html>
