@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Plan</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body class="min-h-screen font-[Poppins] bg-customGray text-white">
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="relative mr-6 mt-1">
+                            <button id="notificationButton">
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div id="notificationDropdown"
+                                class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                                <div class="py-2 px-4 bg-gray-300 border-b border-gray-200 text-gray-700 font-bold">
+                                    Notifications
+                                </div>
+                                <div id="notificationList" class="max-h-80 overflow-y-auto">
+                                    <!-- Notification Items will be dynamically populated here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="memberDashboard.html" onclick="removeCookie('accessToken');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="memberDashboard.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="maps.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="locate-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Maps</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="barbell-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Workout Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-white bg-customGray rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="egg-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Meal Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trainerlist.html"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="people-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Trainer</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="chats.html"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="chatbubbles-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Chat</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="settings-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="sm:ml-64">
+        <div class="m-4 p-4 mt-20">
+            <h1 class="text-[22px] font-semibold text-center justify-center">Meal Plan</h1>
+            <h1 class="justify-center text-center">
+                <span class="greetChange text-[16px]">Fuel your body for success with a customized plan that nourishes
+                    and energizes.</span>
+            </h1>
+        </div>
+        <section class="py-12">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <h2 class="font-semibold text-[20px] mb-8 max-lg:text-center">
+                    Today's Meal
+                    <span class="text-[16px] font-normal">October 30 2024</span>
+                </h2>
+
+                <!--If mag wlaon ang snack nga div kay anue wlaa lng tapos sa paki puli sa lg:grid-cols-4 imbes na 4 kay 3 nana sa grids tapos ang gaps sad salamat-->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="#"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg"
+                        aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-stacked-overlays"
+                        data-hs-overlay="#hs-stacked-overlays">
+                        <div class="">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s"
+                                alt="keto salmon image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Breakfast
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Keto Salmon</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg"
+                                alt="cobb salad image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Lunch
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Cobb Salad</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.tamingtwins.com/wp-content/uploads/2023/11/image-87.jpeg"
+                                alt="smoked salmon canapes image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Snack
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Smoked Salmon Canapes</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.justataste.com/wp-content/uploads/2018/04/beef-broccoli-sauce-1.jpg"
+                                alt="beef and broccoli stir fry image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Dinner
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Beef & Broccoli Stir-fry</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!---->
+        <section class="py-10">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <h2 class="font-semibold text-[20px] mb-8 max-lg:text-center">
+                    Your meals for this week
+                </h2>
+
+                <h2 class="font-semibold text-[16px] mb-8 max-lg:text-center">
+                    Thursday
+                    <span class="text-[12px] font-normal">October 31 2024</span>
+                </h2>
+
+                <!--If mag wlaon ang snack nga div kay anue wlaa lng tapos sa paki puli sa lg:grid-cols-4 imbes na 4 kay 3 nana sa grids tapos ang gaps sad salamat-->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="#"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s"
+                                alt="keto salmon image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Breakfast
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Keto Salmon</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg"
+                                alt="cobb salad image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Lunch
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Cobb Salad</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.tamingtwins.com/wp-content/uploads/2023/11/image-87.jpeg"
+                                alt="smoked salmon canapes image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Snack
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Smoked Salmon Canapes</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.justataste.com/wp-content/uploads/2018/04/beef-broccoli-sauce-1.jpg"
+                                alt="beef and broccoli stir fry image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Dinner
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Beef & Broccoli Stir-fry</p>
+                        </div>
+                    </a>
+                </div>
+
+                <hr class="h-px my-8 border-0 bg-gray-700">
+
+                <!---->
+                <h2 class="font-semibold text-[16px] mb-8 max-lg:text-center mt-10">
+                    Friday
+                    <span class="text-[12px] font-normal">November 1 2024</span>
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="#"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s"
+                                alt="keto salmon image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Breakfast
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Keto Salmon</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg"
+                                alt="cobb salad image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Lunch
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Cobb Salad</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.tamingtwins.com/wp-content/uploads/2023/11/image-87.jpeg"
+                                alt="smoked salmon canapes image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Snack
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Smoked Salmon Canapes</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.justataste.com/wp-content/uploads/2018/04/beef-broccoli-sauce-1.jpg"
+                                alt="beef and broccoli stir fry image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Dinner
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Beef & Broccoli Stir-fry</p>
+                        </div>
+                    </a>
+                </div>
+
+                <hr class="h-px my-8 border-0 bg-gray-700">
+
+                <!---->
+                <h2 class="font-semibold text-[16px] mb-8 max-lg:text-center mt-10">
+                    Saturday
+                    <span class="text-[12px] font-normal">November 2 2024</span>
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="#"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s"
+                                alt="keto salmon image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Breakfast
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Keto Salmon</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg"
+                                alt="cobb salad image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Lunch
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Cobb Salad</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.tamingtwins.com/wp-content/uploads/2023/11/image-87.jpeg"
+                                alt="smoked salmon canapes image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Snack
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Smoked Salmon Canapes</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.justataste.com/wp-content/uploads/2018/04/beef-broccoli-sauce-1.jpg"
+                                alt="beef and broccoli stir fry image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Dinner
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Beef & Broccoli Stir-fry</p>
+                        </div>
+                    </a>
+                </div>
+
+                <hr class="h-px my-8 border-0 bg-gray-700">
+
+                <!---->
+                <h2 class="font-semibold text-[16px] mb-8 max-lg:text-center mt-10">
+                    Sunday
+                    <span class="text-[12px] font-normal">November 3 2024</span>
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <a href="#"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7dECF8uRrgIMefZc_Xoy3idE--d-qgRVBSg&s"
+                                alt="keto salmon image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Breakfast
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Keto Salmon</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://i2.wp.com/www.downshiftology.com/wp-content/uploads/2019/04/Cobb-Salad-main.jpg"
+                                alt="cobb salad image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Lunch
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Cobb Salad</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.tamingtwins.com/wp-content/uploads/2023/11/image-87.jpeg"
+                                alt="smoked salmon canapes image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Snack
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Smoked Salmon Canapes</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:;"
+                        class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                        <div class="">
+                            <img src="https://www.justataste.com/wp-content/uploads/2018/04/beef-broccoli-sauce-1.jpg"
+                                alt="beef and broccoli stir fry image"
+                                class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                        </div>
+                        <div class="mt-2">
+                            <div class="flex items-center justify-between">
+                                <h6 class="font-normal text-[10px] leading-6 ml-3">
+                                    Dinner
+                                </h6>
+                            </div>
+                            <p
+                                class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                                Beef & Broccoli Stir-fry</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Structure -->
+        <div id="hs-stacked-overlays"
+            class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center">
+            <div class="bg-div_color rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold">Keto Salmon - Breakfast</h3>
+                    <button type="button" id="modalCloseButton" class="text-white hover:text-gray-700">
+                        <span class="sr-only">Close</span>
+                        &times;
+                    </button>
+                </div>
+                <div class="p-4">
+                    <img src="https://thebigmansworld.com/wp-content/uploads/2022/01/keto-salmon-recipe.jpeg"
+                        alt="Keto Salmon" class="w-full h-60 object-cover rounded-lg">
+
+                    <div class="flex flex-row gap-4 text-center justify-evenly">
+                        <!-- Gauge Component -->
+                        <div class="relative size-40 mt-4">
+                            <svg class="rotate-[135deg] size-full" viewBox="0 0 36 36"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Background Circle (Gauge) -->
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current dark:text-neutral-700"
+                                    stroke-width="1" stroke-dasharray="75 100"></circle>
+
+                                <!-- Gauge Progress -->
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
+                                    stroke-width="2" stroke-dasharray="18.75 100"></circle>
+                            </svg>
+
+                            <!-- Value Text -->
+                            <div
+                                class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                <span class="text-4xl font-bold text-customOrange">25</span>
+                                <span class="text-customOrange block">carbs</span>
+                            </div>
+                        </div>
+                        <!-- End Gauge Component -->
+
+                        <!-- Gauge Component -->
+                        <div class="relative size-40 mt-4">
+                            <svg class="rotate-[135deg] size-full" viewBox="0 0 36 36"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Background Circle (Gauge) -->
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current dark:text-neutral-700"
+                                    stroke-width="1" stroke-dasharray="75 100"></circle>
+
+                                <!-- Gauge Progress -->
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
+                                    stroke-width="2" stroke-dasharray="18.75 100"></circle>
+                            </svg>
+
+                            <!-- Value Text -->
+                            <div
+                                class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                <span class="text-4xl font-bold text-customOrange">25</span>
+                                <span class="text-customOrange block">carbs</span>
+                            </div>
+                        </div>
+                        <!-- End Gauge Component -->
+
+                        <!-- Gauge Component -->
+                        <div class="relative size-40 mt-4">
+                            <svg class="rotate-[135deg] size-full" viewBox="0 0 36 36"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Background Circle (Gauge) -->
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current dark:text-neutral-700"
+                                    stroke-width="1" stroke-dasharray="75 100"></circle>
+
+                                <!-- Gauge Progress -->
+                                <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
+                                    stroke-width="2" stroke-dasharray="18.75 100"></circle>
+                            </svg>
+
+                            <!-- Value Text -->
+                            <div
+                                class="absolute top-1/2 start-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                <span class="text-4xl font-bold text-customOrange">25</span>
+                                <span class="text-customOrange block">carbs</span>
+                            </div>
+                        </div>
+                        <!-- End Gauge Component -->
+                    </div>
+                </div>
+                <div class="flex justify-end p-4 border-t">
+                    <button type="button" id="viewIngredientsButton"
+                        class="py-2 px-4 bg-customOrange text-white rounded-lg hover:bg-orange-600">View
+                        Recipe</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recipe Modal Structure (Scrollable) -->
+        <div id="ingredientsModal"
+            class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center">
+            <div class="bg-div_color rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
+                <div class="flex justify-between items-center p-4 border-b">
+                    <h3 class="text-lg font-semibold">Recipe</h3>
+                    <button type="button" id="ingredientsModalCloseButton" class="text-white hover:text-gray-700">
+                        <span class="sr-only">Close</span>
+                        &times;
+                    </button>
+                </div>
+                <div class="p-4 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-50 scrollbar-track-51">
+                    <!--delete rani og wlay ingredients apil-->
+                    <ul class="text-gray-800 dark:text-neutral-400">
+                        <li class="text-white mb-2">Ingredients:</li>
+                        <li>Salmon Fillets</li>
+                        <li>Olive Oil</li>
+                        <li>Garlic</li>
+                        <li>Lemon Juice</li>
+                        <li>Salt & Pepper</li>
+                        <li>Butter</li>
+                        <li>Parsley</li>
+                        <!-- Add more ingredients as needed -->
+                    </ul>
+                    <ul class="text-gray-800 dark:text-neutral-400 mt-4">
+                        <li class="text-white mb-2">Instructions:</li>
+                        <li><span class="text-white">1. </span>Start by patting dry the salmon with a paper towel before
+                            sprinkling with salt and pepper.
+                        </li>
+                        <li><span class="text-white">2. </span>Rub lemon juice over each fillet.</li>
+                        <li><span class="text-white">3. </span>Next, add the olive oil to a non-stick pan and place it
+                            over medium heat.</li>
+                        <li><span class="text-white">4. </span>Once hot, add the salmon fillets and cook for 3-4
+                            minutes, before flipping and cooking for a
+                            further two minutes.
+                        </li>
+                        <li><span class="text-white">5. </span>Finally, add the butter, minced garlic, and parsley and
+                            simmer for two minutes, before removing from the heat.</li>
+                        <li><span class="text-white">6. </span>Dish out the salmon onto plates and drizzle with pan
+                            juices. </li>
+                        <!-- Add more instructions as needed -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("hs-stacked-overlays");
+        const ingredientsModal = document.getElementById("ingredientsModal");
+
+        const closeButtons = document.querySelectorAll("#modalCloseButton, #modalCloseButtonFooter");
+        const ingredientsModalCloseButton = document.getElementById("ingredientsModalCloseButton");
+        const viewIngredientsButton = document.getElementById("viewIngredientsButton");
+
+        // Open Main Modal
+        document.querySelector("a[data-hs-overlay]").addEventListener("click", function (e) {
+            e.preventDefault();
+            modal.classList.remove("hidden");
+        });
+
+        // Close Main Modal
+        closeButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                modal.classList.add("hidden");
+            });
+        });
+
+        // Open Ingredients Modal
+        viewIngredientsButton.addEventListener("click", function () {
+            ingredientsModal.classList.remove("hidden");
+        });
+
+        // Close Ingredients Modal
+        ingredientsModalCloseButton.addEventListener("click", function () {
+            ingredientsModal.classList.add("hidden");
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener("click", function (e) {
+            if (e.target === modal) modal.classList.add("hidden");
+            if (e.target === ingredientsModal) ingredientsModal.classList.add("hidden");
+        });
+    });
+
+</script>
+
+</html>

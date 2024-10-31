@@ -88,7 +88,7 @@ const gymIcon = L.icon({
 // ? REQUEST DATA FROM DATABASE TO USE IT HERE 
 async function fetchGyms() {
     try {
-        const response = await axios.get('http://localhost:3000/gyms');
+        const response = await axios.get('https://capstone-erxk.onrender.com/gyms');
         const Gyms = response.data;
         Gyms.forEach(G => {
 
@@ -111,7 +111,7 @@ async function fetchGyms() {
                 // Create your popup content dynamically
                 const popupContent = `
         <div>
-            <img src="http://localhost:3000/uploads/${gym.img}" alt="Gym Image" style="max-width: 100%; height: auto;">
+            <img src="https://capstone-erxk.onrender.com/${gym.img}" alt="Gym Image" style="max-width: 100%; height: auto;">
             <h3>${gym.name}</h3>
             <p><strong>Daily rates:</strong> ${gym.dailyRates}</p>
             <p><strong>Monthly rates:</strong> ${gym.monthlyRates}</p>
@@ -148,7 +148,7 @@ async function fetchGyms() {
 
 async function fetchParks() {
     try {
-        const response = await axios.get('http://localhost:3000/parks');
+        const response = await axios.get('https://capstone-erxk.onrender.com/parks');
         const Parks = response.data;
         Parks.forEach(G => {
 
@@ -381,7 +381,7 @@ function showNearby(distances) {
         <button><ion-icon name="close-outline"></ion-icon></button>
     </div>
     <div class="w-full h-40 bg-customGrayBtn rounded-t-lg"
-        style="background-image: url('http://localhost:3000/uploads/${gym.img}'); background-size: cover; background-position: center;">
+        style="background-image: url('https://capstone-erxk.onrender.com/uploads/${gym.img}'); background-size: cover; background-position: center;">
     </div>
     <div class="p2 mt-2">
         <h3 class="text-lg font-semibold"> ${gym.name}</h3>

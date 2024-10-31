@@ -30,7 +30,7 @@ const port = process.env.PORT || 3000;
 // Setup middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const allowedOrigins = ['http://127.0.0.1:5500'];
+const allowedOrigins = ['https://flexperience.pro', 'http://127.0.0.1:5500'];
 
 app.use(cors({
   origin: allowedOrigins,
