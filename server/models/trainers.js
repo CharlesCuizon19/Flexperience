@@ -343,7 +343,10 @@ const insertPremadeMealImage = async (pre_made_meal_id, filename) => {
 };
 const getPremadeMeals = async (trainer_id) => {
     const [rows] = await pool.query(
-        'SELECT * FROM pre_made_meals WHERE trainer_id = ?',
+        `SELECT p.pre_made_meal_id, p.trainer_id, p.meal_name, p.carbs, p.fats, p.protein, pm.filename
+         FROM pre_made_meals p
+         JOIN pre_made_meal_images pm ON pm.pre_made_meal_id = p.pre_made_meal_id
+         WHERE trainer_id = ?`,
         [trainer_id]
     );
     return rows.length > 0 ? [rows] : null;

@@ -187,6 +187,65 @@ const getMealoftheDay = async (member_id, plan_id) => {
     );
     return rows.length > 0 ? [rows] : null;
 };
+const getMealoftheWeek = async (member_id, plan_id) => {
+    const [rows] = await pool.query(
+        `WITH CTE_CURRENT_DAY AS (
+            SELECT 
+                m.member_id,
+                meal_template_id,
+                m.date_started,
+                CASE 
+                    WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 1 AND DATEDIFF(CURRENT_DATE, m.date_started) < 7 THEN 1
+                    WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 7 AND DATEDIFF(CURRENT_DATE, m.date_started) < 14 THEN 2
+                    WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 14 AND DATEDIFF(CURRENT_DATE, m.date_started) < 21 THEN 3
+                    WHEN DATEDIFF(CURRENT_DATE, m.date_started) + 1 >= 21 AND DATEDIFF(CURRENT_DATE, m.date_started) < 28 THEN 4
+                    ELSE 0
+                END AS Week_Number,
+                MOD(DATEDIFF(CURRENT_DATE, m.date_started), 7) + 1 AS Day_number
+            FROM 
+                member_meal_plan m
+            WHERE m.member_id = ?
+        ),
+        CTE_MEAL AS (
+            SELECT 
+                me.member_id,
+                (SELECT CONCAT(lastname, ', ', firstname) FROM members WHERE member_id = me.member_id) AS member_name,
+                mes.status_id,
+                mes.plan_id,
+                wte.template_item_id,
+                pm.filename,
+                p.meal_name,
+                p.carbs,
+                p.fats,
+                p.protein,
+                wte.classification,
+                wte.week_no,
+                wte.day_no
+            FROM 
+                member_meal_status mes
+            JOIN 
+                meal_template_items wte ON mes.template_item_id = wte.template_item_id
+            JOIN 
+                member_meal_plan me ON me.plan_id = mes.plan_id
+            JOIN 
+                CTE_CURRENT_DAY c ON c.meal_template_id = wte.meal_template_id
+            JOIN
+                pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id
+            JOIN 
+                pre_made_meal_images pm ON pm.pre_made_meal_id = p.pre_made_meal_id
+            WHERE 
+                mes.plan_id = ?
+            AND
+                c.Week_Number = wte.week_no
+        )
+        SELECT * 
+        FROM CTE_MEAL
+        ORDER BY week_no, day_no;
+        `,
+        [member_id, plan_id]
+    );
+    return rows.length > 0 ? [rows] : null;
+};
 const retrieveMealOfTheDay = async (member_id, plan_id) => {
     const [rows] = await pool.query(
         `WITH CTE_CURRENT_DAY AS (
@@ -278,6 +337,7 @@ const updateExerciseStatus = async (status, status_id) => {
 
 
 module.exports = {
+    getMealoftheWeek,
     retrieveMealOfTheDay,
     getWorkoutByDay,
     insertActivity,

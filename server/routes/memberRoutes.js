@@ -6,6 +6,7 @@ const memberController = require('../controllers/memberController');
 router.get("/getWorkoutOftheWeek", memberController.GetTodaysMeal); 
 router.get("/WorkoutOftheDay", memberController.GetTodaysWorkout); 
 router.get("/getMealoftheDay", memberController.getMealoftheDay); 
+router.get("/getMealoftheWeek", memberController.getMealoftheWeek); 
 router.get("/retrieveMealOfTheDay", memberController.retrieveMealOfTheDay); 
 router.get("/getWorkoutByDay", memberController.getWorkoutByDay); 
 router.get("/getMemberInfo", memberController.getMemberInfo); 

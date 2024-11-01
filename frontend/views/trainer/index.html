@@ -337,7 +337,7 @@
       this.classList.add(
         'bg-[#5F6163]'
       );
-      target.classList.remove('hidden');
+     // target.classList.remove('hidden');
     });
   });
 
@@ -346,42 +346,57 @@
     try {
       // Fetch workout progress
       const workoutResponse = await axios.get(`http://localhost:3000/getProgressOftheDay?trainer_id=${trainerid}`);
-      const workoutData = workoutResponse.data || []; // Default to empty array if null
+      const workoutData = workoutResponse.data || [];
 
       // Fetch meal progress
       const mealResponse = await axios.get(`http://localhost:3000/getMealProgressOftheDay?trainer_id=${trainerid}`);
-      const mealData = mealResponse.data || []; // Default to empty array if null
+      const mealData = mealResponse.data || [];
 
       // Container for the progress bars
       const progressContainer = document.getElementById('progress-container');
       progressContainer.innerHTML = '';  // Clear any existing content
 
       // Combine workout and meal data by member ID
-      workoutData.flat().forEach(student => {
-        const mealProgress = mealData.flat().find(meal => meal.member_id === student.member_id);
+      const combinedData = [...workoutData.flat(), ...mealData.flat()]
+        .reduce((acc, item) => {
+          const memberId = item.member_id;
+          if (!acc[memberId]) {
+            acc[memberId] = { member_id: memberId, member_name: item.member_name, workoutData: null, mealData: null };
+          }
+          if ('total_workouts' in item) {
+            acc[memberId].workoutData = item;
+          } else if ('total_meals' in item) {
+            acc[memberId].mealData = item;
+          }
+          return acc;
+        }, {});
 
-        // Calculate workout progress if data is available
+      Object.values(combinedData).forEach(student => {
+        const workout = student.workoutData;
+        const meal = student.mealData;
+
+        // Calculate workout progress if available
         let workoutProgressPercentage = 0;
-        if (student.total_workouts && student.finished_workouts) {
-          workoutProgressPercentage = Math.round((student.finished_workouts / student.total_workouts) * 100);
+        if (workout && workout.total_workouts && workout.finished_workouts) {
+          workoutProgressPercentage = Math.round((workout.finished_workouts / workout.total_workouts) * 100);
         }
 
         // Calculate meal progress if available
         let mealProgressPercentage = 0;
         let mealPlanId = 0;
-        if (mealProgress) {
-          const totalMeals = mealProgress.total_meals || 0;
-          const completedMeals = mealProgress.finished_meals || 0;
-          mealPlanId = mealProgress.plan_id || 0;
+        if (meal) {
+          const totalMeals = meal.total_meals || 0;
+          const completedMeals = meal.finished_meals || 0;
+          mealPlanId = meal.plan_id || 0;
           if (totalMeals > 0) {
             mealProgressPercentage = Math.round((completedMeals / totalMeals) * 100);
           }
         }
 
-        // Create the HTML for the student workout and meal progress bars
+        // Create the HTML for the student's workout and meal progress bars
         const studentDiv = `
           <div class="flex flex-col py-5 mx-10 px-5 hover:border dark:border-gray-500 hover:shadow-md cursor-pointer"
-            onclick="studentProgress(this, ${student.member_id}, ${student.plan_id}, ${mealPlanId})">
+            onclick="studentProgress(this, ${student.member_id}, ${workout ? workout.plan_id : 0}, ${mealPlanId})">
             <div class="w-full">
                <h2 class="student-name">
                 ${student.member_name}
@@ -389,7 +404,8 @@
               <br>
             </div>
   
-            <!-- Workout Progress Bar -->
+            <!-- Workout Progress Bar (only if workout data is available) -->
+            ${workout ? `
             <div class='relative w-full bg-customOrange bg-opacity-50 rounded-3xl h-5 mb-2'>
               <div class='bg-customOrange h-5 rounded-3xl text-white text-xs text-center' role='progressbar'
                 aria-valuenow='${workoutProgressPercentage}' aria-valuemin='0' aria-valuemax='100' style='width: ${workoutProgressPercentage}%;'>
@@ -398,8 +414,10 @@
                 Workout Progress: ${workoutProgressPercentage}%
               </span>
             </div>
+            ` : ''}
   
-            <!-- Meal Progress Bar -->
+            <!-- Meal Progress Bar (only if meal data is available) -->
+            ${meal ? `
             <div class='relative w-full bg-teal-400 bg-opacity-50 rounded-3xl h-5'>
               <div class='bg-teal-400 h-5 rounded-3xl text-white text-xs text-center' role='progressbar'
                 aria-valuenow='${mealProgressPercentage}' aria-valuemin='0' aria-valuemax='100' style='width: ${mealProgressPercentage}%;'>
@@ -408,6 +426,7 @@
                 Meal Progress: ${mealProgressPercentage}%
               </span>
             </div>
+            ` : ''}
           </div>
         `;
 
@@ -418,6 +437,7 @@
       console.error('Error fetching student progress:', error);
     }
   }
+
 
 
 
@@ -482,51 +502,25 @@
 
   async function studentProgress(element, member_id, plan_id, meal_plan_id) {
     try {
-      // Fetch workout data from the API
+      console.log("Workout ID:", plan_id);
+      console.log("Member ID:", member_id);
+      console.log("Meal ID:", meal_plan_id);
+
+      // Clear previous content
       workoutTabContent.innerHTML = "";
       mealTabContent.innerHTML = "";
-      // Handle the student name and update the header
+
+      // Update header with student name
       const studentName = element.querySelector('.student-name').innerText;
       document.getElementById('student').innerHTML = `${studentName} progress`;
-      const workoutResponse = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${plan_id}&member_id=${member_id}`);
-      const workoutData = await workoutResponse.json();
 
-      const exercises = workoutData[0]; // Access the array of exercises
-
-      // Initialize a string to hold the dynamic content for the workout tab
+      // Initialize content variables
       let workoutHTML = `
         <span>
           <div class="text-white font-semibold text-lg">${new Date().toLocaleDateString()}</div>
         </span><br>
         <div class="space-y-4"> <!-- Spacing between tasks -->
       `;
-
-      // Loop through each exercise and build the workout list dynamically
-      exercises.forEach(exercise => {
-        const statusIcon = exercise.status === 'not started'
-          ? '<i class="fas fa-times-circle text-red-500 text-xl"></i>'
-          : '<i class="fas fa-check-circle text-green-400 text-xl"></i>';
-
-        workoutHTML += `
-          <div class="flex items-center p-4 bg-gray-700 shadow-md rounded-lg hover:bg-gray-600 transition ease-in-out duration-150">
-            <div class="flex items-center space-x-4">
-              ${statusIcon}
-              <span class="text-white text-base font-medium">${exercise.exercise_name}</span>
-            </div>
-          </div>
-        `;
-      });
-
-      workoutHTML += `</div>`; // Close the main container
-      workoutTabContent.innerHTML = workoutHTML; // Populate workout tab content
-
-      // Fetch meal data from the API
-      const mealResponse = await fetch(`http://localhost:3000/getMealoftheDay?member_id=${member_id}&plan_id=${meal_plan_id}`);
-      const mealData = await mealResponse.json();
-
-      const meals = mealData[0]; // Access the array of meals
-
-      // Initialize a string to hold the dynamic content for the meal tab
       let mealHTML = `
         <span>
           <div class="text-white font-semibold text-lg">${new Date().toLocaleDateString()}</div>
@@ -534,26 +528,67 @@
         <div class="space-y-4"> <!-- Spacing between meals -->
       `;
 
-      // Loop through each meal and build the meal list dynamically
-      meals.forEach(meal => {
-        const statusIcon = meal.status === 'not started'
-          ? '<i class="fas fa-times-circle text-red-500 text-xl"></i>'
-          : '<i class="fas fa-check-circle text-green-400 text-xl"></i>';
+      // Fetch workout data if a workout plan exists
+      if (plan_id) {
+        const workoutResponse = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${plan_id}&member_id=${member_id}`);
+        const workoutData = await workoutResponse.json();
+        const exercises = workoutData[0] || [];
 
-        mealHTML += `
-          <div class="flex items-center p-4 bg-gray-700 shadow-md rounded-lg hover:bg-gray-600 transition ease-in-out duration-150">
-              <div class="flex items-center space-x-4">
-              ${statusIcon}
-              <span class="text-white text-base font-medium">${meal.meal_name}</span>
-            </div>
-          </div>
-        `;
-      });
+        if (exercises.length) {
+          exercises.forEach(exercise => {
+            const statusIcon = exercise.status === 'not started'
+              ? '<i class="fas fa-times-circle text-red-500 text-xl"></i>'
+              : '<i class="fas fa-check-circle text-green-400 text-xl"></i>';
+            workoutHTML += `
+              <div class="flex items-center p-4 bg-gray-700 shadow-md rounded-lg hover:bg-gray-600 transition ease-in-out duration-150">
+                <div class="flex items-center space-x-4">
+                  ${statusIcon}
+                  <span class="text-white text-base font-medium">${exercise.exercise_name}</span>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          workoutHTML += `<p class="text-gray-400">No workout data available for today.</p>`;
+        }
+      } else {
+        workoutHTML += `<p class="text-gray-400">No workout plan assigned.</p>`;
+      }
 
-      mealHTML += `</div>`; // Close the main container
-      mealTabContent.innerHTML = mealHTML; // Populate meal tab content
+      workoutHTML += `</div>`;
+      workoutTabContent.innerHTML = workoutHTML;
 
-      // Set initial visibility for tabs: Show workout, hide meal
+      // Fetch meal data if a meal plan exists
+      if (meal_plan_id) {
+        const mealResponse = await fetch(`http://localhost:3000/getMealoftheDay?member_id=${member_id}&plan_id=${meal_plan_id}`);
+        const mealData = await mealResponse.json();
+        const meals = mealData[0] || [];
+
+        if (meals.length) {
+          meals.forEach(meal => {
+            const statusIcon = meal.status === 'not started'
+              ? '<i class="fas fa-times-circle text-red-500 text-xl"></i>'
+              : '<i class="fas fa-check-circle text-green-400 text-xl"></i>';
+            mealHTML += `
+              <div class="flex items-center p-4 bg-gray-700 shadow-md rounded-lg hover:bg-gray-600 transition ease-in-out duration-150">
+                <div class="flex items-center space-x-4">
+                  ${statusIcon}
+                  <span class="text-white text-base font-medium">${meal.meal_name}</span>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          mealHTML += `<p class="text-gray-400">No meal data available for today.</p>`;
+        }
+      } else {
+        mealHTML += `<p class="text-gray-400">No meal plan assigned.</p>`;
+      }
+
+      mealHTML += `</div>`;
+      mealTabContent.innerHTML = mealHTML;
+
+      // Initial tab visibility settings
       workoutTabContent.classList.add("bg-[#5F6163]");
       workoutTabContent.classList.remove("hidden");
       mealTabContent.classList.add("hidden");
@@ -562,6 +597,7 @@
       console.error('Error fetching data:', error);
     }
   }
+
 
   // Function to handle tab switching
   function tabChange(tabType) {
