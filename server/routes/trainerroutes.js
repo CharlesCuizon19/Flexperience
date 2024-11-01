@@ -31,6 +31,7 @@ router.post("/assignWorkoutPlan", trainerController.assignWorkoutPlan);
 router.post("/insertStudentWorkouts", trainerController.insertStudentWorkouts); 
 router.post("/assignMealPlan", trainerController.assignMealPlan); 
 router.post("/insertPremadeMeals", trainerController.insertPremadeMeals); 
+router.post("/insertPremadeMealImage", trainerController.insertPremadeMealImage); 
 router.post("/insertStudentMeals", trainerController.insertStudentMeals); 
 router.put("/ModifyWorkoutTemplateExercises", trainerController.updateWorkoutTemplateExercise); 
 router.delete("/RemoveWorkoutTemplateExercises", trainerController.removeTemplateExercise); 

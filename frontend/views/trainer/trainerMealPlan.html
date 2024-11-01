@@ -449,51 +449,76 @@
                 </div>
                 <div id="createMealModal"
                     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-                    <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-                        <div class="mb-4">
-                            <h2 class="text-2xl font-bold text-gray-800">Add Meal Details</h2>
+                    <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full h-[90vh] overflow-hidden relative">
+                        <!-- Close button for the modal -->
+                        <button id="closeModalBtn"
+                            class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <!-- Modal Content with Scrollable Form -->
+                        <div class="mb-6 text-center">
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Add Meal Details</h2>
+                            <p class="text-gray-600">Fill in the details below to create a new meal.</p>
                         </div>
-                        <form id="mealForm">
+
+                        <form id="mealForm" enctype="multipart/form-data" class="overflow-y-auto max-h-[70vh] pr-4">
                             <!-- Meal Name -->
-                            <div class="mb-4">
-                                <label for="mealName" class="block text-gray-700 font-semibold">Meal Name</label>
+                            <div class="mb-5">
+                                <label for="mealName" class="block text-gray-700 font-semibold mb-1">Meal Name</label>
                                 <input type="text" id="MealName"
-                                    class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                                     placeholder="e.g., Breakfast Smoothie">
                             </div>
 
                             <!-- Carbohydrates -->
-                            <div class="mb-4">
-                                <label for="carbs" class="block text-gray-700 font-semibold">Carbs (g)</label>
+                            <div class="mb-5">
+                                <label for="carbs" class="block text-gray-700 font-semibold mb-1">Carbs (g)</label>
                                 <input type="number" id="Carbs" min="0" step="5"
-                                    class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                                     placeholder="e.g., 30">
                             </div>
 
                             <!-- Fats -->
-                            <div class="mb-4">
-                                <label for="fats" class="block text-gray-700 font-semibold">Fats (g)</label>
+                            <div class="mb-5">
+                                <label for="fats" class="block text-gray-700 font-semibold mb-1">Fats (g)</label>
                                 <input type="number" id="Fats" min="0" step="5"
-                                    class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                                     placeholder="e.g., 15">
                             </div>
 
                             <!-- Protein -->
-                            <div class="mb-4">
-                                <label for="protein" class="block text-gray-700 font-semibold">Protein (g)</label>
+                            <div class="mb-5">
+                                <label for="protein" class="block text-gray-700 font-semibold mb-1">Protein (g)</label>
                                 <input type="number" id="Protein" min="0" step="5"
-                                    class="w-full mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                                     placeholder="e.g., 20">
                             </div>
 
+                            <!-- Image Upload with Preview -->
+                            <div class="mb-5">
+                                <label for="mealImage" class="block text-gray-700 font-semibold mb-1">Meal Image</label>
+                                <input type="file" id="mealImage" name="mealImage" accept="image/*"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                <div id="imagePreviewContainer" class="mt-4 hidden">
+                                    <img id="imagepreview"
+                                        class="w-full h-48 object-cover rounded-md border border-gray-200" />
+                                </div>
+                            </div>
+
                             <!-- Steps for Preparing the Meal -->
-                            <h3 class="text-xl font-semibold mb-4">Steps for Preparing the Meal</h3>
-                            <div id="steps" class="max-h-48 overflow-y-auto">
+                            <h3 class="text-xl font-semibold mt-6 mb-4 text-gray-800">Steps for Preparing the Meal</h3>
+                            <div id="steps" class="max-h-48 overflow-y-auto mb-5">
                                 <div class="mb-4 step-item">
                                     <label for="step_1" class="block text-sm font-semibold">Step 1</label>
                                     <input type="hidden" name="step_numbers[]" value="1">
                                     <input type="text" id="step_1" name="steps[]"
-                                        class="block w-full mt-1 p-2 border rounded-md text-black" required>
+                                        class="block w-full mt-1 p-2 border border-gray-300 rounded-md text-black"
+                                        required>
                                 </div>
                             </div>
 
@@ -505,19 +530,20 @@
                                     Add Another Step
                                 </button>
 
-                                <!-- Cancel and Save Buttons -->
+                                <!-- Save and Cancel Buttons -->
                                 <div class="flex space-x-2">
-                                    <button type="button" id="closeModalBtn"
+                                    <button type="button"
                                         class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Cancel</button>
                                     <button type="submit"
-                                        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">Save
-                                        &
-                                        Continue</button>
+                                        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">
+                                        Save & Continue
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+
                 <div id="success-toast"
                     class="fixed top-14 right-3 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
                     <div class="flex items-center">
@@ -956,6 +982,7 @@
                         if (stepsArray.length > 0) {
                             // Insert each step into the database
                             insertSteps(preMadeMealId, stepsArray);
+                            insertMealImage(preMadeMealId)
                         } else {
                             alert('Please add at least one step for the meal template.');
                         }
@@ -1044,6 +1071,50 @@
                 });
             }
 
+            async function insertMealImage(preMadeMealId) {
+                try {
+                    alert(preMadeMealId)
+                    const profileImageFile = document.getElementById("mealImage").files[0];
+        
+                    if (!profileImageFile) {
+                        alert("::Please select a file to upload.");
+                        return;
+                    }
+        
+                    const formData = new FormData();
+                    formData.append('file', profileImageFile);  // 'file' should match the key in multer
+        
+                    // Upload the file using axios (first request)
+                    axios.post('http://localhost:3000/uploadSingle', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                        .then((response) => {
+                            const fileName = response.data.fileName; // Assuming filePath contains the uploaded file name
+                            console.log("Uploaded file name: ", fileName);
+
+                            // After successful upload, send trainer_id and fileName to the new endpoint
+                            return axios.post('http://localhost:3000/insertPremadeMealImage', {
+                                pre_made_meal_id: preMadeMealId,
+                                filename: fileName
+                            })
+                        })
+                        .then((insertResponse) => {
+                            console.log("Trainer image inserted successfully:", insertResponse.data);
+                        })
+                        .catch((error) => {
+                            console.error("Error during upload or insertion: ", error);
+                            alert('Error during upload or image insertion.');
+                        });
+        
+                } catch (error) {
+                    console.error("Unexpected error: ", error);
+                    alert('Error uploading file.');
+                }
+            }
+
+
 
             function showToast(type, message) {
                 const toast = document.getElementById('success-toast'); // You seem to be using only success toast for both types
@@ -1085,7 +1156,25 @@
                 }
             });
 
+            // JavaScript for image preview
+            document.getElementById('mealImage').addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                console.log(file)
+                const preview = document.getElementById('imagepreview');
+                const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        imagePreviewContainer.classList.remove('hidden'); // Show the preview container
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.src = '';
+                    imagePreviewContainer.classList.add('hidden'); // Hide the preview container if no file
+                }
+            });
 
             document.addEventListener("DOMContentLoaded", fetchAndDisplayMeals);
 

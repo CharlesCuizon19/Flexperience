@@ -149,6 +149,7 @@ const getMealoftheDay = async (member_id, plan_id) => {
                 mes.status_id,
                 mes.plan_id,
                 wte.template_item_id,
+                pm.filename,
                 p.meal_name,
                 p.carbs,
                 p.fats,
@@ -170,7 +171,9 @@ const getMealoftheDay = async (member_id, plan_id) => {
             JOIN 
                 CTE_CURRENT_DAY c ON c.meal_template_id = wte.meal_template_id
 			JOIN
-				pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id	
+				pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id
+            JOIN 
+                pre_made_meal_images pm ON pm.pre_made_meal_id = p.pre_made_meal_id	
             WHERE 
                 mes.plan_id = ?
             AND 
@@ -210,6 +213,7 @@ const retrieveMealOfTheDay = async (member_id, plan_id) => {
             mes.status_id,
             mes.plan_id,
             wte.template_item_id,
+       		pm.filename,
             p.meal_name,
             p.carbs,
             p.fats,
@@ -229,6 +233,8 @@ const retrieveMealOfTheDay = async (member_id, plan_id) => {
             pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id
         JOIN 
             meal_item_steps ms ON ms.pre_made_meal_id = p.pre_made_meal_id
+        JOIN 
+        	pre_made_meal_images pm ON pm.pre_made_meal_id = p.pre_made_meal_id
         WHERE 
             mes.plan_id = ?
         AND 

@@ -332,6 +332,15 @@ const insertPremadeMeals = async (trainer_id, meal_name, carbs, fats, protein) =
     // Return only the insertId
     return rows.insertId;
 };
+const insertPremadeMealImage = async (pre_made_meal_id, filename) => {
+    const [rows] = await pool.query(
+       `INSERT INTO pre_made_meal_images (pre_made_meal_id, filename)
+        VALUES (?,?)`,
+        [pre_made_meal_id, filename]
+    );
+    // Return only the insertId
+    return rows.insertId;
+};
 const getPremadeMeals = async (trainer_id) => {
     const [rows] = await pool.query(
         'SELECT * FROM pre_made_meals WHERE trainer_id = ?',
@@ -341,6 +350,7 @@ const getPremadeMeals = async (trainer_id) => {
 };
 
 module.exports = {
+    insertPremadeMealImage,
     getMealProgressOftheDay,
     getPremadeMeals,
     insertPremadeMeals,

@@ -4,7 +4,28 @@ const { pool } = require('./database');
 
 const getTemplateMeals = async (template_id) => {
     const [rows] = await pool.query(
-        'SELECT m.template_item_id, p.meal_name, m.week_no, m.day_no, s.step_number, s.instruction,m.classification FROM meal_template_items m JOIN meal_item_steps s ON m.pre_made_meal_id = m.pre_made_meal_id JOIN pre_made_meals p ON p.pre_made_meal_id = m.pre_made_meal_id WHERE m.meal_template_id = ? ORDER BY m.week_no ASC, m.day_no ASC, s.step_number',
+        `SELECT 
+            m.template_item_id, 
+            p.pre_made_meal_id, 
+            p.meal_name, 
+            m.week_no, 
+            m.day_no, 
+            s.step_number, 
+            s.instruction, 
+            m.classification 
+        FROM 
+            meal_template_items m 
+        JOIN 
+            meal_item_steps s ON m.pre_made_meal_id = s.pre_made_meal_id 
+        JOIN 
+            pre_made_meals p ON p.pre_made_meal_id = m.pre_made_meal_id 
+        WHERE m.meal_template_id = ?
+        ORDER BY 
+            p.pre_made_meal_id ASC, 
+            m.week_no ASC, 
+            m.day_no ASC, 
+            s.step_number ASC;
+`,
         [template_id]
     );
     return rows.length > 0 ? rows : null;

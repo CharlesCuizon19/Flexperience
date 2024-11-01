@@ -883,6 +883,7 @@
                 });
                 // Check if response data is null
                 return response.data === null ? null : response.data;
+                console.log(response.data)
             } catch (error) {
                 console.error("Error fetching meal data:", error);
                 return null; // Return null on error as well
@@ -914,12 +915,12 @@
             const meals = mealData[0]; // Assuming meal data is the first item
             meals.forEach(meal => {
                 console.log("Meal item:", meal);
-
+                console.log(meal.filename)
                 const mealCard = document.createElement('div');
                 mealCard.className = 'bg-div_color rounded-3xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col';
 
                 mealCard.innerHTML = `
-                    <div class='h-40 bg-cover bg-center' style='background-image:url(${meal.imageUrl || 'https://img.freepik.com/free-photo/pasta-spaghetti-with-shrimps-sauce_1220-5072.jpg?w=2000&t=st=1678041911~exp=1678042511~hmac=e4aa55e70f8c231d4d23832a611004f86eeb3b6ca067b3fa0c374ac78fe7aba6'});'></div>
+                     <div class='h-40 bg-cover bg-center' style='background-image:url("http://localhost:3000/uploads/${meal.filename}");'></div>
                     <div class='flex-1 p-4 sm:p-6 flex flex-col justify-between'>
                         <div>
                             <h3 class='font-bold text-white text-lg mb-2'>${meal.meal_name}</h3>

@@ -6,7 +6,7 @@ const { getAllTrainers, getGymTrainers, insertGymTrainers, insertWorkoutTemplate
     insertWorkoutTemplateExercise, getGymTrainersById, updateWorkoutTemplateExercise,
     removeTemplateExercise, inputFilter, insertMealTemplates, insertMealTemplatesItems,
     insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity,
-    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay } = require('../models/trainers');
+    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay, insertPremadeMealImage } = require('../models/trainers');
 
 module.exports = {
 
@@ -335,6 +335,16 @@ module.exports = {
 
         } catch (error) {
             console.error("Error adding meal template items:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    insertPremadeMealImage: async (req, res) => {
+        try {
+            const { pre_made_meal_id, filename } = req.body;
+            const data = await insertPremadeMealImage(pre_made_meal_id, filename);
+            res.json(data);
+        } catch (error) {
+            console.error("Error posting meal image", error.message);
             res.status(500).send("Internal Server Error");
         }
     },
