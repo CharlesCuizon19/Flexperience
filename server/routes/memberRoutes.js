@@ -18,6 +18,7 @@ router.get("/retrieveProposals", memberController.getProposals);
 router.post("/insertContracts", memberController.insertContract); 
 router.post("/insertActivity", memberController.insertActivity); 
 router.put("/updateExerciseStatus", memberController.updateExerciseStatus); 
+router.put("/updateMealStatus", memberController.updateMealStatus); 
 
 module.exports = router;
 

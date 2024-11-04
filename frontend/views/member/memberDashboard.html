@@ -659,7 +659,7 @@
                 .then(response => {
                     if (response.data && response.data.length > 0) { // Check if data exists and has elements
                         const mealPlanId = response.data[0].plan_id;
-                        console.log("Meal plan id:", mealPlanId);
+                        trainer_id = response.data[0].trainer_id;
                         setCookie('meal_template_id', mealPlanId, 1);
                         setCookie('member_id', member_id, 1);
                         //populateMealCards(mealPlanId, member_id);
@@ -1151,8 +1151,9 @@
         const createMealTaskCard = (meals, member_id) => {
             const { meal_name, classification, status } = meals;
             // Set icon based on status
-            console.log("zzzzz")
-            console.log(meals)
+            console.log("--")
+            console.log(trainer_id)
+            console.log(member_id)
 
             const statusIcon = status === "completed" ? `
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -1176,7 +1177,7 @@
                             <p class="text-sm text-slate-400">Classification: ${classification}</p>
                         </div>
                     </div>
-                    <button class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600" onclick="">
+                    <button class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600" onclick="markMealAsDone('${meals.status_id}', '${meal_name}', '${member_id}', '${firstname}', '${trainer_id}')">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -1295,6 +1296,31 @@
             console.error('Error:', error);
         }
     };
+    const markMealAsDone = async (status_id, meal, member_id, member_name, trainer_id) => {
+        // Here you would typically make an API call to update the status on the server
+        console.log("DEBUG START---")
+        console.log(meal)
+        console.log(member_id)
+        console.log(member_name)
+        console.log(trainer_id)
+        console.log("DEBUG END---")
+        try {
+            const response = await axios.put(`http://localhost:3000/updateMealStatus`, {
+                status_id: status_id,
+                status: 'completed'
+            });
+
+            if (response.status === 200) {
+                // Update the UI accordingly, e.g., re-fetch data or update the status locally
+                console.log('Meal marked as completed');
+                insertMealActivity(meal, member_id, member_name, trainer_id);
+            } else {
+                console.error('Failed to mark meal as completed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
     const insertActivity = async (workout, member_id, member_name, trainer_id) => {
         // Here you would typically make an API call to update the status on the server
         try {
@@ -1302,6 +1328,26 @@
                 member_id: member_id,
                 trainer_id: trainer_id,
                 message: `completed the ${workout} workout`
+            });
+
+            if (response.status === 200) {
+                // Update the UI accordingly, e.g., re-fetch data or update the status locally
+                console.log('Activity successfully inserted');
+                window.location.href = 'memberDashboard.html'
+            } else {
+                console.error('Failed to mark exercise as completed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const insertMealActivity = async (meal, member_id, member_name, trainer_id) => {
+        // Here you would typically make an API call to update the status on the server
+        try {
+            const response = await axios.post(`http://localhost:3000/insertActivity`, {
+                member_id: member_id,
+                trainer_id: trainer_id,
+                message: `just finished their ${meal} meal. Progress is on track!`
             });
 
             if (response.status === 200) {

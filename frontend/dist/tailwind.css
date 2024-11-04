@@ -709,10 +709,6 @@ video {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
-.my-auto {
-  margin-top: auto;
-  margin-bottom: auto;
-}
 .\!mt-8 {
   margin-top: 2rem !important;
 }
@@ -962,6 +958,9 @@ video {
 .h-5 {
   height: 1.25rem;
 }
+.h-52 {
+  height: 13rem;
+}
 .h-56 {
   height: 14rem;
 }
@@ -1046,20 +1045,20 @@ video {
 .max-h-96 {
   max-height: 24rem;
 }
+.max-h-\[400px\] {
+  max-height: 400px;
+}
 .max-h-\[600px\] {
   max-height: 600px;
 }
 .max-h-\[60vh\] {
   max-height: 60vh;
 }
-.max-h-\[80vh\] {
-  max-height: 80vh;
-}
-.max-h-\[90vh\] {
-  max-height: 90vh;
-}
 .max-h-\[70vh\] {
   max-height: 70vh;
+}
+.max-h-\[80vh\] {
+  max-height: 80vh;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -1486,6 +1485,9 @@ video {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
 .whitespace-normal {
   white-space: normal;
 }
@@ -1660,10 +1662,6 @@ video {
 .border-gray-700 {
   --tw-border-opacity: 1;
   border-color: rgb(55 65 81 / var(--tw-border-opacity));
-}
-.border-gray-800 {
-  --tw-border-opacity: 1;
-  border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 .border-green-500 {
   --tw-border-opacity: 1;
@@ -2393,6 +2391,10 @@ video {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
+.text-yellow-400 {
+  --tw-text-opacity: 1;
+  color: rgb(250 204 21 / var(--tw-text-opacity));
+}
 .text-yellow-500 {
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
@@ -3116,11 +3118,6 @@ header .icons span:last-child {
   background-color: rgb(55 65 81 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-gray-800:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-green-400:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(74 222 128 / var(--tw-bg-opacity));
@@ -3407,6 +3404,10 @@ header .icons span:last-child {
 
 @media (min-width: 640px) {
 
+  .sm\:mb-0 {
+    margin-bottom: 0px;
+  }
+
   .sm\:ml-64 {
     margin-left: 16rem;
   }
@@ -3417,6 +3418,10 @@ header .icons span:last-child {
 
   .sm\:mr-2 {
     margin-right: 0.5rem;
+  }
+
+  .sm\:mr-4 {
+    margin-right: 1rem;
   }
 
   .sm\:mt-11 {
@@ -3433,6 +3438,10 @@ header .icons span:last-child {
 
   .sm\:hidden {
     display: none;
+  }
+
+  .sm\:h-28 {
+    height: 7rem;
   }
 
   .sm\:h-9 {
@@ -3453,6 +3462,10 @@ header .icons span:last-child {
 
   .sm\:w-1\/4 {
     width: 25%;
+  }
+
+  .sm\:w-28 {
+    width: 7rem;
   }
 
   .sm\:w-auto {
@@ -3529,6 +3542,11 @@ header .icons span:last-child {
   .sm\:text-lg {
     font-size: 1.125rem;
     line-height: 1.75rem;
+  }
+
+  .sm\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
   }
 
   .sm\:text-xl {
@@ -3624,6 +3642,10 @@ header .icons span:last-child {
 
   .md\:w-\[60\%\] {
     width: 60%;
+  }
+
+  .md\:max-w-sm {
+    max-width: 24rem;
   }
 
   .md\:grid-cols-2 {

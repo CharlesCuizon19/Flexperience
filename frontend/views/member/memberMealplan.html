@@ -198,7 +198,7 @@
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h2 class="font-semibold text-[20px] mb-8 max-lg:text-center">
                     Today's Meal
-                    <span class="text-[16px] font-normal">October 30, 2024</span>
+                    <span class="text-[16px] font-normal date-today"></span>
                 </h2>
 
                 <!-- Container for dynamic meal items -->
@@ -366,7 +366,20 @@
 
         const memberid = getCookie("member_id")
         const meal_template_id = getCookie("meal_template_id")
+        const dateElement = document.querySelector('.date-today');
 
+
+        const today = new Date();
+        
+
+        const formattedDate = today.toLocaleDateString("en-US", {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        });
+        
+        // Insert the formatted date into the selected element
+        dateElement.textContent = formattedDate;
 
         // Fetch meals of the day from the API
         fetch(`http://localhost:3000/retrieveMealOfTheDay?member_id=${memberid}&plan_id=${meal_template_id}`)
@@ -486,10 +499,14 @@
                 Object.keys(mealsByDay).forEach(day => {
                     const meals = mealsByDay[day];
                     const dayDiv = document.createElement("div");
-                    const date = new Date(); // Set the starting date for the week
-                    date.setDate(date.getDate() + parseInt(meals[0].day_no) - 1);
-                    const formattedDate = date.toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' });
 
+                    // Use meal_date from the response directly for formatted date display
+                    const formattedDate = new Date(meals[0].meal_date).toLocaleDateString("en-US", {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    console.log(formattedDate)
                     dayDiv.innerHTML = `
                         <h2 class="font-semibold text-[16px] mb-8 max-lg:text-center">${day}
                             <span class="text-[12px] font-normal">${formattedDate}</span>
@@ -518,6 +535,7 @@
                 console.error("Error fetching meals:", error);
             }
         }
+
 
         // Fetch and render meals on page load
         fetchMeals();

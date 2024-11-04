@@ -220,7 +220,9 @@ const getMealoftheWeek = async (member_id, plan_id) => {
                 p.protein,
                 wte.classification,
                 wte.week_no,
-                wte.day_no
+                wte.day_no,
+                DATE(DATE_ADD(me.date_started, INTERVAL ((wte.week_no - 1) * 7 + (wte.day_no - 1)) DAY)) AS meal_date
+
             FROM 
                 member_meal_status mes
             JOIN 
@@ -334,9 +336,17 @@ const updateExerciseStatus = async (status, status_id) => {
     );
     return rows.length > 0 ? rows : null;
 };
+const updateMealStatus = async (status, status_id) => {
+    const [rows] = await pool.query(
+        'UPDATE member_meal_status SET status = ? WHERE status_id = ?;',
+        [status, status_id]
+    );
+    return rows.length > 0 ? rows : null;
+};
 
 
 module.exports = {
+    updateMealStatus,
     getMealoftheWeek,
     retrieveMealOfTheDay,
     getWorkoutByDay,

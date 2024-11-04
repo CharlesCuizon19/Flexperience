@@ -88,7 +88,7 @@ const gymIcon = L.icon({
 // ? REQUEST DATA FROM DATABASE TO USE IT HERE 
 async function fetchGyms() {
     try {
-        const response = await axios.get('https://capstone-erxk.onrender.com/gyms');
+        const response = await axios.get('http://localhost:3000/gyms');
         const Gyms = response.data;
         Gyms.forEach(G => {
 
@@ -148,7 +148,7 @@ async function fetchGyms() {
 
 async function fetchParks() {
     try {
-        const response = await axios.get('https://capstone-erxk.onrender.com/parks');
+        const response = await axios.get('http://localhost:3000/parks');
         const Parks = response.data;
         Parks.forEach(G => {
 
@@ -231,7 +231,7 @@ function populateGymsList(userCoords) { //? THIS FUNCTION POPULATES THE 3 NEARES
         );
 
         var content = ` 
-        <img src="https://capstone-erxk.onrender.com/uploads/${nearbyGym.img}" alt="Gym Image" class="w-24 h-24 object-cover rounded-lg mr-4">
+        <img src="https://capstone-erxk.onrender.com/uploads/${nearbyGym.img}" alt="Gym Image" class="w-24 h-52 object-cover rounded-lg mr-4">
         <div class="flex flex-col">
             <div class="al-gym-name text-lg font-bold">${nearbyGym.name}</div>
             <div class="flex items-center text-sm">
@@ -347,22 +347,18 @@ function onMapClick(e) {
 // Listen for click events on the map
 map.on("click", onMapClick);
 
-function showNearby(distances) {
-    let gym = distances;
+function showNearby(gym) {
     const overlay2 = document.getElementById("overlay2");
-    const container = document.getElementById("overlay2");
-    container.innerHTML = "";
     overlay2.classList.remove("hidden");
+    overlay2.innerHTML = ""; // Clear previous content
 
-    // Create the main div with the required classes
+    // Create the main div with updated responsive classes
     const listItem = document.createElement('div');
     listItem.classList.add(
         "gym-item",
         "cursor-pointer",
-        "p-2",
-        "mb-2",
-        "border",
-        "border-gray-800",
+        "p-4",
+        "mb-4",
         "rounded-lg",
         "bg-customGrayBtn",
         "transition",
@@ -370,107 +366,90 @@ function showNearby(distances) {
         "ease-in-out",
         "flex",
         "flex-col",
-        "items-start",
-        "shadow-md",
-        "font-[Poppins]",
+        "text-white",
+        "shadow-lg",
+        "w-full",
+        "md:max-w-sm", // Limit width on larger screens
+        "max-h-[400px]", // Set a max height
+        "overflow-y-auto", // Enable scroll if content overflows
+        "mx-auto",
     );
 
-    // Create the content
+    // Define the content using Tailwind classes
     const content = `
-    <div class="text-white text-2xl">
-        <button><ion-icon name="close-outline"></ion-icon></button>
+    <div class="flex justify-end">
+        <button class="text-white text-2xl"><ion-icon name="close-outline"></ion-icon></button>
     </div>
-    <div class="w-full h-40 bg-customGrayBtn rounded-t-lg"
-        style="background-image: url('https://capstone-erxk.onrender.com/uploads/${gym.img}'); background-size: cover; background-position: center;">
+    <img src="https://capstone-erxk.onrender.com/uploads/${gym.img}" alt="${gym.name} Image" class="w-full h-48 object-cover rounded-lg"> <!-- Using img tag with specified height -->
+    <div class="mt-4 px-2">
+        <h3 class="text-lg font-bold">${gym.name}</h3>
+        <p class="flex items-center text-sm text-gray-400 mt-1">
+            <i class="fas fa-star mr-1 text-yellow-400"></i> Ratings: ${gym.average}
+        </p>
+        <p class="flex items-center text-sm text-gray-400 mt-1">
+            <i class="fas fa-location-arrow mr-1"></i> ${gym.distance} km away
+        </p>
+        <p class="flex items-center text-sm text-gray-400 mt-1">
+            <i class="fas fa-money-bill-alt mr-1"></i> ₱${gym.dailyRates}/Session, ₱${gym.monthlyRates}/Monthly
+        </p>
     </div>
-    <div class="p2 mt-2">
-        <h3 class="text-lg font-semibold"> ${gym.name}</h3>
+    <div class="flex justify-center gap-4 mt-4">
+        <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded-full text-white">
+            <i class="fas fa-arrows-alt"></i>
+        </button>
+        <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded-full text-white">
+            <i class="fas fa-phone-alt"></i>
+        </button>
+        <button class="bg-gray-700 hover:bg-gray-600 p-2 rounded-full text-white">
+            <i class="fas fa-bookmark"></i>
+        </button>
     </div>
-    <div class="flex items-center text-sm mb-1">
-        <div class="rating flex items-center text-sm mt-1.5">
-            <strong>Ratings:</strong>&nbsp<span id="rating-value">${gym.average}</span>
-            <div class="rating-stars flex ml-2" data-rating="${gym.average}">
-                <i class="rating-star fas fa-star text-gray-400"></i>
-                <i class="rating-star fas fa-star text-gray-400"></i>
-                <i class="rating-star fas fa-star text-gray-400"></i>
-                <i class="rating-star fas fa-star text-gray-400"></i>
-                <i class="rating-star fas fa-star text-gray-400"></i>
-            </div>
-        </div>
+    <div class="mt-4 px-2">
+        <p class="text-sm text-gray-300">
+            <i class="fas fa-map-marker-alt mr-1"></i> ${gym.address}
+        </p>
+        <p class="text-sm text-gray-300">
+            <i class="fas fa-phone-alt mr-1"></i> ${gym.contact}
+        </p>
     </div>
-    <div class="p2 flex flex-col mb-1">
-        <div class="flex flex-col mb-1 mt-1">
-            <span id="nearby_distance" class="text-sm flex items-center" style="font-weight: 300;">
-                <i class="fas fa-location-arrow mr-1 mt-1"></i>
-                ${gym.distance} km away
-            </span>
-            <div class="flex flex-col mb-1 mt-1">
-                <span class="text-sm"><i class="fas fa-money-bill-alt mr-1 mt-1"></i>&nbsp;₱${gym.dailyRates}/Session</span>
-                <span class="text-sm"><i class="fas fa-money-bill-alt mr-1 mt-1"></i>&nbsp;₱${gym.monthlyRates}/Monthly</span>
-            </div>
-        </div>
-    </div>
-    <div class="flex flex-row gap-2 text-center justify-center mx-auto my-auto text-white text-sm">
-        <div>
-            <button class="rounded-full bg-customGrayBtn hover:bg-customGray py-2 px-3 shadow-lg">
-                <i class="fas fa-arrows-alt"></i>
-            </button>
-        </div>
-        <div>
-            <button class="rounded-full bg-customGrayBtn hover:bg-customGray py-2 px-3 shadow-lg">
-                <i class='fas fa-phone-alt'></i>
-            </button>
-        </div>
-        <div>
-            <button class="rounded-full bg-customGrayBtn hover:bg-customGray py-2 px-3 shadow-lg">
-                <i class='fas fa-bookmark'></i>
-            </button>
-        </div>
-    </div>
-    <div class="text-sm mb-1 mt-6 ">  
-        <i class="fas fa-map-marker-alt"></i>&nbsp; ${gym.address}
-    </div>
-    <div class="text-sm mb-1">
-        <i class="fas fa-phone-alt"></i>&nbsp; ${gym.contact}
-    </div>
-    <div class="flex items-center justify-between my-auto mx-auto p-2">
-        <button id="openStreetView" data-src="${gym.street_view}" class="bg-customGray text-white px-3 py-1 rounded-md text-sm ml-2 flex items-center hover:bg-gray-800 shadow-lg">
+    <div class="flex justify-between mt-6 px-2">
+        <button id="openStreetView" data-src="${gym.street_view}" class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm flex items-center shadow-md">
             <i class="fas fa-eye mr-2"></i> Street view
         </button>
-        <button id="viewGymButton" data-src="${gym.id}" class="bg-customGray text-white px-3 py-1 rounded-md text-sm ml-2 flex items-center hover:bg-gray-800 shadow-lg">
+        <button id="viewGymButton" data-src="${gym.id}" class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm flex items-center shadow-md">
             View Gym
         </button>
     </div>
 `;
 
+
     // Set the content to the listItem
     listItem.innerHTML = content;
 
-    // Append the listItem to the container
-    container.appendChild(listItem);
+    // Append the listItem to the overlay
+    overlay2.appendChild(listItem);
 
-    //* Added an event listener for the click event to open streetview.
-    //* I used setTimeout() here to make the button element to load first before assigning a click event 
+    // Add event listeners for buttons with a small delay to ensure they load first
     setTimeout(() => {
-        const button = document.getElementById("openStreetView")
-        const gymbutton = document.getElementById("viewGymButton")
+        const button = document.getElementById("openStreetView");
+        const gymbutton = document.getElementById("viewGymButton");
         if (button && gymbutton) {
-            button.addEventListener('click', function () {
+            button.addEventListener('click', function (event) {
                 event.stopPropagation();
                 const src = this.getAttribute('data-src');
                 ToggleStreetView(src);
             });
-            gymbutton.addEventListener('click', function () {
+            gymbutton.addEventListener('click', function (event) {
                 event.stopPropagation();
                 const gymid = this.getAttribute('data-src');
                 window.location.href = `./viewGym.html?gymid=${gymid}`;
             });
         } else {
-            console.error(`Button not found.`);
+            console.error("Button not found.");
         }
     }, 0);
-
 }
+
 
 //* function to make a route to all the gyms in the city from the location of the user
 //* and finding the nearest gym.
@@ -598,13 +577,11 @@ function setStarRatings() {
 //* function to populaate all gyms in the "Gyms around the city" section
 function populateAllGymsList() {
     var gymsList = document.getElementById("all-gyms");
-    var userMarker = null;
     // Clear existing list items
     gymsList.innerHTML = "";
-    // Add new list items - ITEMS PARA SA GYMS AROUND THE CITY
-    gyms.forEach(function (g, index) {
-        console.table(g.img)
 
+    // Add new list items for gyms around the city
+    gyms.forEach(function (g, index) {
         var listItem = document.createElement("div");
         listItem.classList.add(
             "gym-item",
@@ -619,20 +596,22 @@ function populateAllGymsList() {
             "duration-300",
             "ease-in-out",
             "flex",
-            "flex-row",
+            "flex-col", // Stacks items vertically in mobile view
+            "sm:flex-row", // Changes to row on small screens and up
             "items-center",
             "hover:bg-customGray1",
             "text-white"
         );
-        var content = ` 
-        <img src="https://capstone-erxk.onrender.com/uploads/${g.img}" alt="Gym Image" class="w-24 h-24 object-cover rounded-lg mr-4">
-        <div class="flex flex-col">
-            <div class="al-gym-name text-lg font-bold">${g.name}</div>
-            <div class="text-sm mb-1">  
+
+        var content = `
+        <img src="https://capstone-erxk.onrender.com/uploads/${g.img}" alt="Gym Image" class="w-full h-24 object-cover rounded-lg mb-4 sm:mb-0 sm:w-28 sm:h-28 sm:mr-4">
+        <div class="flex flex-col flex-1"> <!-- Added flex-1 to allow the text container to grow -->
+            <div class="al-gym-name text-sm sm:text-lg font-bold whitespace-normal overflow-hidden text-ellipsis">${g.name}</div> <!-- Responsive font size -->
+            <div class="text-xs sm:text-sm mb-1 whitespace-normal overflow-hidden text-ellipsis">  
                 <i class="fas fa-map-marker-alt"></i>&nbsp; ${g.address}
             </div>
-            <div class="rating flex items-center text-sm mt-1.5">
-                <strong>Ratings:</strong>&nbsp${g.avg}
+            <div class="rating flex items-center text-xs sm:text-sm mt-1.5">
+                <strong>Ratings:</strong>&nbsp;${g.avg}
                 <div class="rating-stars flex ml-2" data-rating="${g.avg}">
                     <i class="rating-star fas fa-star text-gray-400"></i>
                     <i class="rating-star fas fa-star text-gray-400"></i>
@@ -644,16 +623,21 @@ function populateAllGymsList() {
         </div>`;
 
         listItem.innerHTML = content;
-        document.getElementById("all-gyms").appendChild(listItem);
+        gymsList.appendChild(listItem);
 
         listItem.addEventListener("click", function (e) {
-            showNearby(gyms[index])
-            const distanceElement = document.getElementById('nearby_distance');//mao ning id sa <span> na diri nakabutang ang "2.87 km away"
-            distanceElement.classList.add('hidden'); //ihide sya gamit classlist kay and styles nato kay nasa class kay tailwind man
-
-        })
+            showNearby(gyms[index]);
+            const distanceElement = document.getElementById('nearby_distance');
+            distanceElement.classList.add('hidden'); // Hide the distance element
+        });
     });
 }
+
+
+
+
+
+
 
 //*diri na part tong STREETVIEW 
 function ToggleStreetView(src) {
