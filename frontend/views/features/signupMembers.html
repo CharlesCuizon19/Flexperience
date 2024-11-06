@@ -10,107 +10,82 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../../dist/tailwind.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 </head>
 <style>
     html {
         overflow-x: hidden;
         scroll-behavior: smooth;
     }
-
-    li {
-        text-decoration: none;
-        color: white;
-        letter-spacing: 0.5px;
-    }
-
-    li:after {
-        content: "";
-        position: absolute;
-        background-color: white;
-        height: 3px;
-        width: 0;
-        left: 0;
-        bottom: -10px;
-        transition: 0.3s;
-    }
-
-    li:hover {
-        color: white;
-    }
-
-    li:hover:after {
-        width: 100%;
-    }
-
-    .box {
-        width: 250px;
-        height: 280px;
-        margin: 0px 5px;
-        transition: 1s;
-        border-radius: 10px;
-    }
-
-    .box:hover {
-        transform: scale(1.1);
-        z-index: 2;
-        box-shadow: 1px 1px 20px 6px #EC7E4A;
-    }
 </style>
 
-<body class="bg-[#1E1E1E] font-customFont">
-    <header class="fixed h-[100px] w-full flex bg-guestNavbar justify-between drop-shadow-lg">
-        <div class="relative">
-            <img class="w-[450px] mix-blend-overlay" src="../../views/img/nav_img.png" alt="">
-        </div>
-        <div class="absolute left-20 top-4 h-16 w-16 text-xl pt-5">
-            <b
-                class="text-2xl bg-gradient-to-r from-white to-forGradientWhite text-transparent bg-clip-text">FLEXPERIENCE</b>
-        </div>
-
-        <div class="pl-5 pr-10 text-50 pt-5">
-            <button
-                class="inline-block border border-[#343639] rounded-full px-5 py-2 hover:bg-50 hover:text-white duration-300">
-                Log in
-            </button>
-        </div>
+<body class="bg-eerieBlack font-[Poppins]">
+    <header class="fixed w-full z-10">
+        <nav class="bg-customGray shadow-md py-2.5">
+            <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
+                <a href="../Landing Page/index(new).html" class="flex items-center">
+                    <img src="../../img/LOGOTESTING.svg" class="h-6 mr-3 sm:h-9" alt="Flexperiece Logo" />
+                    <span
+                        class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Flexperience</span>
+                </a>
+                <div class="flex items-center gap-2 lg:order-2">
+                    <a href="../features/login.html" target="_blank"
+                        class="text-white font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:hover:text-customOrange focus:outline-none">Login</a>
+                    <a href="signup.html" target="_blank"
+                        class="text-white font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-customOrange dark:hover:bg-orange-700 focus:outline-none">Register</a>
+                </div>
+            </div>
+        </nav>
     </header>
     <br><br>
     <main class="flex justify-center items-center h-screen">
-        <form class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mt-12">
-            <h2 class="text-2xl text-gray-700 font-bold text-center mb-6">Member fucking signup</h2>
-            <div class="mb-4">
-                <input type="text" id="firstName" placeholder="First name"
-                    class="w-full p-3 border border-gray-300 rounded" required>
+        <div class="flex flex-row w-full mx-40 pt-20 pb-10">
+            <div class=" bg-customBodyColor p-8 rounded-tr-none rounded-br-none rounded-bl-lg rounded-tl-lg rounded shadow-lg w-full lg:flex md:hidden sm:hidden">
+                <img class=" h-full w-full" src="../img/Logo (1).png" alt="">
             </div>
-            <div class="mb-4">
-                <input type="text" id="lastName" placeholder="Last name"
-                    class="w-full p-3 border border-gray-300 rounded" required>
-            </div>
-            <div class="mb-4">
-                <input type="number" id="weight" placeholder="Weight"
-                    class="w-full p-3 border border-gray-300 rounded" required>
-            </div>
+            <form class=" bg-customBodyColor p-8 rounded-tl-none rounded-bl-none rounded-br-lg rounded-tr-lg shadow-lg w-full">
+                <h2 class="text-2xl text-white font-bold text-center mb-6">Member signup</h2>
+                <div class="mb-4">
+                    <input type="text" id="firstName" placeholder="First name"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="lastName" placeholder="Last name"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <input type="number" id="weight" placeholder="Weight"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+    
+                <div class="mb-4">
+                    <input type="text" id="bodytype" placeholder="Bodytype"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                
+                <div class="mb-4">
+                    <input type="text" id="username" placeholder="Username"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" id="password" placeholder="Password (8 or more characters)"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" id="tips" class="mr-2">
+                    <label for="tips" class="text-white">Send me emails with the further updates of this website</label>
+                </div>
+    
+                <button id="signup"
+                    class="transition-transform transform bg-50 text-white py-2 px-4 rounded w-full hover:bg-orange-600 hover:scale-105">
+                    Sign Up
+                </button>
+    
+            </form>
 
-            <div class="mb-4">
-                <input type="text" id="bodytype" placeholder="Bodytype"
-                    class="w-full p-3 border border-gray-300 rounded" required>
-            </div>
-            
-            <div class="mb-4">
-                <input type="text" id="username" placeholder="Username"
-                    class="w-full p-3 border border-gray-300 rounded" required>
-            </div>
-            <div class="mb-4">
-                <input type="password" id="password" placeholder="Password (8 or more characters)"
-                    class="w-full p-3 border border-gray-300 rounded" required>
-            </div>
-
-            <button id="signup"
-                class="transition-transform transform bg-50 text-white py-2 px-4 rounded w-full hover:bg-orange-600 hover:scale-105">
-                Sign Up
-            </button>
-
-        </form>
+        </div>
         <!-- Success Modal -->
         <div id="successModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
             <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-lg text-center w-11/12 max-w-md">

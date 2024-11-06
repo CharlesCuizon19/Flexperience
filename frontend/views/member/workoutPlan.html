@@ -543,7 +543,6 @@
 
         // Make the Axios request to fetch the workout data
         const endpoint = `http://localhost:3000/getWorkoutByDay?member_id=${member_id}&date=${formattedDate}`;
-        alert(member_id)
         axios.get(endpoint)
             .then(response => {
                 const workouts = response.data;
