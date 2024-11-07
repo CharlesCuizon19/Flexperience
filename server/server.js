@@ -41,7 +41,7 @@ app.use(cors({
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://capstone-erxk.onrender.com/",
+    origin: "https://flexperience.pro",
     methods: ["GET", "POST"]
   }
 });
