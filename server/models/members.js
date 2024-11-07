@@ -151,6 +151,7 @@ const getMealoftheDay = async (member_id, plan_id) => {
                 wte.template_item_id,
                 pm.filename,
                 p.meal_name,
+                p.calories,
                 p.carbs,
                 p.fats,
             	p.protein,
@@ -181,7 +182,8 @@ const getMealoftheDay = async (member_id, plan_id) => {
             AND
                 c.Week_Number = wte.week_no
         )
-        SELECT * FROM CTE_MEAL;
+        SELECT * FROM CTE_MEAL
+        ORDER BY status_id;
         `,
         [member_id, plan_id]
     );
@@ -242,7 +244,7 @@ const getMealoftheWeek = async (member_id, plan_id) => {
         )
         SELECT * 
         FROM CTE_MEAL
-        ORDER BY week_no, day_no;
+        ORDER BY week_no, day_no, status_id;
         `,
         [member_id, plan_id]
     );

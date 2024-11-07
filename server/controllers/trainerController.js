@@ -325,10 +325,10 @@ module.exports = {
         }
     },
     insertPremadeMeals: async (req, res) => {
-        const { trainer_id, meal_name, carbs, fats, protein } = req.body;
+        const { trainer_id, meal_name, calories, carbs, fats, protein } = req.body;
         try {
             // Capture the returned insertId
-            const pre_made_meal_id = await insertPremadeMeals(trainer_id, meal_name, carbs, fats, protein);
+            const pre_made_meal_id = await insertPremadeMeals(trainer_id, meal_name, calories, carbs, fats, protein);
 
             // Respond with a success message and the inserted ID
             res.status(200).json({ message: "Pre made meal added successfully!", pre_made_meal_id: pre_made_meal_id });

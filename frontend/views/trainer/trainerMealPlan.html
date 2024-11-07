@@ -475,6 +475,14 @@
                                     placeholder="e.g., Breakfast Smoothie">
                             </div>
 
+                            <!-- Calories -->
+                            <div class="mb-5">
+                                <label for="calories" class="block text-gray-700 font-semibold mb-1">Calories (g)</label>
+                                <input type="number" id="Calories" min="0" step="5"
+                                    class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                    placeholder="e.g., 20">
+                            </div>
+
                             <!-- Carbohydrates -->
                             <div class="mb-5">
                                 <label for="carbs" class="block text-gray-700 font-semibold mb-1">Carbs (g)</label>
@@ -947,6 +955,7 @@
 
                 // Get the values of meal details
                 const mealName = document.getElementById("MealName").value;
+                const calories = document.getElementById("Calories").value;
                 const carbs = document.getElementById("Carbs").value;
                 const fats = document.getElementById("Fats").value;
                 const protein = document.getElementById("Protein").value;
@@ -955,6 +964,7 @@
                 const mealData = {
                     trainer_id: trainerid,
                     meal_name: mealName,
+                    calories: calories,
                     carbs: carbs,
                     fats: fats,
                     protein: protein
@@ -1075,15 +1085,15 @@
                 try {
                     alert(preMadeMealId)
                     const profileImageFile = document.getElementById("mealImage").files[0];
-        
+
                     if (!profileImageFile) {
                         alert("::Please select a file to upload.");
                         return;
                     }
-        
+
                     const formData = new FormData();
                     formData.append('file', profileImageFile);  // 'file' should match the key in multer
-        
+
                     // Upload the file using axios (first request)
                     axios.post('http://localhost:3000/uploadSingle', formData, {
                         headers: {
@@ -1107,7 +1117,7 @@
                             console.error("Error during upload or insertion: ", error);
                             alert('Error during upload or image insertion.');
                         });
-        
+
                 } catch (error) {
                     console.error("Unexpected error: ", error);
                     alert('Error uploading file.');
