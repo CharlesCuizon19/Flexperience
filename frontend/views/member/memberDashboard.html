@@ -121,7 +121,7 @@
                                 </li>
                                 <li>
                                     <a href="memberDashboard.html"
-                                        onclick="removeCookie('accessToken', 'meal_template_id', 'member_id');"
+                                        onclick="removeCookie('accessToken', 'meal_template_id', 'workout_template_id', 'member_id');"
                                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                                         role="menuitem">Sign out</a>
                                 </li>
@@ -223,7 +223,7 @@
             </h1>
         </div>
         <div class="flex flex-col md:flex-col">
-            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4">
+            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4" id="workoutSectioncontainer">
                 <!--Workout tasks-->
                 <div class="flex flex-col md:flex-row">
                     <div class="flex flex-col md:flex-col">
@@ -297,7 +297,6 @@
                             id="workouts-section">
                             <!-- Workout cards will be dynamically added here -->
                         </div>
-
 
 
                     </div>
@@ -422,7 +421,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4">
+            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4" id="mealContainer">
                 <!--Meal tasks-->
                 <div class="flex flex-col md:flex-row">
                     <div class="flex flex-col md:flex-col">
@@ -593,6 +592,15 @@
             }
             document.cookie = name + "=" + (value || "") + expires + "; path=/";
         }
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
 
         function fetchMemberInfo() {
             axios.get('http://localhost:3000/getMemberInfo', {
@@ -669,12 +677,14 @@
                     if (response.data && response.data.length > 0) { // Check if data exists and has elements
                         const mealPlanId = response.data[0].plan_id;
                         trainer_id = response.data[0].trainer_id;
+                        console.log("Meal plan found for this member")
                         setCookie('meal_template_id', mealPlanId, 1);
                         setCookie('member_id', member_id, 1);
                         //populateMealCards(mealPlanId, member_id);
                         populateMeals(mealPlanId, member_id)
                         populateMealTaskList(mealPlanId, member_id)
                         updateMealGauge(mealPlanId)
+                        displayDynamicDashboard()
                     } else {
                         console.log("No meal plan found for this member.");
                         const mealsContainer = document.querySelector('#meal-container');
@@ -682,11 +692,34 @@
                         placeholder.className = 'text-center text-gray-300 text-lg';
                         placeholder.innerText = "No meal plan assigned";
                         mealsContainer.appendChild(placeholder);
+                        displayDynamicDashboard()
                     }
                 })
                 .catch(error => {
                     console.error('Error fetching plan info:', error);
                 });
+        }
+
+        function displayDynamicDashboard() {
+            const mealPlanId = getCookie("meal_template_id")
+            const workoutPlanId = getCookie("workout_template_id")
+            console.log("x-x-x--x-x-")
+            console.log(workoutPlanId)
+            console.log("x-x-x--x-x-")
+            if (mealPlanId && !workoutPlanId) {
+                console.log("THIS USER IS ASSIGNED WITH MEAL PLAN ONLY")
+                const workoutContainer = document.getElementById("workoutSectioncontainer")
+                workoutContainer.classList.add("hidden")
+                
+            }
+            else if (workoutPlanId && !mealPlanId) {
+                const mealContainer = document.getElementById("mealContainer")
+                mealContainer.classList.add("hidden")
+                console.log("THIS USER IS ASSIGNED WITH WORKOUT PLAN")
+            }
+            else if (mealPlanId && workoutPlanId) {
+                console.log("THIS USER IS ASSIGNED WITH COMPREHENSIVE PLAN")
+            }
         }
 
 
@@ -789,10 +822,11 @@
                 notificationDropdown.classList.add('hidden');
             }
         });
-        function removeCookie(token, id, template_item_id) {
+        function removeCookie(token, mealTemplateId, workoutTemplateId, memberId) {
             document.cookie = token + '=; Max-Age=0; path=/';
-            document.cookie = template_item_id + '=; Max-Age=0; path=/';
-            document.cookie = id + '=; Max-Age=0; path=/';
+            document.cookie = mealTemplateId + '=; Max-Age=0; path=/';
+            document.cookie = workoutTemplateId + '=; Max-Age=0; path=/';
+            document.cookie = memberId + '=; Max-Age=0; path=/';
         }
 
         document.getElementById('acceptProposalBtn').addEventListener('click', async () => {
