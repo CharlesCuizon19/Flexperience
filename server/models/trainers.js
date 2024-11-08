@@ -339,11 +339,11 @@ const getMealProgressOftheDay = async (trainer_id) => {
     );
     return rows.length > 0 ? [rows] : null;
 };
-const insertPremadeMeals = async (trainer_id, meal_name, calories, carbs, fats, protein) => {
+const insertPremadeMeals = async (trainer_id, meal_name, calories, carbs, fats, protein, ingredients) => {
     const [rows] = await pool.query(
-       `INSERT INTO pre_made_meals (trainer_id, meal_name, calories, carbs, fats, protein)
-        VALUES (?,?,?,?,?,?)`,
-        [trainer_id, meal_name, calories, carbs, fats, protein]
+       `INSERT INTO pre_made_meals (trainer_id, meal_name, calories, carbs, fats, protein, ingredients)
+        VALUES (?,?,?,?,?,?,?)`,
+        [trainer_id, meal_name, calories, carbs, fats, protein, ingredients]
     );
     // Return only the insertId
     return rows.insertId;

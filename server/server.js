@@ -23,7 +23,7 @@ const adminRoute = require('./routes/adminRoute');
 // Initialize environment variables (.env file)
 dotenv.config();
 
-// Initialize express app
+// Initialize express app1
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -41,7 +41,7 @@ app.use(cors({
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://flexperience.pro",
+    origin: "http://127.0.0.1:5500",
     methods: ["GET", "POST"]
   }
 });

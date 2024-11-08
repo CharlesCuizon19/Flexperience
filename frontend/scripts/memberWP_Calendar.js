@@ -27,7 +27,7 @@ function renderCalendar(month, year) {
 
         // Create the cell with an onclick event to set the clicked date
         row += `<td class="${isToday ? 'bg-customOrange text-white' : ''}" onclick="setClickedDate(${day}, ${month}, ${year})">
-                    <div class="flex flex-col xl:aspect-square max-xl:min-h-[60px] p-3.5 bg-transparent border-r border-b border-50 transition-all duration-300 hover:bg-50 cursor-pointer ${isToday ? 'bg-customOrange text-white rounded-full' : ''}">
+                    <div class="flex flex-col xl:aspect-square max-xl:min-h-[60px] p-10 bg-transparent border-r border-b border-50 transition-all duration-300 hover:bg-50 cursor-pointer ${isToday ? 'bg-customOrange text-white rounded-full' : ''}">
                         <p class="text-base font-semibold">${day}</p>
                         <br>
                         <p class="text-xs">10 </p>

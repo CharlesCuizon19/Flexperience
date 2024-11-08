@@ -414,7 +414,7 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     })
-                    imgPath = uploadResponse.data.filePath; // Store the file path from the response
+                    imgPath = uploadResponse.data.fileName; // Store the file path from the response
                 } catch (error) {
                     console.error("Error uploading image:", error);
                     alert("Image upload failed.");
