@@ -484,10 +484,19 @@ async function addSubscriptionRecord(admin_id, gym_id, subscription_id, days) {
 
 async function retrieveMemberChatLog(trainer_id) {
     const [result] = await pool.query(`
-        SELECT c.id, CONCAT(m.lastname,', ',m.firstname) AS member_name, c.member_id
+        SELECT c.id, 
+            CONCAT(m.lastname, ', ', m.firstname) AS member_name, 
+            c.member_id, 
+            ms.message
         FROM conversation_tbl c
         INNER JOIN members m ON c.member_id = m.member_id
-        WHERE trainer_id = ?
+        INNER JOIN messages ms ON ms.conversation_id = c.id
+        INNER JOIN (
+            SELECT conversation_id, MAX(id) AS latest_message_id
+            FROM messages
+            GROUP BY conversation_id
+        ) latest ON ms.id = latest.latest_message_id
+        WHERE trainer_id = ?;
     `, [trainer_id])
 
     return result
@@ -495,11 +504,30 @@ async function retrieveMemberChatLog(trainer_id) {
 
 async function retrieveTrainerchatLog(member_id) {
     const [result] = await pool.query(`
-        SELECT c.id, CONCAT(m.lastname,', ',m.firstname) AS trainer_name, c.trainer_id, i.filename
-        FROM conversation_tbl c
-        INNER JOIN trainers m ON c.trainer_id = m.trainer_id
-        INNER JOIN trainer_images i ON c.trainer_id = i.trainer_id
-        WHERE member_id = ?
+        SELECT 
+            c.id, 
+            CONCAT(m.lastname, ', ', m.firstname) AS trainer_name, 
+            c.trainer_id, 
+            i.filename AS trainer_image, 
+            ms.message
+        FROM 
+            conversation_tbl c
+        INNER JOIN 
+            trainers m ON c.trainer_id = m.trainer_id
+        INNER JOIN 
+            trainer_images i ON c.trainer_id = i.trainer_id
+        INNER JOIN 
+            messages ms ON ms.conversation_id = c.id
+        INNER JOIN (
+            SELECT 
+                conversation_id, MAX(id) AS latest_message_id
+            FROM 
+                messages
+            GROUP BY 
+                conversation_id
+        ) latest ON ms.id = latest.latest_message_id
+        WHERE 
+            c.member_id = ?;
     `, [member_id])
 
     return result

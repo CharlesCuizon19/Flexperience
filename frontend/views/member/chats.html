@@ -328,16 +328,30 @@
                 // Create a container div to hold the image, text, and indicator side by side
                 const container = document.createElement('div');
                 container.classList.add('flex', 'items-center', 'justify-between', 'w-full');
-
+                console.log(trainer.trainer_image)
                 // Create an image element for the trainer's avatar
                 const avatar = document.createElement('img');
-                avatar.src = 'http://localhost:3000/uploads/' + trainer.filename || 'default-avatar.jpg'; // Use trainer's avatar or a default one
+                avatar.src = 'http://localhost:3000/uploads/' + (trainer.trainer_image || 'default-avatar.jpg'); // Use trainer's avatar or a default one
                 avatar.alt = `${trainer.trainer_name}'s avatar`;
-                avatar.classList.add('h-8', 'w-8', 'rounded-full', 'mr-1'); // Tailwind classes for circular image and spacing
+                avatar.classList.add('h-8', 'w-8', 'rounded-full', 'mr-2'); // Tailwind classes for circular image and spacing
 
-                // Add trainer name to a text element inside the container
+                // Create a div to hold the trainer name and message text
+                const textContainer = document.createElement('div');
+                textContainer.classList.add('flex', 'flex-col', 'justify-center');
+
+                // Add trainer name to a text element inside the textContainer
                 const trainerName = document.createElement('span');
                 trainerName.textContent = trainer.trainer_name;
+                trainerName.classList.add('text-white', 'font-medium'); // Styling for the trainer name
+
+                // Add the recent message to another text element inside the textContainer
+                const recentMessage = document.createElement('span');
+                recentMessage.textContent = trainer.message || ''; // Display the latest message
+                recentMessage.classList.add('text-gray-300', 'text-sm', 'truncate'); // Styling for the recent message
+
+                // Append trainer name and recent message to the textContainer
+                textContainer.appendChild(trainerName);
+                textContainer.appendChild(recentMessage);
 
                 // Create the online indicator
                 const onlineIndicator = document.createElement('span');
@@ -350,9 +364,9 @@
                     onlineIndicator.classList.add('bg-gray-500');
                 }
 
-                // Append the avatar, trainer name, and online indicator to the container
+                // Append the avatar, textContainer (with trainer name and message), and online indicator to the container
                 container.appendChild(avatar);
-                container.appendChild(trainerName);
+                container.appendChild(textContainer);
                 container.appendChild(onlineIndicator);
 
                 listItem.addEventListener('click', () => {
@@ -370,8 +384,8 @@
                 // Append the list item to the chat list container
                 chatListElement.appendChild(listItem);
             });
-
         }
+
 
         const loadChatHistory = async (trainerid) => {
             try {
@@ -472,7 +486,8 @@
 
             if (data.img_path) {
                 const imgElement = document.createElement("img");
-                imgElement.src = `http://localhost:3000/uploads/${data.img_path}`;
+                console.log(data.img_path)
+                imgElement.src = `https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${data.img_path}`;
                 imgElement.classList.add("w-full", "rounded-md", "mb-2");
                 messageElement.appendChild(imgElement);
             }

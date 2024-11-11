@@ -411,51 +411,55 @@
             function populateChatList(chatList) {
                 const chatListElement = document.getElementById('chatList');
                 chatListElement.innerHTML = ''; // Clear any existing content
-
+            
                 chatList.forEach(member => {
                     const listItem = document.createElement('li');
-                    listItem.classList.add('p-3', 'bg-gray-700', 'rounded-lg', 'hover:bg-gray-600', 'cursor-pointer', 'flex', 'justify-between', 'items-center');
-
-                    // Create a container div to hold the text and indicator side by side
-                    const container = document.createElement('div');
-                    container.classList.add('flex', 'items-center', 'justify-between', 'w-full');
-
-                    // Add member name to a text element inside the container
+                    listItem.classList.add('p-3', 'bg-gray-700', 'rounded-lg', 'hover:bg-gray-600', 'cursor-pointer', 'flex', 'flex-col', 'justify-between', 'items-start', 'space-y-1');
+            
+                    // Create a container div to hold the name and online indicator
+                    const header = document.createElement('div');
+                    header.classList.add('flex', 'justify-between', 'items-center', 'w-full');
+            
+                    // Add member name to a text element inside the header
                     const memberName = document.createElement('span');
+                    memberName.classList.add('text-white', 'font-semibold');
                     memberName.textContent = member.member_name;
-                    container.appendChild(memberName);
-
-
+                    header.appendChild(memberName);
+            
+                    // Add online indicator
                     const onlineIndicator = document.createElement('span');
                     onlineIndicator.classList.add('h-3', 'w-3', 'rounded-full', 'ml-2');
-
-                    // Check if the member is online based on their member_id
-                    if (onlineUsers[member.member_id]) { //DIRI ANG LOGIC PARA MABAL.AN IF ONLINE OR DILI ANG USER
+            
+                    // Check if the member is online
+                    if (onlineUsers[member.member_id]) {
                         onlineIndicator.classList.add('bg-green-500');
                     } else {
                         onlineIndicator.classList.add('bg-gray-500');
                     }
-
-
-                    container.appendChild(onlineIndicator);
-
-
+            
+                    header.appendChild(onlineIndicator);
+                    listItem.appendChild(header);
+            
+                    // Add recent message
+                    const recentMessage = document.createElement('span');
+                    recentMessage.classList.add('text-gray-300', 'text-sm', 'truncate', 'w-full');
+                    recentMessage.textContent = member.message;
+                    listItem.appendChild(recentMessage);
+            
                     listItem.addEventListener('click', () => {
-                        clear();  // PARA DILI MAG STACK ANG MESSAGES EVERYTIME WE CLICK A LIST
+                        clear();  // Clear chat history
                         document.getElementById('chatWith').textContent = member.member_name;
                         console.log(member.member_id);
                         memberid = member.member_id;  // Use this ID to load member-specific chat
                         loadChatHistory(memberid);  // Load chat history for the clicked member
                         CheckConversation();  // Any additional function to execute
                     });
-
-                    // Append the container to the list item
-                    listItem.appendChild(container);
-
+            
                     // Append the list item to the chat list container
                     chatListElement.appendChild(listItem);
                 });
             }
+            
 
             const loadChatHistory = async (memberId) => {
                 try {
@@ -492,6 +496,7 @@
                     const path = "/server/";
                     const formData = new FormData();
                     formData.append('file', file);
+                    console.log("File in FormData:", formData.get('file'));
 
                     try {
                         const uploadResponse = await axios.post('http://localhost:3000/uploadSingle', formData, {
@@ -499,11 +504,15 @@
                                 'Content-Type': 'multipart/form-data'
                             }
                         })
-                        console.log("--------------------")
-                        console.log(uploadResponse)
-                        imgPath = uploadResponse.data.fileName; // Store the file path from the response
+                        console.log("--------------------hereee")
+                        imgPath = uploadResponse.data.fileUrl; // This should be the generated filename, e.g., '1731303279230.jpg'
+                        console.log("File Path in Supabase:", imgPath);
+                        console.log("Received response from backend:", uploadResponse.data);
+                        console.log("File URL in Supabase:", uploadResponse.data.fileUrl); // This should give you the full URL
+                        console.log("File Name:", uploadResponse.data.fileName); // This should give you the original filename
+
                     } catch (error) {
-                        console.error("Error uploading image:", error);
+                        console.error("Error uploading image:", error.message);
                         alert("Image upload failed.");
                         return;
                     }
@@ -567,7 +576,7 @@
                     console.log("------------$$$")
                     console.log(data.img_path)
                     const imgElement = document.createElement("img");
-                    imgElement.src = `http://localhost:3000/uploads/${data.img_path}`;
+                    imgElement.src = `https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${data.img_path}`;
                     imgElement.classList.add("w-full", "rounded-md", "mb-2");
                     messageElement.appendChild(imgElement);
                 }
