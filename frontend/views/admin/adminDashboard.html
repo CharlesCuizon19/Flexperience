@@ -147,8 +147,7 @@
                     </button>
                     <a href="#" class="flex ms-2 md:me-24">
                         <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
-                        <span
-                            class="self-center text-xl font-semibold sm:text-2xl text-white">FLEXPERIENCE</span>
+                        <span class="self-center text-xl font-semibold sm:text-2xl text-white">FLEXPERIENCE</span>
                     </a>
                 </div>
                 <div class="flex items-center">
@@ -311,6 +310,9 @@
                                                 Street Address</th>
                                             <th
                                                 class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
+                                                Renewal Date</th>
+                                            <th
+                                                class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
                                                 Subscription</th>
                                             <th
                                                 class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
@@ -372,7 +374,8 @@
                     </button>
                 </div>
             </div>
-            <div class="bg-div_color p-2 shadow-xl w-full border-border_color border-2 rounded-b-lg md:mx-auto md:overflow-none overflow-x-scroll overflow-auto md:overflow-x-none scrollbar-thin md:scrollbar-none scrollbar-track-div_color scrollbar-thumb-50">
+            <div
+                class="bg-div_color p-2 shadow-xl w-full border-border_color border-2 rounded-b-lg md:mx-auto md:overflow-none overflow-x-scroll overflow-auto md:overflow-x-none scrollbar-thin md:scrollbar-none scrollbar-track-div_color scrollbar-thumb-50">
                 <table class="min-w-full text-white shadow-md overflow-hidden">
                     <thead>
                         <tr class="bg-50">
@@ -386,6 +389,18 @@
                         <!-- Plans will be dynamically injected here -->
                     </tbody>
                 </table>
+                <div id="paginationControls" class="flex justify-center mt-4 space-x-2">
+                    <button id="prevPage" class="px-4 py-2 bg-50 text-white rounded flex items-center"
+                            onclick="changePage(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="nextPage" class="px-4 py-2 bg-50 text-white rounded flex items-center"
+                            onclick="changePage(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+
             </div>
         </div>
 
@@ -401,7 +416,7 @@
     <!-- Modal -->
     <div id="modal" class="fixed inset-0 flex mt-9 items-center justify-center bg-black bg-opacity-50 hidden">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-lg w-full">
-            <h1 class="text-2xl font-bold text-gray-700 mb-4 text-center">Create PayPal Subscription
+            <h1 class="text-2xl font-bold text-gray-700 mb-4 text-center">Create Subscription
                 Plan</h1>
 
             <form id="createPlanForm" class="space-y-6">
@@ -423,6 +438,7 @@
                     <select id="intervalUnit" name="intervalUnit"
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="MONTH">Month</option>
+                        <option value="QUARTERLY">Quarterly</option>
                         <option value="YEAR">Year</option>
                     </select>
                 </div>
@@ -432,6 +448,12 @@
                         Count:</label>
                     <input type="number" id="intervalCount" name="intervalCount" min="1" required
                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="Description" class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea id="Description" name="Description" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        rows="2"></textarea>
                 </div>
 
                 <div>
@@ -530,6 +552,13 @@
         tbody.innerHTML = ''; // Clear the table before appending new data
 
         data.forEach(item => {
+            // Convert Upcoming_Payment_Date to a Date object
+            const paymentDate = new Date(item.Upcoming_Payment_Date);
+
+            // Format as "Tue Dec 03 2024"
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            const formattedDate = paymentDate.toLocaleDateString('en-US', options);
+
             // Create a table row
             const tr = document.createElement('tr');
             tr.classList.add('bg-customGray', 'hover:bg-gray-600');
@@ -539,6 +568,7 @@
                 <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.gym_admin}</td>
                 <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.gym_name}</td>
                 <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.street_address}</td>
+                <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${formattedDate}</td>
                 <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.Subscription}</td>
                 <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">
                     <span class="bg-50 text-white px-2 py-1 rounded-full ${item.membership_status === 'Active' ? 'bg-green-600' : 'bg-gray-500'}">
@@ -550,6 +580,7 @@
             tbody.appendChild(tr);
         });
     }
+
 
     // Function to fetch data using Axios
     function fetchGymData() {
@@ -669,18 +700,29 @@
         });
 
 
-    async function populatePlans() {
+    let currentPage = 1;
+    const pageSize = 10; // Set the number of plans to display per page
+
+    async function populatePlans(page = 1) {
         const productID = 'PROD-4VR73311L4870944G';  // Your product ID here
         try {
             // Make a GET request to the backend to get all plans
             const response = await axios.get(`http://localhost:3000/admin/get-plans?productID=${productID}`);
-            const plans = response.data;
-            // Display the plans in the table
+            const allPlans = response.data;
+
+            // Calculate start and end indices for current page
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+            const paginatedPlans = allPlans.slice(start, end);
+
+            // Clear previous plans from the table
             const plansContainer = document.getElementById('plansContainer');
-            plans.forEach(plan => {
+            plansContainer.innerHTML = '';
+
+            // Display paginated plans in the table
+            paginatedPlans.forEach(plan => {
                 const planRow = document.createElement('tr');
                 planRow.classList.add('border-b', 'bg-customGray', 'hover:bg-gray-600');
-
                 planRow.innerHTML = `
                         <td class="py-2 border-b border-border_color px-4 text-[12px] font-normal">${plan.id}</td>
                         <td class="py-2 border-b border-border_color px-4 text-[12px] font-normal">${plan.name}</td>
@@ -689,11 +731,26 @@
                     `;
                 plansContainer.appendChild(planRow);
             });
+
+            // Update pagination controls
+            updatePaginationControls(page, allPlans.length);
+
         } catch (error) {
             console.error('Error fetching plans:', error);
         }
-
     }
+    function updatePaginationControls(page, totalPlans) {
+        const totalPages = Math.ceil(totalPlans / pageSize);
+
+        document.getElementById('prevPage').disabled = page <= 1;
+        document.getElementById('nextPage').disabled = page >= totalPages;
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        populatePlans(currentPage);
+    }
+
 
     // Modal functionality
     const modal = document.getElementById("modal");
@@ -718,6 +775,7 @@
         const intervalUnit = document.getElementById("intervalUnit").value;
         const intervalCount = document.getElementById("intervalCount").value;
         const productID = document.getElementById("productID").value;
+        const Description = document.getElementById("Description").value;
 
 
         try {
@@ -727,11 +785,13 @@
                 price,
                 intervalUnit,
                 intervalCount,
-                productID
+                productID,
+                Description
             });
 
             // Display success message
             document.getElementById("message").innerText = `Plan created successfully! Plan ID: ${response.data.planID}`;
+            insertSubscriptionPlan(planName,price,intervalUnit,Description);
             setTimeout(() => {
                 window.location.href = 'adminDashboard.html';
             }, 2500);
@@ -741,6 +801,31 @@
             document.getElementById("message").innerText = 'Error creating plan. Please try again.';
         }
     });
+
+    async function insertSubscriptionPlan(planName, price, intervalUnit, Description) {
+        try {
+            let duration_months;
+            if (intervalUnit == "MONTH") {
+                duration_months = 1;
+            } else if (intervalUnit == "QUARTERLY") {
+                duration_months = 3;
+            } else if (intervalUnit == "YEAR") {
+                duration_months = 12;
+            }
+
+
+            const response = await axios.post('http://localhost:3000/insertPlan', {
+                plan_name: planName,
+                price: price,
+                duration_months: duration_months,
+                description: Description,
+            });
+
+            console.log('Subscription added successfully:', response.data);
+        } catch (error) {
+            console.error('Error adding subscription:', error);
+        }
+    }
 
 
 

@@ -7,6 +7,7 @@ router.get("/getVerifiedAdmins", gymAdmin.getVerifiedAdmins);
 router.get("/getSales", gymAdmin.getSales); 
 router.get("/getTrainerSales", gymAdmin.getTrainerSales); 
 router.post("/insertTrainerImage", gymAdmin.AddTrainerProfile); 
+router.post("/insertPlan", gymAdmin.insertPlan); 
 
 
 module.exports = router;

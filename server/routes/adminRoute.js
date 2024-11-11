@@ -6,10 +6,10 @@ const { createPlan,getAllPlansForProduct } = require("../services/paypal.js");  
 
 // Route for creating a PayPal subscription plan
 router.post('/create-plan', async (req, res) => {
-    const { planName, price, intervalUnit, intervalCount, productID } = req.body;  // Expect productID from the request
+    const { planName, price, intervalUnit, intervalCount, productID, Description } = req.body;  // Expect productID from the request
 
     try {
-        const planID = await createPlan(productID, planName, price, intervalUnit, intervalCount);
+        const planID = await createPlan(productID, planName, price, intervalUnit, intervalCount, Description);
         res.status(200).json({ message: 'Plan created successfully', planID });
     } catch (error) {
         console.error(error);

@@ -167,7 +167,7 @@ exports.getSubscriptionDetails = async (subscriptionID) => {
     }
 };
 
-exports.createPlan = async (productID, planName, price, intervalUnit, intervalCount) => {
+exports.createPlan = async (productID, planName, price, intervalUnit, intervalCount, Description) => {
     const accessToken = await generateAccessToken();
 
     const response = await axios({
@@ -180,7 +180,7 @@ exports.createPlan = async (productID, planName, price, intervalUnit, intervalCo
         data: {
             product_id: "PROD-4VR73311L4870944G",  // Use the manually created product ID
             name: planName,
-            description: `Subscription plan for ${planName}`,
+            description: `Subscription plan for ${Description}`,
             status: 'ACTIVE',
             billing_cycles: [{
                 frequency: {
@@ -219,19 +219,38 @@ exports.createPlan = async (productID, planName, price, intervalUnit, intervalCo
 // Function to get all plans for a product ID
 exports.getAllPlansForProduct = async (productID) => {
     const accessToken = await generateAccessToken(); // Fetch access token for PayPal API
+    let allPlans = [];
+    let currentPage = 1;
+    const pageSize = 20; // Adjust according to PayPal's limits, likely 10 or 20
 
-    const response = await axios({
-        url: `${process.env.PAYPAL_BASE_URL}/v1/billing/plans?product_id=${productID}`,
-        method: 'get',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
+    try {
+        while (true) {
+            const response = await axios({
+                url: `${process.env.PAYPAL_BASE_URL}/v1/billing/plans?page=${currentPage}&page_size=${pageSize}&product_id=${productID}`,
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            const plans = response.data.plans || [];
+            allPlans = allPlans.concat(plans);
+
+            // Stop if there are no more pages
+            if (plans.length < pageSize) break;
+
+            currentPage++; // Move to the next page
         }
-    });
 
-    return response.data.plans;  // Return the list of plans for this product
+        const activePlans = allPlans.filter(plan => plan.status === 'ACTIVE');
+        return activePlans;
+
+    } catch (error) {
+        console.error("Error fetching plans:", error.response ? error.response.data : error.message);
+        throw error;
+    }
 };
-
 
 
 
