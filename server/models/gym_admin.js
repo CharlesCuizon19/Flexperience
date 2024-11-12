@@ -31,6 +31,36 @@ const getVerifiedAdmins = async () => {
 
     return rows;
 };
+const getAdminGyms = async (id) => {
+    const [rows] = await pool.query(
+        `SELECT * FROM gyms WHERE admin_id = ?`,
+        [id]);
+
+    return rows;
+};
+const getSalesById = async (gym_id) => {
+    const [rows] = await pool.query(
+        `   SELECT 
+            gym_id,
+            COUNT(name) as members_registered,
+            YEAR(date_created) AS year,
+            MONTH(date_created) AS month,
+            SUM(amount_paid) AS total_amount_paid
+        FROM 
+            member_registrations
+        WHERE
+            gym_id = ?
+        GROUP BY 
+            gym_id,
+            YEAR(date_created),
+            MONTH(date_created)
+        ORDER BY 
+            year DESC, month DESC;
+    `,
+        [gym_id]);
+
+    return rows;
+};
 
 
 async function AddTrainerProfile(trainer_id, filename) {
@@ -41,17 +71,28 @@ async function AddTrainerProfile(trainer_id, filename) {
 
     return result
 }
-async function insertPlan(planName,price,intervalUnit,Description) {
+async function insertPlan(planName, price, intervalUnit, Description) {
     const result = await pool.query(`
     INSERT INTO subscriptions (plan_name,price,duration_months,description) 
     VALUES (?,?,?,?)
-    `, [planName,price,intervalUnit,Description])
+    `, [planName, price, intervalUnit, Description])
+
+    return result
+}
+async function insertMemberRegistration(gym_id, name, membership_type, amount_paid) {
+    const result = await pool.query(`
+    INSERT INTO member_registrations (gym_id, name,membership_type,amount_paid) 
+    VALUES (?,?,?,?)
+    `, [gym_id, name, membership_type, amount_paid])
 
     return result
 }
 
 
 module.exports = {
+    getSalesById,
+    getAdminGyms,
+    insertMemberRegistration,
     insertPlan,
     getVerifiedAdmins,
     AddTrainerProfile

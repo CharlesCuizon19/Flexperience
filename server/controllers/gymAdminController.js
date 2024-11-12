@@ -1,5 +1,5 @@
 const { GetGymAdminInfo, getSales, getTrainerSales } = require('../models/database');
-const { getVerifiedAdmins,AddTrainerProfile,insertPlan } = require('../models/gym_admin');
+const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById } = require('../models/gym_admin');
 
 module.exports = {
     GetGymAdminInfo: async (req, res) => {
@@ -12,12 +12,32 @@ module.exports = {
             res.status(500).send("Internal Server Error");
         }
     },
+    getAdminGyms: async (req, res) => {
+        try {
+            const { id } = req.query;
+            const data = await getAdminGyms(id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching admin gyms:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
     getSales: async (req, res) => {
         try {
             const data = await getSales();
             res.json(data);
         } catch (error) {
             console.error("Error fetching data:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    getSalesById: async (req, res) => {
+        try {
+            const { gym_id } = req.query;
+            const data = await getSalesById(gym_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching gyms sales:", error.message);
             res.status(500).send("Internal Server Error");
         }
     },
@@ -62,6 +82,19 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error adding plan:", error);
+            res.status(500).send("Internal Server Error", error.message);
+        }
+    },
+
+    insertMemberRegistration: async (req, res) => {
+        try {
+            const { gym_id, name, membership_type, amount_paid} = req.body;
+            console.log("RECEIVED DATA: ")
+            console.log(req.body)
+            const data = await insertMemberRegistration(gym_id, name,membership_type,amount_paid);
+            res.json(data);
+        } catch (error) {
+            console.error("Error registering member:", error.message);
             res.status(500).send("Internal Server Error", error.message);
         }
     }

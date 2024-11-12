@@ -1,154 +1,239 @@
+document.addEventListener('DOMContentLoaded', async () => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const id = getCookie("gymAdminId");
+  let gymId;
 
-document.addEventListener('DOMContentLoaded', () => {
-  function modifyPending() {
-    var modify_pending = document.getElementById('pending_card')
-    var pending_modify_input = document.getElementById('pending_modify_input')
-    var modify_text = document.getElementById('modify_text')
-    modify_pending.classList.add('border-50')
-    modify_pending.classList.add('border-b-2')
-    modify_pending.classList.add('pb-10')
-    pending_modify_input.classList.remove('hidden')
-    modify_text.classList.remove('hidden')
+  // Initialize empty data arrays for registered members and amount
+  const registeredMembersData = new Array(12).fill(0); // Monthly registered members count
+  const amountData = new Array(12).fill(0); // Monthly total amount paid
+
+  // Track the current chart instances
+  let amountChartInstance = null;
+  let membersChartInstance = null;
+  let lineChartInstance = null;
+
+  // Fetch sales data from the endpoint
+  loadGymDropdowns(id);
+
+  function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
   }
 
-  function cancel_Modiy() {
-    var modify_pending = document.getElementById('pending_card')
-    var pending_modify_input = document.getElementById('pending_modify_input')
-    var modify_text = document.getElementById('modify_text')
-    modify_pending.classList.remove('border-50')
-    modify_pending.classList.remove('border-b-2')
-    modify_pending.classList.remove('pb-10')
-    pending_modify_input.classList.add('hidden')
-    modify_text.classList.add('hidden')
+  async function loadGymDropdowns(id) {
+    try {
+      const response = await axios.get(`http://localhost:3000/getAdminGyms?id=${id}`);
+      const gyms = response.data;
+
+      const dropdown = document.getElementById('gymDropdown');
+      dropdown.innerHTML = ''; // Clear existing options
+
+      gyms.forEach(gym => {
+        const option = document.createElement('option');
+        option.value = gym.gym_id;
+        option.textContent = gym.gym_name;
+        dropdown.appendChild(option);
+      });
+
+      gymId = gyms[0].gym_id; // Set initial gymId based on the first gym
+      await fetchSalesData(gymId); // Fetch sales data for the initial gym
+
+    } catch (error) {
+      console.error('Error fetching gyms:', error);
+      alert('Could not load gyms. Please try again later.');
+    }
   }
 
-
-  //calendar
-
-  const currentDate = document.querySelector(".current-date"),
-    daysTag = document.querySelector(".days"),
-    prevNextIcon = document.querySelectorAll(".icons span");
-
-  //getting new date, current year and month
-  let date = new Date(),
-    currYear = date.getFullYear(),
-    currMonth = date.getMonth();
-
-  const months = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
-
-  const renderCalendar = () => {
-    let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), //first day
-      lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), //last date sa month
-      lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), //last day sa month
-      lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); //last date previous month
-    let liTag = "";
-
-    for (let i = firstDayofMonth; i > 0; i--) { //previous month last days
-      liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
-    }
-
-    for (let i = 1; i <= lastDateofMonth; i++) { // all days of current month
-
-      //current day,month, year active
-      let isToday = i === date.getDate() && currMonth === new Date().getMonth()
-        && currYear === new Date().getFullYear() ? "active" : "";
-      liTag += `<li class="${isToday}">${i}</li>`;
-    }
-
-    for (let i = lastDayofMonth; i < 6; i++) { //next month first days
-      liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
-    }
-
-    currentDate.innerText = `${months[currMonth]} ${currYear}`;
-    daysTag.innerHTML = liTag;
-  }
-  renderCalendar();
-
-  //click event sa icons
-  prevNextIcon.forEach(icon => {
-    icon.addEventListener("click", () => {
-      currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-
-      if (currMonth < 0 || currMonth > 11) {
-        date = new Date(currYear, currMonth);
-        currYear = date.getFullYear(); //updates current year with new date year
-        currMonth = date.getMonth(); //updates current month with new date month
-      } else { //pass new date as date value
-        date = new Date();
-      }
-      renderCalendar();
-    });
+  // Add event listener to update the charts when a gym is selected from the dropdown
+  document.getElementById('gymDropdown').addEventListener('change', async (event) => {
+    const selectedGymId = event.target.value;
+    gymId = selectedGymId;
+    await fetchSalesData(gymId); // Fetch data for the newly selected gym
   });
 
+  async function fetchSalesData(gymId) {
+    try {
+      const response = await axios.get(`http://localhost:3000/getSalesById?gym_id=${gymId}`);
+      const salesData = response.data;
 
-  //sidebar
-  var btnContainer = document.getElementById("forActive");
-  var btns = btnContainer.getElementsByClassName("btn");
+      // Reset data arrays to avoid carrying over old data
+      amountData.fill(0); // Reset total amount data
+      registeredMembersData.fill(0); // Reset registered members data
 
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener('click', function () {
-      var current = document.getElementsByClassName("active");
-      current[0].className = current[0].className.replace(" active");
-      this.className += " active";
-    })
+      if (salesData.length > 0) {
+        // Populate data arrays with fetched data if there is sales data
+        salesData.forEach(item => {
+          const monthIndex = item.month - 1; // Convert month number to zero-based index
+          amountData[monthIndex] = parseInt(item.total_amount_paid, 10);
+          registeredMembersData[monthIndex] = item.members_registered;
+        });
+      }
+
+      // Update the charts with the new data (even if it's empty, it will be correctly displayed)
+      updateCharts();
+    } catch (error) {
+      console.error('Error fetching sales data:', error);
+    }
   }
 
 
+  // Function to update the charts
+  function updateCharts() {
+    // Destroy existing chart instances if they exist
+    if (amountChartInstance) amountChartInstance.destroy();
+    if (membersChartInstance) membersChartInstance.destroy();
+    if (lineChartInstance) lineChartInstance.destroy();
 
-
-  // --------------------For the Chart----------------
-
-  const ctx = document.getElementById('myChart').getContext('2d');
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [{
-        label: 'Registered Gyms',
-        data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3], // manipulate here the data for the bars to show up
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
+    // Chart for Total Amount Paid
+    const amountCtx = document.getElementById('amountChart').getContext('2d');
+    amountChartInstance = new Chart(amountCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Total Sales',
+            data: amountData,
+            backgroundColor: 'rgba(236, 126, 74, 0.5)',  // rgba equivalent of #EC7E4A with 50% opacity
+            borderColor: 'rgba(236, 126, 74, 1)',       // rgba equivalent of #EC7E4A with full opacity          
+            borderWidth: 1
+          }
+        ]
       },
-      {
-        label: 'Pending Registrations',
-        data: [10, 10, 10, 10, 10, 10, 12, 19, 3, 5, 2, 3],   // manipulate here the data for the bars to show up
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: 'rgba(255, 255, 255, 0.1)'
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
           },
-          ticks: {
-            color: '#ffffff'
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
           }
         },
-        x: {
-          grid: {
-            color: 'rgba(255, 255, 255, 0.1)'
-          },
-          ticks: {
-            color: '#ffffff'
-          }
-        }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#ffffff'
+        plugins: {
+          legend: {
+            labels: {
+              color: '#ffffff'
+            }
           }
         }
       }
-    }
-  });
+    });
 
-})
+    // Chart for Registered Members
+    const membersCtx = document.getElementById('membersChart').getContext('2d');
+    membersChartInstance = new Chart(membersCtx, {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: 'Registered Members',
+            data: registeredMembersData,
+            backgroundColor: 'rgba(236, 126, 74, 0.5)',  // rgba equivalent of #EC7E4A with 50% opacity
+            borderColor: 'rgba(236, 126, 74, 1)',       // rgba equivalent of #EC7E4A with full opacity   
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#ffffff'
+            }
+          }
+        }
+      }
+    });
+
+    // Set up the months array (for the x-axis)
+    const monthss = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    // Line Chart for Sales Data Over Time
+    const lineChartCtx = document.getElementById('lineChart').getContext('2d');
+    lineChartInstance = new Chart(lineChartCtx, {
+      type: 'line',
+      data: {
+        labels: monthss, // X-axis: months
+        datasets: [
+          {
+            label: 'Total Sales Over Time',
+            data: amountData, // Y-axis: total sales (from the server)
+            borderColor: 'rgba(250, 126, 90, 60)',
+            backgroundColor: 'rgba(236, 126, 74, 0.5)',
+            fill: true,
+            tension: 0.4  // Smooth the line
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#ffffff'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#ffffff'
+            }
+          }
+        }
+      }
+    });
+  }
+
+});
