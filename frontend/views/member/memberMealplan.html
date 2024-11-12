@@ -219,138 +219,91 @@
         <!-- Modal Structure -->
         <div id="hs-stacked-overlays"
             class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-70 flex items-center justify-center">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
-                <div class="flex justify-between items-center p-4 border-b border-gray-300">
-                    <h3 class="text-xl font-semibold text-gray-800">Keto Salmon - Breakfast</h3>
-                    <button type="button" id="modalCloseButton"
-                        class="text-gray-500 hover:text-gray-700 transition-colors">
-                        <span class="sr-only">Close</span>
-                        &times;
-                    </button>
-                </div>
-                <div class="p-4">
-                    <img src="https://thebigmansworld.com/wp-content/uploads/2022/01/keto-salmon-recipe.jpeg"
-                        alt="Keto Salmon" class="w-full h-60 object-cover rounded-lg mb-4">
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Carbs Gauge Component -->
-                        <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow carbs-gauge">
-                            <h4 class="text-gray-600 text-lg mb-2">Carbs</h4>
-                            <div class="relative">
-                                <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
-                                        stroke-width="2" stroke-dasharray="75 100"></circle>
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
-                                        stroke-width="2" stroke-dasharray="18.75 100"></circle>
-                                </svg>
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-xl font-bold text-customOrange">25g</span>
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full flex">
+                <div class="w-1/2 p-4">
+                    <div class="flex justify-between items-center border-b border-gray-300 pb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Keto Salmon - Breakfast</h3>
+                    </div>
+                    <div class="py-4">
+                        <img src="https://thebigmansworld.com/wp-content/uploads/2022/01/keto-salmon-recipe.jpeg"
+                            alt="Keto Salmon" class="w-full h-60 object-cover rounded-lg mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Carbs Gauge Component -->
+                            <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow carbs-gauge">
+                                <h4 class="text-gray-600 text-lg mb-2">Carbs</h4>
+                                <div class="relative">
+                                    <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
+                                            stroke-width="2" stroke-dasharray="75 100"></circle>
+                                        <circle cx="18" cy="18" r="16" fill="none"
+                                            class="stroke-current text-customOrange" stroke-width="2"
+                                            stroke-dasharray="18.75 100"></circle>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-xl font-bold text-customOrange">25g</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Protein Gauge Component -->
-                        <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow protein-gauge">
-                            <h4 class="text-gray-600 text-lg mb-2">Protein</h4>
-                            <div class="relative">
-                                <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
-                                        stroke-width="2" stroke-dasharray="75 100"></circle>
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
-                                        stroke-width="2" stroke-dasharray="30 100"></circle>
-                                </svg>
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-xl font-bold text-customOrange">30g</span>
+                            <!-- Protein Gauge Component -->
+                            <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow protein-gauge">
+                                <h4 class="text-gray-600 text-lg mb-2">Protein</h4>
+                                <div class="relative">
+                                    <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
+                                            stroke-width="2" stroke-dasharray="75 100"></circle>
+                                        <circle cx="18" cy="18" r="16" fill="none"
+                                            class="stroke-current text-customOrange" stroke-width="2"
+                                            stroke-dasharray="30 100"></circle>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-xl font-bold text-customOrange">30g</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Fats Gauge Component -->
-                        <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow fats-gauge">
-                            <h4 class="text-gray-600 text-lg mb-2">Fats</h4>
-                            <div class="relative">
-                                <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
-                                        stroke-width="2" stroke-dasharray="75 100"></circle>
-                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-customOrange"
-                                        stroke-width="2" stroke-dasharray="10 100"></circle>
-                                </svg>
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="text-xl font-bold text-customOrange">10g</span>
+                            <!-- Fats Gauge Component -->
+                            <div class="flex flex-col items-center bg-gray-200 p-4 rounded-lg shadow fats-gauge">
+                                <h4 class="text-gray-600 text-lg mb-2">Fats</h4>
+                                <div class="relative">
+                                    <svg class="rotate-[135deg] w-20 h-20" viewBox="0 0 36 36"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-gray-300"
+                                            stroke-width="2" stroke-dasharray="75 100"></circle>
+                                        <circle cx="18" cy="18" r="16" fill="none"
+                                            class="stroke-current text-customOrange" stroke-width="2"
+                                            stroke-dasharray="10 100"></circle>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-xl font-bold text-customOrange">10g</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-end p-4 border-t border-gray-300">
-                    <button type="button" id="viewIngredientsButton"
-                        class="py-2 px-4 bg-customOrange text-white rounded-lg hover:bg-orange-600 transition-colors">View
-                        Recipe</button>
+                <!-- New Section for Ingredients and Procedure -->
+                <div class="w-1/2 p-4 border-l border-gray-300">
+                    <h1 class="text-black">Ingredients</h1>
+
+                    <ul id="ingredientsContainer"></ul>
+
+                    <br><br>
+                    <!-- Steps section -->
+                    <h1 class="text-black">Procedure</h1>
+                    <ol id="stepsContainer"></ol>
                 </div>
             </div>
+
         </div>
 
-
-
-
-
-        <!-- Recipe Modal Structure (Scrollable) -->
-        <div id="ingredientsModal"
-            class="fixed inset-0 z-50 hidden bg-gray-900 bg-opacity-50 flex items-center justify-center">
-            <div class="bg-div_color rounded-lg shadow-lg overflow-hidden max-w-lg w-full">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h3 class="text-lg font-semibold">Recipe</h3>
-                    <button type="button" id="ingredientsModalCloseButton" class="text-white hover:text-gray-700">
-                        <span class="sr-only">Close</span>
-                        &times;
-                    </button>
-                </div>
-                <div class="p-4 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-50 scrollbar-track-51">
-                    <!--delete rani og wlay ingredients apil-->
-                    <ul class="text-gray-800 dark:text-neutral-400">
-                        <li class="text-white mb-2">Ingredients:</li>
-                        <li>Salmon Fillets</li>
-                        <li>Olive Oil</li>
-                        <li>Garlic</li>
-                        <li>Lemon Juice</li>
-                        <li>Salt & Pepper</li>
-                        <li>Butter</li>
-                        <li>Parsley</li>
-                        <!-- Add more ingredients as needed -->
-                    </ul>
-                    <ul class="text-gray-800 dark:text-neutral-400 mt-4">
-                        <li class="text-white mb-2">Instructions:</li>
-                        <li><span class="text-white">1. </span>Start by patting dry the salmon with a paper towel before
-                            sprinkling with salt and pepper.
-                        </li>
-                        <li><span class="text-white">2. </span>Rub lemon juice over each fillet.</li>
-                        <li><span class="text-white">3. </span>Next, add the olive oil to a non-stick pan and place it
-                            over medium heat.</li>
-                        <li><span class="text-white">4. </span>Once hot, add the salmon fillets and cook for 3-4
-                            minutes, before flipping and cooking for a
-                            further two minutes.
-                        </li>
-                        <li><span class="text-white">5. </span>Finally, add the butter, minced garlic, and parsley and
-                            simmer for two minutes, before removing from the heat.</li>
-                        <li><span class="text-white">6. </span>Dish out the salmon onto plates and drizzle with pan
-                            juices. </li>
-                        <!-- Add more instructions as needed -->
-                    </ul>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("hs-stacked-overlays");
-        const ingredientsModal = document.getElementById("ingredientsModal");
-
         const closeButtons = document.querySelectorAll("#modalCloseButton, #modalCloseButtonFooter");
-        const ingredientsModalCloseButton = document.getElementById("ingredientsModalCloseButton");
         const viewIngredientsButton = document.getElementById("viewIngredientsButton");
 
         const mealTitle = document.getElementById("mealTitle");
@@ -370,14 +323,14 @@
 
 
         const today = new Date();
-        
+
 
         const formattedDate = today.toLocaleDateString("en-US", {
             month: 'long',
             day: 'numeric',
             year: 'numeric'
         });
-        
+
         // Insert the formatted date into the selected element
         dateElement.textContent = formattedDate;
 
@@ -398,6 +351,7 @@
                             fats: meal.fats,
                             protein: meal.protein,
                             classification: meal.classification,
+                            ingredients: meal.ingredients.split("\r\n"), // Split ingredients into an array
                             steps: [],
                             img: meal.filename
                         };
@@ -414,45 +368,69 @@
                     mealCard.classList.add("mx-auto", "sm:mr-0", "group", "cursor-pointer", "lg:mx-auto", "bg-div_color", "transition-all", "duration-500", "rounded-lg");
 
                     mealCard.innerHTML = `
-                        <div>
-                            <img src="http://localhost:3000/uploads/${meal.img}" alt="${meal.meal_name} image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
-                        </div>
-                        <div class="mt-2">
-                            <div class="flex items-center justify-between">
-                                <h6 class="font-normal text-[10px] leading-6 ml-3">
-                                    ${meal.classification}
-                                </h6>
-                            </div>
-                            <p class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
-                                ${meal.meal_name}
-                            </p>
-                        </div>
-                    `;
+                <div>
+                    <img src="http://localhost:3000/uploads/${meal.img}" alt="${meal.meal_name} image" class="w-full h-60 aspect-square rounded-t-lg object-cover">
+                </div>
+                <div class="mt-2">
+                    <div class="flex items-center justify-between">
+                        <h6 class="font-normal text-[10px] leading-6 ml-3">
+                            ${meal.classification}
+                        </h6>
+                    </div>
+                    <p class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
+                        ${meal.meal_name}
+                    </p>
+                </div>
+            `;
 
                     // Add click event to each card
                     mealCard.addEventListener("click", function (event) {
                         event.preventDefault();
 
-                        //Populate modal with meal data
+                        // Populate modal with meal data
                         modalTitle.textContent = `${meal.meal_name} - ${meal.classification}`;
                         modalImage.src = `http://localhost:3000/uploads/${meal.img}`;
                         modalImage.alt = `${meal.meal_name} image`;
 
-                        //Update nutritional info
+                        // Update nutritional info
                         updateGauge(carbsGauge, meal.carbs, 'Carbs');
                         updateGauge(proteinGauge, meal.protein, 'Protein');
                         updateGauge(fatsGauge, meal.fats, 'Fats');
 
+                        // Populate ingredients list
+                        const ingredientsContainer = document.getElementById("ingredientsContainer");
+                        ingredientsContainer.innerHTML = ""; // Clear previous ingredients
+                        meal.ingredients.forEach(ingredient => {
+                            const ingredientItem = document.createElement("li");
+                            ingredientItem.textContent = ingredient;
+                            ingredientItem.classList.add("text-gray-800", "bg-gray-100", "p-2", "rounded-md", "mb-1"); // Add styling
+                            ingredientsContainer.appendChild(ingredientItem);
+                        });
+
+                        // Populate steps list
+                        const stepsContainer = document.getElementById("stepsContainer");
+                        stepsContainer.innerHTML = ""; // Clear previous steps
+                        meal.steps.forEach(step => {
+                            const stepItem = document.createElement("li");
+                            stepItem.textContent = step;
+                            stepItem.classList.add("text-gray-800", "bg-gray-100", "p-2", "rounded-md", "mb-1"); // Add styling
+                            stepsContainer.appendChild(stepItem);
+                        });
+
+                        // Style containers for readability
+                        ingredientsContainer.classList.add("bg-white", "p-4", "rounded-md", "shadow-md");
+                        stepsContainer.classList.add("bg-white", "p-4", "rounded-md", "shadow-md");
+
                         // Display the modal
                         modal.classList.remove("hidden");
                     });
-
                     mealItemContainer.appendChild(mealCard);
                 }
             })
             .catch(error => {
                 console.error("Error fetching meal data:", error);
             });
+
 
         closeButtons.forEach(button => {
             button.addEventListener("click", function () {
@@ -483,7 +461,7 @@
             try {
                 const response = await fetch(`http://localhost:3000/getMealoftheWeek?member_id=${memberid}&plan_id=${meal_template_id}`);
                 const data = await response.json();
-
+                console.log("API Response Data:", data);
                 // Group meals by day number
                 const mealsByDay = data[0].reduce((acc, meal) => {
                     const day = `Day ${meal.day_no}`;
@@ -495,26 +473,24 @@
                 const mealsContainer = document.getElementById("weekly-meals-container");
                 mealsContainer.innerHTML = "";
 
-                // Loop through each day and render meals
                 Object.keys(mealsByDay).forEach(day => {
                     const meals = mealsByDay[day];
                     const dayDiv = document.createElement("div");
 
-                    // Use meal_date from the response directly for formatted date display
                     const formattedDate = new Date(meals[0].meal_date).toLocaleDateString("en-US", {
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric'
                     });
-                    console.log(formattedDate)
+
                     dayDiv.innerHTML = `
                         <h2 class="font-semibold text-[16px] mb-8 max-lg:text-center">${day}
                             <span class="text-[12px] font-normal">${formattedDate}</span>
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                             ${meals.map(meal => `
-                                <a href="javascript:;" class="mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
-                                    <div class="">
+                                <a href="javascript:;" class="meal-card mx-auto sm:mr-0 group cursor-pointer lg:mx-auto bg-div_color transition-all duration-500 rounded-lg">
+                                    <div>
                                         <img src="http://localhost:3000/uploads/${meal.filename}" alt="${meal.meal_name}" class="w-full h-60 aspect-square rounded-t-lg object-cover">
                                     </div>
                                     <div class="mt-2">
@@ -522,7 +498,8 @@
                                             <h6 class="font-normal text-[10px] leading-6 ml-3">${meal.classification}</h6>
                                         </div>
                                         <p class="mt-2 font-semibold text-[15px] ml-3 leading-8 transition-all duration-500 group-hover:text-customOrange">
-                                            ${meal.meal_name}</p>
+                                            ${meal.meal_name}
+                                        </p>
                                     </div>
                                 </a>
                             `).join('')}
@@ -530,14 +507,85 @@
                         <hr class="h-px my-8 border-0 bg-gray-700">
                     `;
                     mealsContainer.appendChild(dayDiv);
+
+                    // Add event listeners to meal cards
+                    const mealCards = dayDiv.querySelectorAll(".meal-card");
+                    mealCards.forEach((mealCard, index) => {
+                        mealCard.addEventListener("click", (event) => {
+                            event.preventDefault();
+                            openModal(meals[index]);
+                        });
+                    });
                 });
+
             } catch (error) {
                 console.error("Error fetching meals:", error);
             }
         }
 
 
-        // Fetch and render meals on page load
+        function openModal(meal) {
+            console.log("Meal data:", meal); // Log the meal data for debugging
+
+            // Populate modal with meal data
+            modalTitle.textContent = `${meal.meal_name} - ${meal.classification}`;
+            modalImage.src = `http://localhost:3000/uploads/${meal.filename}`;
+            modalImage.alt = `${meal.meal_name} image`;
+
+            // Update nutritional info
+            updateGauge(carbsGauge, meal.carbs, 'Carbs');
+            updateGauge(proteinGauge, meal.protein, 'Protein');
+            updateGauge(fatsGauge, meal.fats, 'Fats');
+
+            // Parse and populate ingredients list
+            const ingredientsContainer = document.getElementById("ingredientsContainer");
+            ingredientsContainer.innerHTML = ""; // Clear previous ingredients
+            if (typeof meal.ingredients === 'string') {
+                const ingredientsArray = meal.ingredients.split(/\r?\n/); // Split by new lines
+                ingredientsArray.forEach(ingredient => {
+                    const ingredientItem = document.createElement("li");
+                    ingredientItem.textContent = ingredient;
+                    ingredientItem.classList.add("text-gray-800", "bg-gray-100", "p-2", "rounded-md", "mb-1");
+                    ingredientsContainer.appendChild(ingredientItem);
+                });
+            } else {
+                console.log("Ingredients data is missing or not a string.");
+            }
+
+            // Parse and populate steps list
+            const stepsContainer = document.getElementById("stepsContainer");
+            stepsContainer.innerHTML = ""; // Clear previous steps
+            if (typeof meal.steps === 'string') {
+                const stepsArray = JSON.parse(meal.steps); // Parse the JSON string into an array of objects
+                stepsArray.forEach(step => {
+                    const stepItem = document.createElement("li");
+                    stepItem.textContent = `Step ${step.step_number}: ${step.instruction}`;
+                    stepItem.classList.add("text-gray-800", "bg-gray-100", "p-2", "rounded-md", "mb-1");
+                    stepsContainer.appendChild(stepItem);
+                });
+            } else {
+                console.log("Steps data is missing or not a string.");
+            }
+
+            // Style containers for readability
+            ingredientsContainer.classList.add("bg-white", "p-4", "rounded-md", "shadow-md");
+            stepsContainer.classList.add("bg-white", "p-4", "rounded-md", "shadow-md");
+
+            // Display the modal
+            modal.classList.remove("hidden");
+        }
+
+        function closeModal() {
+            modal.classList.add("hidden");  // Hide the modal by adding a "hidden" class or your preferred method
+        }
+
+        modal.addEventListener("click", (event) => {
+            // Check if the click happened outside the modal content
+            if (!modalContent.contains(event.target)) {
+                closeModal();
+            }
+        });
+
         fetchMeals();
 
     });

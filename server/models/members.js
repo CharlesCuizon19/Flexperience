@@ -220,10 +220,19 @@ const getMealoftheWeek = async (member_id, plan_id) => {
                 p.carbs,
                 p.fats,
                 p.protein,
+                p.ingredients,
                 wte.classification,
                 wte.week_no,
                 wte.day_no,
-                DATE(DATE_ADD(me.date_started, INTERVAL ((wte.week_no - 1) * 7 + (wte.day_no - 1)) DAY)) AS meal_date
+                DATE(DATE_ADD(me.date_started, INTERVAL ((wte.week_no - 1) * 7 + (wte.day_no - 1)) DAY)) AS meal_date,
+                
+                -- Group steps into an array
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'step_number', ms.step_number,
+                        'instruction', ms.instruction
+                    )
+                ) AS steps
 
             FROM 
                 member_meal_status mes
@@ -236,11 +245,17 @@ const getMealoftheWeek = async (member_id, plan_id) => {
             JOIN
                 pre_made_meals p ON p.pre_made_meal_id = wte.pre_made_meal_id
             JOIN 
+                meal_item_steps ms ON ms.pre_made_meal_id = p.pre_made_meal_id
+            JOIN 
                 pre_made_meal_images pm ON pm.pre_made_meal_id = p.pre_made_meal_id
             WHERE 
                 mes.plan_id = ?
             AND
                 c.Week_Number = wte.week_no
+            GROUP BY 
+                me.member_id, mes.status_id, mes.plan_id, wte.template_item_id, pm.filename,
+                p.meal_name, p.carbs, p.fats, p.protein, p.ingredients, wte.classification,
+                wte.week_no, wte.day_no, meal_date
         )
         SELECT * 
         FROM CTE_MEAL
@@ -281,6 +296,7 @@ const retrieveMealOfTheDay = async (member_id, plan_id) => {
             p.carbs,
             p.fats,
             p.protein,
+            p.ingredients,
             ms.step_number,
             ms.instruction,
             wte.classification
