@@ -496,7 +496,7 @@
             }
         });
 
-
+ 
         async function loadGyms() {
             try {
                 // Replace '14' with the specific admin_id if dynamic; otherwise, use variable
@@ -505,8 +505,6 @@
 
                 // Get the dropdown element
                 const gymSelect = document.getElementById('gymSelect');
-                const dropdown = document.getElementById('gymDropdown');
-                dropdown.innerHTML = '';
                 // Clear any existing options (except the placeholder)
                 gymSelect.innerHTML = '<option value="">-- Choose a Gym --</option>';
 
@@ -516,11 +514,10 @@
                     option.value = gym.gym_id;
                     option.textContent = gym.gym_name;
                     gymSelect.appendChild(option);
-                    dropdown.appendChild(option);
                 });
             } catch (error) {
                 console.error('Error fetching gyms:', error);
-                alert('Could not load gyms. Please try again later.');
+                alert('Could not load gyms. Please try again laterrr.');
             }
         }
 
