@@ -7,6 +7,7 @@ const templateSchema = require('../validations/templateValidations')
 const exerciseSchema = require('../validations/templateExercisesValidations')
 
 router.get("/getTrainers", trainerController.getAllTrainers); 
+router.get("/checkAvailability", trainerController.checkAvailability); 
 router.get("/getTrainerInfo", trainerController.getTrainerInfo); 
 router.get("/getGymTrainer", trainerController.getGymTrainer); 
 router.get("/getGymTrainerById", trainerController.getGymTrainersById); 

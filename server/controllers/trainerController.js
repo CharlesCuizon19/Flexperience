@@ -6,7 +6,7 @@ const { getAllTrainers, getGymTrainers, insertGymTrainers, insertWorkoutTemplate
     insertWorkoutTemplateExercise, getGymTrainersById, updateWorkoutTemplateExercise,
     removeTemplateExercise, inputFilter, insertMealTemplates, insertMealTemplatesItems,
     insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity,
-    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay, insertPremadeMealImage } = require('../models/trainers');
+    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay, insertPremadeMealImage,checkAvailability } = require('../models/trainers');
 
 module.exports = {
 
@@ -18,6 +18,17 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error fetching trainer:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    checkAvailability: async (req, res) => {
+        try {
+            const { member_id } = req.query;
+            console.log("received id: " + member_id)
+            const data = await checkAvailability(member_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching member availability:", error.message);
             res.status(500).send("Internal Server Error");
         }
     },

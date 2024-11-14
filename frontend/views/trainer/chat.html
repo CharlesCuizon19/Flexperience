@@ -25,7 +25,7 @@
             --custom-light-blue: #E0F7FA;
         }
 
-        #success-toast {
+        #success-toast, #error-toast {
             z-index: 9999;
         }
     </style>
@@ -307,6 +307,29 @@
             </button>
         </div>
     </div>
+    <div id="error-toast"
+        class="fixed top-5 right-5 bg-white border-l-4 border-orange-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 bg-orange-500 rounded-full">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h2 class="text-lg font-semibold text-orange-600">Cant send proposal</h2>
+                <p id="error-message-toast" class="text-sm text-gray-600">Your error message here</p>
+            </div>
+            <button id="close-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
 
 
 
@@ -411,41 +434,41 @@
             function populateChatList(chatList) {
                 const chatListElement = document.getElementById('chatList');
                 chatListElement.innerHTML = ''; // Clear any existing content
-            
+
                 chatList.forEach(member => {
                     const listItem = document.createElement('li');
                     listItem.classList.add('p-3', 'bg-gray-700', 'rounded-lg', 'hover:bg-gray-600', 'cursor-pointer', 'flex', 'flex-col', 'justify-between', 'items-start', 'space-y-1');
-            
+
                     // Create a container div to hold the name and online indicator
                     const header = document.createElement('div');
                     header.classList.add('flex', 'justify-between', 'items-center', 'w-full');
-            
+
                     // Add member name to a text element inside the header
                     const memberName = document.createElement('span');
                     memberName.classList.add('text-white', 'font-semibold');
                     memberName.textContent = member.member_name;
                     header.appendChild(memberName);
-            
+
                     // Add online indicator
                     const onlineIndicator = document.createElement('span');
                     onlineIndicator.classList.add('h-3', 'w-3', 'rounded-full', 'ml-2');
-            
+
                     // Check if the member is online
                     if (onlineUsers[member.member_id]) {
                         onlineIndicator.classList.add('bg-green-500');
                     } else {
                         onlineIndicator.classList.add('bg-gray-500');
                     }
-            
+
                     header.appendChild(onlineIndicator);
                     listItem.appendChild(header);
-            
+
                     // Add recent message
                     const recentMessage = document.createElement('span');
                     recentMessage.classList.add('text-gray-300', 'text-sm', 'truncate', 'w-full');
                     recentMessage.textContent = member.message;
                     listItem.appendChild(recentMessage);
-            
+
                     listItem.addEventListener('click', () => {
                         clear();  // Clear chat history
                         document.getElementById('chatWith').textContent = member.member_name;
@@ -454,12 +477,12 @@
                         loadChatHistory(memberid);  // Load chat history for the clicked member
                         CheckConversation();  // Any additional function to execute
                     });
-            
+
                     // Append the list item to the chat list container
                     chatListElement.appendChild(listItem);
                 });
             }
-            
+
 
             const loadChatHistory = async (memberId) => {
                 try {
@@ -598,9 +621,22 @@
             const submitProposalButton = document.getElementById('submitProposalButton');
 
             // Open the modal when the "Send Proposal" button is clicked
-            sendProposalButton.addEventListener('click', () => {
-                proposalModalBackground.classList.remove('hidden');
+            sendProposalButton.addEventListener('click', async () => {
+                try {
+                    const response = await axios.get('http://localhost:3000/checkAvailability?member_id=9');
+                    const data = response.data;
+
+                    if (data[0][0].contract_availability === 'Available') {
+                        proposalModalBackground.classList.remove('hidden');
+                    } else {
+                        showToast("error", "The student is not available for a new proposal at this time.")
+                    }
+                } catch (error) {
+                    console.error("Error fetching availability:", error);
+                    alert("There was an issue checking the student's availability. Please try again later.");
+                }
             });
+
 
             // Close the modal when the close button is clicked
             closeModalButton.addEventListener('click', () => {
@@ -666,7 +702,7 @@
                 // Auto-hide the toast after 3 seconds
                 setTimeout(() => {
                     toast.classList.add('translate-x-full');  // Slide toast out to the right
-                    setTimeout(() => toast.classList.add('hidden'), 300);  // Hide completely after the transition
+                    setTimeout(() => toast.classList.add('hidden'), 4000);  // Hide completely after the transition
                 }, 3000);
             }
             document.getElementById('close-success-toast-btn').addEventListener('click', () => {

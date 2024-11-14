@@ -336,7 +336,6 @@
         axios.get(`http://localhost:3000/getTrainerStudents?trainer_id=${trainerid}`)
             .then(response => {
                 const members = response.data; // Assuming the response is an array of member objects
-                console.log(members)
                 populateTable(members);
             })
             .catch(error => {
@@ -348,10 +347,9 @@
     function populateTable(members) {
         const tableBody = document.getElementById('table-body');
         tableBody.innerHTML = ''; // Clear the table before populating
-
+        
         members.forEach(member => {
-            const { member_id, Name, plan_type, start_date, end_date, days_remaining, status } = member;
-
+            const { member_id, Name, plan_type, start_date, end_date, days_remaining, plan_status } = member;
             // Calculate days remaining
             const currentDate = new Date();
             const end = new Date(end_date);
@@ -377,7 +375,7 @@
                 <td class="px-6 py-3">${formatDate(end_date)}</td>
                 <td class="px-6 py-3">${daysRemaining}</td>
                 <td class="px-6 py-3">
-                    ${status === "Not assigned yet"
+                    ${member.plan_status === "Not assigned yet"
                     ? `<button onClick="AddPlan(${trainerid}, ${member_id}, '${plan_type}')" class="flex items-center gap-2 bg-div_color border border-white p-2 rounded-lg text-white hover:bg-white hover:text-black transition duration-300">
                             <span>${buttonLabel}</span>
                         </button>`
