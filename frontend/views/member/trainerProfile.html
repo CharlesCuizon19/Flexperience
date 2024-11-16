@@ -16,6 +16,16 @@
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/frontend/scripts/auth.js"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        #messageModal {
+            z-index: 1000;
+            /* Ensure the modal appears on top */
+        }
+    </style>
 </head>
 
 <body class="font-[Poppins] bg-customGray text-white">
@@ -200,7 +210,7 @@
                         <p class="font-normal text-[14px] leading-7 max-sm:text-center">Trainer <br
                                 class="hidden sm:block">Davao City</p>
                     </div>
-                    <button
+                    <button id="sendMessageBtn" onclick="window.location.href='privateChat.html'"
                         class="py-3.5 px-5 flex rounded-full bg-customOrange items-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-orange-700">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -209,6 +219,7 @@
                         </svg>
                         <span class="px-2 font-semibold text-base leading-7 text-white">Send Message</span>
                     </button>
+
                 </div>
                 <div class="flex max-sm:flex-wrap max-sm:justify-center items-center gap-4">
                     <a href="#about"
@@ -223,6 +234,18 @@
                 </div>
             </div>
         </section>
+
+        <div id="messageModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg p-6 w-1/3">
+                <h2 class="text-xl font-semibold mb-4 text-orange-500">Start a Conversation</h2>
+                <textarea placeholder="Type your message here..."
+                    class="w-full p-2 border border-gray-300 rounded mb-4 text-black"></textarea>
+                <div class="flex justify-end">
+                    <button id="closeModalBtn" class="mr-2 px-4 py-2 bg-gray-500 rounded">Cancel</button>
+                    <button class="px-4 py-2 bg-customOrange text-white rounded">Send</button>
+                </div>
+            </div>
+        </div>
 
         <!--About-->
         <div id="about" class="content-div bg-customGray overflow-hidden shadow-lg rounded-lg p-6 text-white">
@@ -358,8 +381,7 @@
         const mealButton = document.querySelector('a[href="#meal-plan"]');
         const contentDivs = document.querySelectorAll('.content-div');
         const trainerid = getCookie('trainer_id')
-
-
+        let trainerName;
         window.onload = function () {
             fetchAndDisplayTrainerData(trainerid);
             fetchAndDisplayWorkoutTemplates(trainerid)
@@ -390,7 +412,8 @@
                 // Fetch trainer data from the backend
                 const response = await axios.get(`http://localhost:3000/getGymTrainerById?trainer_id=${trainerId}`);
                 const trainer = response.data[0]; // Assuming the response returns an array of trainer data
-
+                trainerName = `${trainer.firstname} ${trainer.lastname}`
+                setCookie('trainer_name', trainerName, 1);
                 const trainerAvatarElement = document.querySelector('#avatar');
                 trainerAvatarElement.src = `http://localhost:3000/uploads/${trainer.filename}`;
                 // Update Trainer Introduction
@@ -480,12 +503,45 @@
             }
             return null;
         }
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Days to milliseconds
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
         // Set default to "About" on page load
         showDiv('about');
 
         aboutButton.addEventListener('click', () => showDiv('about'));
         workoutButton.addEventListener('click', () => showDiv('workout-plan'));
         mealButton.addEventListener('click', () => showDiv('meal-plan'));
+
+
+        // Get elements
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const messageModal = document.getElementById('messageModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // Open modal when Send Message button is clicked
+        sendMessageBtn.addEventListener('click', () => {
+            messageModal.classList.remove('hidden');
+        });
+
+        // Close modal when Cancel button is clicked
+        closeModalBtn.addEventListener('click', () => {
+            messageModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside the modal
+        window.addEventListener('click', (event) => {
+            if (event.target === messageModal) {
+                messageModal.classList.add('hidden');
+            }
+        });
+
     </script>
 
 

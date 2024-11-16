@@ -267,89 +267,127 @@
     </aside>
 
     <!-- Content -->
-    <div class="sm:ml-64 ">
-        <div class="m-4 p-4 mt-20">
-            <div>
-                <img src="../img/elavation_sampleimage.png"
-                    class="w-32 h-32 rounded-lg object-cover border border-gray-400" alt="gym profile">
-            </div>
-
-            <div class="flex">
-                <div class="w-full flex flex-col">
-                    <span class="gym-name mb-2 mt-2 font-bold">Elevation Fitness Gym</span>
-                    <span class="gym-location mb-4">Location, locatiion Davao City</span>
-
-                    <div class="flex justify-between">
-                        <div class="my-14 flex items-center">
-                            <div class="flex flex-col gap-2 pr-10">
-                                <div>Rating: </div>
-                                <div>Contact: </div>
-                                <div>Session: </div>
-                                <div>Monthly: </div>
-                            </div>
-                            <div class="flex flex-col gap-2 pr-20">
-                                <span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star checked"></span>
-                                    <span class="fa fa-star"></span>
-                                    <span class="fa fa-star"></span>
-                                </span>
-                                <span class="contact"></span>
-                                <span class="gym-session-rate"></span>
-                                <span class="gym-monthly-rate"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h3 class="my-8">Photos</h3>
-                    <div class="flex flex-col">
-                        <div class="flex">
-                            <img src="../img/gymImage_sample.png" alt="">
-                            <img src="../img/gymImage_sample.png" alt="">
-                        </div>
-                        <div class="flex">
-                            <img src="../img/gymImage_sample.png" alt="">
-                            <img src="../img/gymImage_sample.png" alt="">
-                        </div>
-                    </div>
+    <div class="sm:ml-64">
+        <div class="m-4 p-6 mt-20 bg-div_color rounded-lg shadow-lg">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <!-- Gym Logo -->
+                <div class="flex-shrink-0 mb-6 md:mb-0">
+                    <img src="../img/elavation_sampleimage.png"
+                        class="gym-logo w-32 h-32 rounded-lg object-cover border-4 border-gray-300 shadow-md"
+                        alt="gym profile">
                 </div>
 
-                <div class="w-full">
-                    <span>Meet the trainers</span>
-                    <div id="trainers-container" class="grid grid-cols-2 gap-4 mt-10">
-                        <!-- Trainers will be dynamically inserted here -->
+                <!-- Gym Info -->
+                <div class="flex flex-col md:flex-1 md:ml-6 text-center md:text-left">
+                    <span class="gym-name mb-2 text-3xl font-bold text-white">Elevation Fitness Gym</span>
+                    <span class="gym-location mb-4 text-gray-300">Location, Davao City</span>
+
+                    <div class="flex justify-center md:justify-start space-x-8 mt-4 text-white">
+                        <div class="text-sm font-medium">
+                            <div>Rating:</div>
+                            <div>Contact:</div>
+                            <div>Session:</div>
+                            <div>Monthly:</div>
+                        </div>
+                        <div class="text-sm">
+                            <div class="flex items-center">
+                                <span class="fa fa-star checked text-yellow-500"></span>
+                                <span class="fa fa-star checked text-yellow-500"></span>
+                                <span class="fa fa-star checked text-yellow-500"></span>
+                                <span class="fa fa-star text-gray-400"></span>
+                                <span class="fa fa-star text-gray-400"></span>
+                            </div>
+                            <div class="contact">09222837121</div>
+                            <div class="gym-session-rate">₱ 50 per session</div>
+                            <div class="gym-monthly-rate">₱ 500 per month</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Photos Section -->
+            <h3 class="my-8 text-xl font-semibold text-white text-center">Photos</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center" id="gym-images">
+                <!-- Images will be dynamically inserted here -->
+            </div>
 
+            <!-- Trainers Section -->
+            <h3 class="mt-12 text-xl font-semibold text-white text-center">Meet the Trainers</h3>
+            <div id="trainers-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+                <!-- Trainers will be dynamically inserted here -->
+            </div>
         </div>
-
-
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
             const urlParams = new URLSearchParams(window.location.search);
             const gymId = urlParams.get('gymid');
+
             // Fetch gym data
             axios.get(`http://localhost:3000/gymdata?gymid=${gymId}`)
                 .then(response => {
-                    const data = response.data[0]; // Assuming the gym data is the first item
-                    if (data) {
-                        document.querySelector('.gym-name').textContent = data.gym_name;
-                        document.querySelector('.gym-location').textContent = data.street_address;
-                        document.querySelector('.contact').textContent = data.contact_no;
-                        document.querySelector('.gym-session-rate').textContent = `₱ ${data.daily_rate}`;
-                        document.querySelector('.gym-monthly-rate').textContent = `₱ ${data.monthly_rate}`;
-                        document.querySelector('.gym-logo').src = "http://localhost:3000/uploads/" + data.img_path;
+                    console.log("Response data:", response.data); // Log the response data to check its structure
+
+                    const data = response.data; // Get all gym data
+                    console.log(data);
+                    if (data && Array.isArray(data) && data.length > 0) { // Check if data is an array and not empty
+                        // Assuming the first object contains the gym info (you can adjust as needed)
+                        const gymInfo = data[0]; // This contains general gym info
+                        // Fill in basic gym info
+                        document.querySelector('.gym-name').textContent = gymInfo.gym_name;
+                        document.querySelector('.gym-location').textContent = gymInfo.street_address;
+                        document.querySelector('.contact').textContent = gymInfo.contact_no;
+                        document.querySelector('.gym-session-rate').textContent = `₱ ${gymInfo.daily_rate}`;
+                        document.querySelector('.gym-monthly-rate').textContent = `₱ ${gymInfo.monthly_rate}`;
+
+                        // Display the gym logo
+                        document.querySelector('.gym-logo').src = "https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/" + gymInfo.img_path;
+
+                        // Get the gym images and dynamically insert them into the HTML
+                        const gymImagesContainer = document.getElementById('gym-images');
+                        gymImagesContainer.innerHTML = ""; // Clear previous images
+
+                        // Create two rows for the images
+                        let firstRow = document.createElement('div');
+                        firstRow.classList.add('flex');
+                        let secondRow = document.createElement('div');
+                        secondRow.classList.add('flex');
+
+                        let imageCount = 0;
+                        // Loop through the entire `data` array and insert images of type "image"
+                        data.forEach(item => {
+                            if (item.type === 'image') {
+                                console.log("Image path:", item.img_path); // Log the image path to check
+
+                                const imgElement = document.createElement('img');
+                                imgElement.src = "https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/" + item.img_path;
+                                imgElement.alt = `${item.gym_name} Image ${imageCount + 1}`;
+
+                                // Add images to the correct row
+                                if (imageCount < 2) {
+                                    firstRow.appendChild(imgElement);
+                                } else {
+                                    secondRow.appendChild(imgElement);
+                                }
+
+                                imageCount++;
+                            }
+                        });
+
+                        // Append rows to the container
+                        gymImagesContainer.appendChild(firstRow);
+                        gymImagesContainer.appendChild(secondRow);
+                    } else {
+                        console.error("Invalid or empty gym data:", data); // Log an error if the data is invalid or empty
                     }
                 })
                 .catch(error => {
                     console.error("Error fetching gym data:", error);
                 });
+
 
             // Fetch trainers data and dynamically populate the trainer cards
             // Fetch trainers data and dynamically populate the trainer cards
@@ -359,19 +397,25 @@
                     const trainersContainer = document.getElementById('trainers-container');
                     trainersContainer.innerHTML = ''; // Clear existing trainer cards
 
+                    // Check if the response contains valid data
+                    if (!trainers || trainers.length === 0) {
+                        trainersContainer.innerHTML = '<p>No trainers found.</p>'; // Show message if no trainers found
+                        return;
+                    }
+
                     // Loop through each trainer and create a dynamic card
                     trainers.forEach(trainer => {
                         const trainerCard = `
-                <div class="trainer-card flex flex-col py-5 bg-div_color items-center rounded-lg shadow-black drop-shadow-lg cursor-pointer" data-trainer-id="${trainer.trainer_id}">
-                    <div>
-                        <img src="http://localhost:3000/uploads/${trainer.filename}" 
-                             class="w-24 h-24 rounded-full object-cover" 
-                             alt="trainer profile">
-                    </div>
-                    <span>${trainer.firstname} ${trainer.lastname}</span>
-                    <span>Trainer</span>
-                </div>
-            `;
+                        <div class="trainer-card flex flex-col py-5 bg-div_color items-center rounded-lg shadow-black drop-shadow-lg cursor-pointer" data-trainer-id="${trainer.trainer_id}">
+                            <div>
+                                <img src="http://localhost:3000/uploads/${trainer.filename}" 
+                                     class="w-24 h-24 rounded-full object-cover" 
+                                     alt="trainer profile">
+                            </div>
+                            <span>${trainer.firstname} ${trainer.lastname}</span>
+                            <span>Trainer</span>
+                        </div>
+                    `;
 
                         // Append each trainer's card to the container
                         trainersContainer.insertAdjacentHTML('beforeend', trainerCard);
@@ -390,6 +434,7 @@
                 .catch(error => {
                     console.error("Error fetching trainers:", error);
                 });
+
 
 
 

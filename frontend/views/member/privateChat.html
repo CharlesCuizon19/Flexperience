@@ -12,13 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
-<body class="bg-gray-500 min-h-screen flex items-center justify-center">
+<body class="bg-customGray min-h-screen flex items-center justify-center">
 
     <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg flex flex-col h-[90vh]">
 
         <!-- Chat Header -->
-        <div class="bg-orange-700 text-white p-4 text-center rounded-t-lg">
-            <h1 class="text-xl font-bold">Chatting with: <span id="chatWith" class="font-semibold"></span></h1>
+        <div class="bg-50 text-white p-4 text-center rounded-t-lg">
+            <h1 class="text-xl font-bold"><span id="chatWith" class="font-semibold"></span></h1>
         </div>
 
         <!-- Chat Messages Display -->
@@ -51,7 +51,7 @@
             let socket = io.connect("http://localhost:3000");
             let memberid;
             let conversationId;
-            const trainerid = getCookie('trainer_iddd');
+            const trainerid = getCookie('trainer_id');
             const trainerName = getCookie('trainer_name');
 
             // Fetch member info
@@ -78,7 +78,6 @@
             }
 
             function loadChatHistory() {
-                console.log("helloooooooooooo")
                 axios.get('http://localhost:3000/messages', {
                     params: {
                         member_id: memberid,
@@ -159,7 +158,6 @@
                     message: messageContent || "",
                     img_path: imgPath || "" // Include the image path if present
                 };
-                alert(imgPath)
 
                 sendSocketMessage(messageData);
 
@@ -190,7 +188,7 @@
 
                 if (data.img_path) {
                     const imgElement = document.createElement("img");
-                    imgElement.src = data.img_path;
+                    imgElement.src = "https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/public/" + data.img_path;
                     imgElement.classList.add("w-full", "rounded-md", "mb-2");
                     messageElement.appendChild(imgElement);
                 }

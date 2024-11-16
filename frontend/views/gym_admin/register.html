@@ -129,8 +129,32 @@
                 </div>
             </div>
 
+
             <!-- Right Column -->
             <div class="space-y-6">
+
+                <!-- Gym Photos Upload Section -->
+                <div>
+                    <span class="font-semibold">Gym Photos</span><br>
+                    <span class="font-thin text-xs text-justify opacity-50 w-auto">
+                        Upload a minimum of 4 pictures of your gym. Showcase the facilities, equipment, and overall
+                        ambiance.
+                    </span><br>
+                    <div>
+                        <div class="mt-1">
+                            <label
+                                class="w-full flex items-center px-3 py-2 bg-gray-700 text-white rounded-lg cursor-pointer hover:bg-gray-600">
+                                <span class="material-symbols-outlined mr-2">upload_file</span>
+                                <span class="text-sm">Choose Files</span>
+                                <input type="file" name="gym_photos" id="gym_photos" class="hidden" multiple
+                                    accept="image/*" onchange="handleFileSelect()">
+                            </label>
+                            <span id="gymPhotosFileCount" class="ml-2 text-sm text-gray-400">No files chosen</span>
+                        </div>
+                        <div id="previewContainer" class="flex flex-wrap gap-4 mt-4"></div>
+                    </div>
+                </div>
+
                 <div>
                     <label for="Gym_address" class="font-semibold">Gym Address</label>
                     <input type="text" id="Gym_address"
@@ -268,34 +292,42 @@
         });
 
 
+        // Function to upload files to the server
         async function uploadFiles() {
             try {
                 const businessPermitFile = document.getElementById("business_permit").files[0];
                 const gymLogoFile = document.getElementById("gym_logo").files[0];
+                const gymPhotos = document.getElementById("gym_photos").files;
 
-                if (!businessPermitFile || !gymLogoFile) {
-                    alert("Please select both files to upload.");
+                if (!businessPermitFile || !gymLogoFile || gymPhotos.length < 4) {
+                    alert("Please select both files and upload at least 4 gym photos.");
                     return;
                 }
 
                 const formData = new FormData();
                 formData.append('business_permit', businessPermitFile);
                 formData.append('gym_logo', gymLogoFile);
+                console.log("gym photos length: " + gymPhotos.length)
+                for (let i = 0; i < gymPhotos.length; i++) {
+                    console.log(i)
+                    formData.append('gym_photos', gymPhotos[i]);
+                }
 
-                // First, upload the files using .then()
+                // Upload files using axios
                 axios.post('http://localhost:3000/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-                    .then((response) => {
-                        // Pass the file paths to the uploadGymFiles function
-                        businessPermitPath = response.data.business_permit[0].filename
-                        gymLogoPath = response.data.gym_logo[0].filename
-                        console.log("All uploads completed successfully.");
-                        uploadGymFiles();
-                        console.log("delay")
-                        window.location.href = "gymAdminDashboard.html?status=gym_registered"
+                    .then(async (response) => {
+                        const fileUrls = response.data;
+                        console.log("File URLs from Supabase:", fileUrls);
+
+                        // Process gym photos URLs if necessary, or store them in the database
+                        await uploadGymFiles(fileUrls.business_permit, fileUrls.gym_logo, fileUrls.gym_photos);
+
+                        //Redirect after the upload completes
+                        window.location.href = "gymAdminDashboard.html?status=gym_registered";
                     })
                     .catch((error) => {
                         console.error("Error during upload: ", error);
@@ -308,22 +340,49 @@
             }
         }
 
+        // Function to handle file selection for gym photos
+        function handleFileSelect() {
+            const gymPhotosInput = document.getElementById("gym_photos");
+            const previewContainer = document.getElementById("previewContainer");
+            const fileCountSpan = document.getElementById("gymPhotosFileCount");
 
-        async function uploadGymFiles() {
+            const files = gymPhotosInput.files;
+            const fileCount = files.length;
+            fileCountSpan.textContent = `${fileCount} files selected`;
+
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+
+            // Create preview for each selected file
+            for (let i = 0; i < fileCount; i++) {
+                const file = files[i];
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.classList.add("w-24", "h-24", "object-cover", "rounded-md");
+                previewContainer.appendChild(img);
+            }
+        }
+
+
+
+        async function uploadGymFiles(businessPermitPath, gymLogoPath, gymPhotoPaths) {
             try {
+                console.log("gym photo paths:")
+                console.log(gymPhotoPaths)
                 console.log("Business permit path:", businessPermitPath);
                 console.log("Gym logo path:", gymLogoPath);
-                // Upload the logo first
-                console.log("Starting logo upload...");
-                uploadLogo(gymLogoPath);
-                console.log("Logo uploaded successfully.");
 
-                // Then upload the document
-                console.log("Starting document upload...");
-                uploadDocs(businessPermitPath);
-                console.log("Document uploaded successfully.");
+                await uploadDocs(businessPermitPath);
+                await uploadLogo(gymLogoPath);
+
+                // Now upload gym images (4 photos)
+                for (let i = 0; i < gymPhotoPaths.length; i++) {
+                    await uploadGymImages(gymPhotoPaths[i], 'image');
+                }
+
+                console.log("All uploads completed successfully.");
             } catch (error) {
-                console.error("Error during the gym file upload: ", error.message);
+                console.error("Error during the gym file upload:", error.message);
                 alert('Error uploading gym files: ' + error.message);
             }
         }
@@ -351,6 +410,7 @@
             try {
                 const formData = {
                     img_path: path,
+                    type: 'logo'
                 };
 
                 const response = await axios.post('http://localhost:3000/AddGymLogo', formData);
@@ -364,6 +424,29 @@
                 throw error;  // Re-throw to be caught in chain
             }
         }
+
+        const uploadGymImages = async (imgPath, type) => {
+            try {
+                const formData = {
+                    img_path: imgPath,
+                    type: type  // type can be 'logo', 'image', etc.
+                };
+
+                // Send a POST request to the AddGymImages endpoint
+                const response = await axios.post('http://localhost:3000/AddGymImages', formData);
+
+                if (response.status === 200) {
+                    console.log("Gym image uploaded successfully:", response.data);
+                    return response.data;  // Return the response if successful
+                } else {
+                    throw new Error("Failed to upload gym image.");
+                }
+            } catch (error) {
+                console.error("Error uploading gym image:", error.message);
+                throw error;  // Rethrow error to be handled by the calling function
+            }
+        };
+
 
 
         function reverseGeocode(lat, long) {

@@ -12,16 +12,20 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Configure Multer to use memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const { v4: uuidv4 } = require('uuid');
 
 const uploadToSupabase = async (file) => {
   const supabase = createClient(supabaseUrl, supabaseKey); // Initialize Supabase client
 
-  // Upload the file to the 'uploads' bucket in Supabase storage
+  // Generate a unique filename using UUID to prevent overwriting
+  const uniqueFilename = uuidv4() + '-' + file.originalname;
+
+  // Upload the file to the 'public' bucket without the '/uploads' folder
   const { data, error } = await supabase.storage
-    .from('uploads') // Replace with your bucket name
-    .upload('public/' + file.originalname, file.buffer, {
+    .from('public') // Specify the 'public' bucket directly (no /uploads prefix)
+    .upload(uniqueFilename, file.buffer, { // Upload directly under 'public'
       cacheControl: '3600',
-      upsert: false, // Optionally, you can set this to true to overwrite existing files
+      upsert: false, // Ensure we don't overwrite existing files
     });
 
   if (error) {
@@ -36,16 +40,22 @@ const uploadToSupabase = async (file) => {
 
 // Middleware to handle file upload
 const handleFileUpload = async (file) => {
-  if (!file) throw new Error('No file to upload');
-
   try {
-    const fileUrl = await uploadToSupabase(file);
-    return fileUrl; // Return the file URL for later use
+    const { data, error } = await supabase.storage
+      .from('uploads')
+      .upload('public/' + file.originalname, file.buffer, {
+        cacheControl: '3600',
+        upsert: true, // Ensure we can overwrite files
+      });
+
+    if (error) throw new Error(error.message);
+    return data.path; // return the file URL or path
   } catch (error) {
-    throw new Error(`Failed to upload file: ${error.message}`);
+    throw new Error('Error uploading to Supabase: ' + error.message);
   }
 };
 
 
 
-module.exports = { upload, handleFileUpload, uploadToSupabase  };
+
+module.exports = { upload, handleFileUpload, uploadToSupabase };

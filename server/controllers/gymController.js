@@ -1,6 +1,7 @@
 const { getGymInfo, getMealInfo, inputFilter, RegisterGym,
     AddGymDocuments, AddGymLogo, getPendingGyms, ApproveRequest,
-    getPaymentPendingGyms, getPendingGymsByID, verifyGymInDb, getVerifiedGyms, GetGymData, getGymsByID, getAllVerifiedGyms } = require('../models/database');
+    getPaymentPendingGyms, getPendingGymsByID, verifyGymInDb, getVerifiedGyms, GetGymData, getGymsByID, getAllVerifiedGyms, AddGymImages } = require('../models/database');
+const { handleFileUpload } = require('../middlewares/multer');
 
 module.exports = {
     GetGyms: async (req, res) => {
@@ -16,7 +17,7 @@ module.exports = {
         const { admin_id } = req.query;
         try {
             console.log("received data: ", admin_id)
-            const gymData = await getGymsByID (admin_id); 
+            const gymData = await getGymsByID(admin_id);
             if (gymData) {
                 res.json(gymData); // Send gym data back to the frontend if response == 200 heehee
             } else {
@@ -160,18 +161,30 @@ module.exports = {
             const data = await AddGymDocuments(document_type, document_path);
             res.json(data);
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Error uploading documents:", error.message);
             res.status(500).send("Internal Server Error");
         }
     },
     AddGymLogo: async (req, res) => {
         try {
-            const { img_path } = req.body;
+            const { img_path, type } = req.body;
             console.log("Received data on the server[logo]:", req.body);
-            const data = await AddGymLogo(img_path);
+            const data = await AddGymLogo(img_path, type);
             res.json(data);
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.error("Error uploading logo:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+
+    AddGymImages: async (req, res) => {
+        try {
+            const { img_path, type } = req.body;
+            console.log("Received data on the server[gym images]:", req.body);
+            const data = await AddGymImages(img_path, type);
+            res.json(data);
+        } catch (error) {
+            console.error("Error uploading gym image:", error.message);
             res.status(500).send("Internal Server Error");
         }
     }

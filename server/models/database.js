@@ -35,6 +35,7 @@ async function getGymInfo() {
         WHERE 
             g.status = 'Verified' 
             AND NOW() <= DATE_ADD(p.payment_date, INTERVAL (SELECT duration_months FROM subscriptions WHERE subscription_id = p.subscription_id) MONTH)
+            AND i.type = 'logo'
         GROUP BY 
             g.gym_id, 
             g.gym_name, 
@@ -203,11 +204,19 @@ async function AddGymDocuments(document_type, document_path) {
     return result
 }
 
-async function AddGymLogo(img_path) {
+async function AddGymLogo(img_path, type) {
     const result = await pool.query(`
-    INSERT INTO gym_images (gym_id, img_path) 
-    VALUES ((SELECT gym_id FROM gyms ORDER BY gym_id desc LIMIT 1), ?)
-    `, [img_path])
+    INSERT INTO gym_images (gym_id, img_path, type) 
+    VALUES ((SELECT gym_id FROM gyms ORDER BY gym_id desc LIMIT 1), ?, ?)
+    `, [img_path, type])
+
+    return result
+}
+async function AddGymImages(img_path, type) {
+    const result = await pool.query(`
+    INSERT INTO gym_images (gym_id, img_path, type) 
+    VALUES ((SELECT gym_id FROM gyms ORDER BY gym_id desc LIMIT 1), ?, ?)
+    `, [img_path, type])
 
     return result
 }
@@ -430,7 +439,7 @@ async function GetTrainerInfo(user_id) {
 }
 async function GetGymData(gym_id) {
     const [result] = await pool.query(`
-    SELECT g.gym_name, g.daily_rate, g.monthly_rate, g.contact_no, g.street_address, i.img_path
+    SELECT g.gym_name, g.daily_rate, g.monthly_rate, g.contact_no, g.street_address, i.img_path, i.type
     FROM gyms g
     INNER JOIN gym_images i ON g.gym_id = i.gym_id
     WHERE g.gym_id = ?
@@ -625,5 +634,6 @@ module.exports = {
     inputFilter,
     RegisterGym,
     AddGymDocuments,
-    AddGymLogo
+    AddGymLogo,
+    AddGymImages
 };

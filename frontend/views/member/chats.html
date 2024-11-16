@@ -329,12 +329,7 @@
                 const container = document.createElement('div');
                 container.classList.add('flex', 'items-center', 'justify-between', 'w-full');
                 console.log(trainer.trainer_image)
-                // Create an image element for the trainer's avatar
-                const avatar = document.createElement('img');
-                avatar.src = 'http://localhost:3000/uploads/' + (trainer.trainer_image || 'default-avatar.jpg'); // Use trainer's avatar or a default one
-                avatar.alt = `${trainer.trainer_name}'s avatar`;
-                avatar.classList.add('h-8', 'w-8', 'rounded-full', 'mr-2'); // Tailwind classes for circular image and spacing
-
+                
                 // Create a div to hold the trainer name and message text
                 const textContainer = document.createElement('div');
                 textContainer.classList.add('flex', 'flex-col', 'justify-center');
@@ -365,7 +360,6 @@
                 }
 
                 // Append the avatar, textContainer (with trainer name and message), and online indicator to the container
-                container.appendChild(avatar);
                 container.appendChild(textContainer);
                 container.appendChild(onlineIndicator);
 

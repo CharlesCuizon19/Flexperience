@@ -20,6 +20,7 @@ router.get("/getAllVerifiedGyms", GymController.getAllVerifiedGyms);
 router.post("/RegisterGym",validation(gymSchema), GymController.RegisterGym); 
 router.post("/AddGymDocuments", GymController.AddGymDocuments); 
 router.post("/AddGymLogo", GymController.AddGymLogo); 
+router.post("/AddGymImages", GymController.AddGymImages); 
 router.put("/ApproveGym", GymController.ApproveRequest); 
 
 module.exports = router;
