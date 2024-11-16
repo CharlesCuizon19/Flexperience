@@ -275,7 +275,7 @@ async function getAllVerifiedGyms() {
             gym_documents d ON g.gym_id = d.gym_id
         LEFT JOIN
         	gym_admin a ON g.admin_id = a.admin_id
-        WHERE g.status = 'Verified'
+        WHERE g.status = 'Verified' AND i.type = 'logo'
         GROUP BY 
             g.gym_id, 
             g.gym_name, 
