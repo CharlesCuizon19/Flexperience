@@ -245,7 +245,7 @@ async function getPendingGyms() {
             gym_documents d ON g.gym_id = d.gym_id
         LEFT JOIN
         	gym_admin a ON g.admin_id = a.admin_id
-        WHERE g.status = 'Pending'
+        WHERE g.status = 'Pending' AND i.type = 'logo'
         GROUP BY 
             g.gym_id, 
             g.gym_name, 

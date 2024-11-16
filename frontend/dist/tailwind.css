@@ -3743,6 +3743,10 @@ header .icons span:last-child {
     gap: 0.75rem;
   }
 
+  .md\:gap-32 {
+    gap: 8rem;
+  }
+
   .md\:gap-4 {
     gap: 1rem;
   }

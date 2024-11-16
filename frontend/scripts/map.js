@@ -106,12 +106,13 @@ async function fetchGyms() {
 
         });
         gyms.forEach(function (gym) {
+            console.log(gym.img)
             var marker = L.marker(gym.coords, { icon: gymIcon }).addTo(map);
             marker.bindPopup(function () {
                 // Create your popup content dynamically
                 const popupContent = `
         <div>
-            <img src="https://capstone-erxk.onrender.com/uploads/${gym.img}" alt="Gym Image" style="max-width: 100%; height: auto;">
+            <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${gym.img}" alt="Gym Image" style="max-width: 100%; height: auto;">
             <h3>${gym.name}</h3>
             <p><strong>Daily rates:</strong> ${gym.dailyRates}</p>
             <p><strong>Monthly rates:</strong> ${gym.monthlyRates}</p>
@@ -231,7 +232,7 @@ function populateGymsList(userCoords) { //? THIS FUNCTION POPULATES THE 3 NEARES
         );
 
         var content = ` 
-        <img src="https://capstone-erxk.onrender.com/uploads/${nearbyGym.img}" alt="Gym Image" class="w-24 h-52 object-cover rounded-lg mr-4">
+        <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${nearbyGym.img}" alt="Gym Image" class="w-24 h-52 object-cover rounded-lg mr-4">
         <div class="flex flex-col">
             <div class="al-gym-name text-lg font-bold">${nearbyGym.name}</div>
             <div class="flex items-center text-sm">
@@ -380,7 +381,7 @@ function showNearby(gym) {
     <div class="flex justify-end">
         <button class="text-white text-2xl"><ion-icon name="close-outline"></ion-icon></button>
     </div>
-    <img src="https://capstone-erxk.onrender.com/uploads/${gym.img}" alt="${gym.name} Image" class="w-full h-48 object-cover rounded-lg"> <!-- Using img tag with specified height -->
+    <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${gym.img}" alt="${gym.name} Image" class="w-full h-48 object-cover rounded-lg"> <!-- Using img tag with specified height -->
     <div class="mt-4 px-2">
         <h3 class="text-lg font-bold">${gym.name}</h3>
         <p class="flex items-center text-sm text-gray-400 mt-1">
@@ -604,7 +605,7 @@ function populateAllGymsList() {
         );
 
         var content = `
-        <img src="https://capstone-erxk.onrender.com/uploads/${g.img}" alt="Gym Image" class="w-full h-24 object-cover rounded-lg mb-4 sm:mb-0 sm:w-28 sm:h-28 sm:mr-4">
+        <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${g.img}" alt="Gym Image" class="w-full h-24 object-cover rounded-lg mb-4 sm:mb-0 sm:w-28 sm:h-28 sm:mr-4">
         <div class="flex flex-col flex-1"> <!-- Added flex-1 to allow the text container to grow -->
             <div class="al-gym-name text-sm sm:text-lg font-bold whitespace-normal overflow-hidden text-ellipsis">${g.name}</div> <!-- Responsive font size -->
             <div class="text-xs sm:text-sm mb-1 whitespace-normal overflow-hidden text-ellipsis">  
