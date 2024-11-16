@@ -41,19 +41,27 @@ const uploadToSupabase = async (file) => {
 // Middleware to handle file upload
 const handleFileUpload = async (file) => {
   try {
+    // Generate a unique filename using UUID
+    const uniqueFilename = uuidv4() + '-' + file.originalname;
+
+    // Upload the file to the 'public' bucket
     const { data, error } = await supabase.storage
-      .from('uploads')
-      .upload('public/' + file.originalname, file.buffer, {
+      .from('uploads') // Ensure this matches your bucket name
+      .upload(uniqueFilename, file.buffer, {
         cacheControl: '3600',
-        upsert: true, // Ensure we can overwrite files
+        upsert: false, // Prevent overwriting existing files
       });
 
-    if (error) throw new Error(error.message);
-    return data.path; // return the file URL or path
+    if (error) {
+      throw new Error('Failed to upload file: ' + error.message);
+    }
+
+    return data.path; // Return the path of the uploaded file
   } catch (error) {
     throw new Error('Error uploading to Supabase: ' + error.message);
   }
 };
+
 
 
 

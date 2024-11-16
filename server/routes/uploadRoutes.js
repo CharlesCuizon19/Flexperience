@@ -52,9 +52,11 @@ router.post('/uploadSingle', upload.single('file'), async (req, res) => {
 
   try {
     if (req.file) {
-      const fileUrl = await uploadToSupabase(req.file); // File upload function that returns URL
-      const fileName = req.file.originalname; // You can also return the original file name if needed
-      res.json({ fileUrl, fileName }); // Return both the file URL and filename
+      // Use handleFileUpload for single file upload
+      const fileUrl = await handleFileUpload(req.file);
+
+      // Respond with the file URL and original filename
+      res.json({ fileUrl, fileName: req.file.originalname });
     } else {
       res.status(400).json({ error: 'File upload failed: No file received' });
     }
@@ -63,6 +65,7 @@ router.post('/uploadSingle', upload.single('file'), async (req, res) => {
     res.status(500).json({ error: 'File upload to Supabase failed', details: error.message });
   }
 });
+
 
 
 
