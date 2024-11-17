@@ -367,7 +367,8 @@ async function getVerifiedGyms(admin_id) {
             a.email,
             g.street_address, 
             i.img_path,
-            d.document_path
+            d.document_path,
+            s.end_date
         FROM 
             gyms g 
         LEFT JOIN 
@@ -376,9 +377,11 @@ async function getVerifiedGyms(admin_id) {
             gym_documents d ON g.gym_id = d.gym_id
         LEFT JOIN
         	gym_admin a ON g.admin_id = a.admin_id
-        WHERE g.status = 'Verified'
+        LEFT JOIN
+        	admin_subscription s ON s.gym_id = g.gym_id
+        WHERE g.status = 'Verified' AND i.type = 'logo'
         AND
-        a.admin_id = ?
+        a.admin_id = 14
         GROUP BY 
         	a.admin_id,
             g.gym_id, 
