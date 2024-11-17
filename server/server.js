@@ -31,7 +31,12 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = ['https://flexperience.pro', 'http://127.0.0.1:5500'];
-
+console.log("paypal client id:")
+console.log(process.env.PAYPAL_CLIENT_ID)
+console.log("paypal trainer id:")
+console.log(process.env.PAYPAL_CLIENT_TRAINER_ID)
+console.log("paypal base url: ")
+console.log(process.env.PAYPAL_BASE_URL)
 app.use(cors({
   origin: allowedOrigins,
   credentials: true // Allow sending of cookies from frontend
