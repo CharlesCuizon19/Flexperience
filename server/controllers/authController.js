@@ -4,6 +4,7 @@ const { sendEmail } = require('../services/emailService'); // Import the email s
 const bcrypt = require('bcrypt');
 const users = require('../models/users'); // Import the users model
 const nodemailer = require('nodemailer');
+const { decode } = require('jsonwebtoken');
 
 // Utility function to send email
 const sendVerificationEmail = async (email, verificationToken) => {
@@ -56,6 +57,19 @@ module.exports = {
 
             await users.createGymAdmin({ firstname, lastname, email });
 
+            // Create a token for email verification
+            const verificationToken = createTokens({ email }); // Assuming you create a token with email as the payload
+
+            // Construct the verification URL
+            const verificationUrl = `http://localhost:3000/auth/verify-email?token=${verificationToken}`;
+            
+            // Send verification email
+            await sendEmail(
+                email,
+                'Verify Your Email',
+                `Thank you for signing up! Please verify your email by clicking on the link below: \n\n ${verificationUrl}`
+            );
+            
             res.status(201).json({ message: "Gym admin successfully created!" });
         } catch (error) {
             console.error("Create Gym Admin Error:", error.message);
@@ -96,32 +110,32 @@ module.exports = {
     // Verify email route
     verifyEmail: async (req, res) => {
         const { token } = req.query;
-    
         try {
             // Verify the token and extract user info (e.g., email)
             const decodedToken = verifyToken(token);  // Assuming you have a verifyToken function in your JWT service
-    
+            console.log("recieved token" + token)
+            console.log("recieved email" + decodedToken.email)
             if (!decodedToken) {
                 return res.status(400).send('Invalid or expired verification token.');
             }
-    
+
             // Find the user by email or token info (whatever you're using to identify the user)
             const user = await users.findByEmail(decodedToken.email);
-    
+
             if (!user) {
                 return res.status(404).send('User not found.');
             }
-    
+
             // Update the user’s email verified status in your database
             await users.activateUser(user.account_id);
-    
+
             // Redirect to the desired URL after successful email verification
             res.redirect('https://flexperience.pro');
         } catch (error) {
             console.error('Verification Error:', error);
             res.status(400).send('Invalid or expired verification link.');
         }
-    },    
+    },
 
     // Login user
     Login: async (req, res) => {
