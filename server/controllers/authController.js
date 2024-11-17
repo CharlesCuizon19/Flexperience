@@ -90,7 +90,7 @@ module.exports = {
 
             // Construct the verification URL
             const verificationUrl = `https://capstone-erxk.onrender.com/auth/verify-email?token=${verificationToken}`;
-
+            console.log(verificationUrl)
             // Send verification email
             await sendEmail(
                 email,
