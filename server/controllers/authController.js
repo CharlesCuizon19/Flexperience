@@ -61,7 +61,7 @@ module.exports = {
             const verificationToken = createTokens({ email }); // Assuming you create a token with email as the payload
 
             // Construct the verification URL
-            const verificationUrl = `http://localhost:3000/auth/verify-email?token=${verificationToken}`;
+            const verificationUrl = `https://capstone-erxk.onrender.com/auth/verify-email?token=${verificationToken}`;
             
             // Send verification email
             await sendEmail(
