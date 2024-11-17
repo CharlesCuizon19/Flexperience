@@ -42,10 +42,12 @@
     <br><br>
     <main class="flex justify-center items-center h-screen">
         <div class="flex flex-row w-full mx-40 pt-20 pb-10">
-            <div class=" bg-customBodyColor p-8 rounded-tr-none rounded-br-none rounded-bl-lg rounded-tl-lg rounded shadow-lg w-full lg:flex md:hidden sm:hidden">
+            <div
+                class=" bg-customBodyColor p-8 rounded-tr-none rounded-br-none rounded-bl-lg rounded-tl-lg rounded shadow-lg w-full lg:flex md:hidden sm:hidden">
                 <img class=" h-full w-full" src="../img/Logo (1).png" alt="">
             </div>
-            <form class=" bg-customBodyColor p-8 rounded-tl-none rounded-bl-none rounded-br-lg rounded-tr-lg shadow-lg w-full">
+            <form
+                class=" bg-customBodyColor p-8 rounded-tl-none rounded-bl-none rounded-br-lg rounded-tr-lg shadow-lg w-full">
                 <h2 class="text-2xl text-white font-bold text-center mb-6">Member signup</h2>
                 <div class="mb-4">
                     <input type="text" id="firstName" placeholder="First name"
@@ -56,15 +58,20 @@
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
                 <div class="mb-4">
+                    <input type="email" id="email" placeholder="Email" class="w-full p-3 border border-gray-300 rounded"
+                        required>
+                </div>
+
+                <div class="mb-4">
                     <input type="number" id="weight" placeholder="Weight"
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
-    
+
                 <div class="mb-4">
                     <input type="text" id="bodytype" placeholder="Bodytype"
                         class="w-full p-3 border border-gray-300 rounded" required>
                 </div>
-                
+
                 <div class="mb-4">
                     <input type="text" id="username" placeholder="Username"
                         class="w-full p-3 border border-gray-300 rounded" required>
@@ -77,12 +84,12 @@
                     <input type="checkbox" id="tips" class="mr-2">
                     <label for="tips" class="text-white">Send me emails with the further updates of this website</label>
                 </div>
-    
+
                 <button id="signup"
                     class="transition-transform transform bg-50 text-white py-2 px-4 rounded w-full hover:bg-orange-600 hover:scale-105">
                     Sign Up
                 </button>
-    
+
             </form>
 
         </div>
@@ -90,11 +97,20 @@
         <div id="successModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
             <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-lg text-center w-11/12 max-w-md">
                 <span class="text-xl font-semibold text-white">Registration Successful!</span>
-                <p class="text-gray-400 mt-2">Your gym has been registered successfully.</p>
+                <p class="text-gray-400 mt-2">You are now registered!.</p>
                 <button class="bg-customOrange mt-4 py-2 px-4 rounded hover:bg-orange-800 text-white"
                     onclick="closeModal()" id="Continue">OK</button>
             </div>
         </div>
+        <!-- Modal for Verification Email -->
+        <div id="emailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-md text-center">
+                <h2 class="text-lg font-semibold">Registration Successful</h2>
+                <p>Please check your email to verify your account.</p>
+                <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">OK</button>
+            </div>
+        </div>
+
 
     </main>
 
@@ -109,34 +125,35 @@
         document.getElementById("signup").addEventListener("click", async function (event) {
             event.preventDefault();
 
-
             const firstName = document.getElementById("firstName").value;
             const lastName = document.getElementById("lastName").value;
             const weight = document.getElementById("weight").value;
             const bodytype = document.getElementById("bodytype").value;
             const username = document.getElementById("username").value;
             const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value; // Get email value
 
             try {
-                // Wait for AddToAccounts to complete before proceeding
-                await AddToAccounts(username, password);
+                // Call AddToAccounts to register the user in the accounts table
+                await AddToAccounts(username, password, email);
 
-                // Now call RegisterGymAdmin
-                await RegisterMember(firstName, lastName, weight, bodytype);
+                // Now call RegisterMember to register additional member details
+                await RegisterMember(firstName, lastName, weight, bodytype, email);
 
-                showModal();
-
+                // Show the email verification modal after successful registration
+                showEmailModal();
             } catch (error) {
                 console.error('Error submitting form:', error);
             }
         });
 
-        async function AddToAccounts(Username, Password) {
+        async function AddToAccounts(Username, Password, Email) {
             try {
                 const formData = {
                     username: Username,
                     password: Password,
-                    usertype: "Member"
+                    usertype: "Member",
+                    email: Email // Add email to the request body
                 };
                 const response = await axios.post('http://localhost:3000/auth/Register', formData);
             } catch (error) {
@@ -144,23 +161,52 @@
             }
         }
 
-        async function RegisterMember(firstname, lastname, weight, bodytype) {
+        async function RegisterMember(firstname, lastname, weight, bodytype, email) {
             try {
                 const formData = {
                     firstname: firstname,
                     lastname: lastname,
                     weight: weight,
-                    bodytype: bodytype
+                    bodytype: bodytype,
+                    email: email // Add email to the request body
                 };
                 const response = await axios.post('http://localhost:3000/auth/RegisterMember', formData);
+                // Assuming the server handles sending the verification email after this point
             } catch (error) {
                 console.error('Error submitting registration:', error.message);
             }
         }
+
         function showModal() {
             const modal = document.getElementById("successModal");
             modal.classList.remove("hidden");
             modal.classList.add("flex");
+        }
+
+        function showEmailModal() {
+            const modal = document.getElementById("emailModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeEmailModal() {
+            const modal = document.getElementById("emailModal");
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+
+            // Reset form inputs
+            resetForm();
+        }
+
+        function resetForm() {
+            // Clear input fields after successful registration and modal closure
+            document.getElementById("firstName").value = "";
+            document.getElementById("lastName").value = "";
+            document.getElementById("weight").value = "";
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("bodytype").value = "";
+            document.getElementById("email").value = ""; // Clear email field if needed
         }
 
         function closeModal() {
@@ -169,7 +215,7 @@
             const lastName = document.getElementById("lastName");
             const username = document.getElementById("username");
             const password = document.getElementById("password");
-            const bodytype= document.getElementById("bodytype");
+            const bodytype = document.getElementById("bodytype");
 
             // Get the modal element
             const modal = document.getElementById("successModal");

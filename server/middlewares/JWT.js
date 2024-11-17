@@ -7,7 +7,8 @@ const createTokens = (user) => {
     { 
       username: user.username, 
       id: user.account_id,
-      user_type: user.user_type  // Attach the userType to the token payload (e.g., Member, Trainer, etc.)
+      user_type: user.user_type,  // Attach the userType to the token payload (e.g., Member, Trainer, etc.)
+      email: user.email  // Make sure email is included in the token
     },
     SECRET_KEY,
     { expiresIn: '1h' }  // You can set an expiration time for the token
@@ -40,5 +41,17 @@ const validateToken = (req, res, next) => {
   }
 };
 
+// Verify and decode the token
+const verifyToken = (token) => {
+  try {
+      // Verify the token using your secret key
+      const decoded = verify(token, SECRET_KEY);  // Use the imported 'verify' function from jsonwebtoken
+      return decoded;  // Return the decoded token if valid
+  } catch (error) {
+      console.error('Token verification error:', error);
+      return null;  // Return null if the token is invalid or expired
+  }
+};
+
 // Export the createTokens and validateToken functions
-module.exports = { createTokens, validateToken };
+module.exports = { createTokens, validateToken, verifyToken };

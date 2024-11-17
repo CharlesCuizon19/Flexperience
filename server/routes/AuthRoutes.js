@@ -10,28 +10,8 @@ const gymAdminSchema = require('../validations/gymAdminValidations')
 router.post("/Register", validation(userSchema), AuthController.Register);
 router.post("/RegisterAdmin",validation(gymAdminSchema), AuthController.createGymAdmin);
 router.post("/RegisterMember", AuthController.createMembers);
+router.get('/verify-email', AuthController.verifyEmail);
 router.post("/Login", AuthController.Login);
-// Express route to get session data
-router.get('/session-data', (req, res) => {
-    // Log session data for debugging
-    console.log('Session data:', req.session);
-
-    if (req.session.authorized) {
-        res.json({
-            userType: req.session.userType,
-            authorized: req.session.authorized,
-            accessToken: req.session.accessToken
-        });
-    } else {
-        res.json({
-            userType: null,
-            authorized: false,
-            accessToken: null
-        });
-    }
-});
-
-
 
 
 module.exports = router;

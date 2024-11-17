@@ -1,10 +1,10 @@
 const db = require('./database');
 const { pool } = require('./database');
 
-const createUser = async ({ username, password, usertype }) => {
+const createUser = async ({ username, password, usertype, email }) => {
     return db.query(
-        'INSERT INTO user_accounts (username, password, user_type) VALUES (?,?,?)',
-        [username, password, usertype]
+        'INSERT INTO user_accounts (username, password, user_type, email) VALUES (?,?,?, ?)',
+        [username, password, usertype, email]
     );
 };
 const createGymAdmin = async ({ firstname, lastname, email }) => {
@@ -41,8 +41,45 @@ const getUserinfo = async ({ account_id }) => {
     );
     return rows[0]; // Return the first row (or undefined if no user was found)
 };
+const activateUser = async (userId) => {
+    try {
+        console.log("account id: " + userId)
+        const result = await db.query(
+            'UPDATE user_accounts SET emailVerified = ? WHERE account_id = ?',
+            [true, userId]
+        );
+        
+        // Log the result to see its structure
+        console.log("Result from DB query:", result);
+
+        // Check if any rows were affected and return accordingly
+        return result[0]?.affectedRows > 0;  // Use optional chaining to avoid errors if result[0] is undefined
+    } catch (error) {
+        console.error("Error activating user email:", error.message);
+        throw error;
+    }
+};
+
+
+const findByEmail = async (email) => {
+    try {
+        console.log("received email: " + email)
+        const [rows] = await pool.query(
+            'SELECT * FROM user_accounts WHERE email = ? LIMIT 1',
+            [email]
+        );
+        // Return the user if found, otherwise return null
+        console.log(rows)
+        return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+        console.error("Error querying database:", error.message);
+        throw error;
+    }
+};
 
 module.exports = {
+    findByEmail,
+    activateUser,
     createUser,
     createGymAdmin,
     findOne,
