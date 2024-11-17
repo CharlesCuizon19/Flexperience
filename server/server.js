@@ -37,6 +37,8 @@ console.log("paypal trainer id:")
 console.log(process.env.PAYPAL_CLIENT_TRAINER_ID)
 console.log("paypal base url: ")
 console.log(process.env.PAYPAL_BASE_URL)
+console.log("EMAIL_USER: ")
+console.log(process.env.EMAIL_USER)
 app.use(cors({
   origin: allowedOrigins,
   credentials: true // Allow sending of cookies from frontend
