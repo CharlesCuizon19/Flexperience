@@ -86,7 +86,7 @@ router.get('/complete-client-payment', async (req, res) => {
                 // await addSubscriptionRecord(admin_id, gym_id, subscription_id, day)
                 console.log("SUCCESS")
                 // Redirect to the success page
-                return res.redirect('/gym_admin/success');
+                return res.redirect('https://flexperience.pro/views/features/login.html');
             } else {
                 console.log("ERROR")
                 throw new Error(result.message);

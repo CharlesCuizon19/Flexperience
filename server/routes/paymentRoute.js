@@ -8,6 +8,7 @@ router.post('/pay', async (req, res) => {
         const { approvalLink } = await paypal.createSubscription(admin_id, gym_id, planID, subscriptionID, subscriptionName, days, price); // Pass the correct parameters
         console.log("------------")
         console.log(days)
+        console.log(approvalLink)
         res.send({ approvalLink }); // Send the PayPal approval URL for the subscription
     } catch (error) {
         res.status(500).send("ERROR: " + error.message);
