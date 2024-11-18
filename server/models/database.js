@@ -307,7 +307,7 @@ async function getPendingGymsByID(admin_id) {
         LEFT JOIN
         	gym_admin a ON g.admin_id = a.admin_id
         WHERE g.status = 'Pending' AND
-        a.admin_id = ?
+        a.admin_id = ? AND i.type = 'logo'
         GROUP BY 
             g.gym_id, 
             g.gym_name, 
@@ -342,7 +342,7 @@ async function getPaymentPendingGyms(admin_id) {
         	gym_admin a ON g.admin_id = a.admin_id
         WHERE g.status = 'Approved - Payment Pending'
         AND
-        a.admin_id = ?
+        a.admin_id = ? AND i.type = 'logo'
         GROUP BY 
         	a.admin_id,
             g.gym_id, 
@@ -381,7 +381,7 @@ async function getVerifiedGyms(admin_id) {
         	admin_subscription s ON s.gym_id = g.gym_id
         WHERE g.status = 'Verified' AND i.type = 'logo'
         AND
-        a.admin_id = 14
+        a.admin_id = ?
         GROUP BY 
         	a.admin_id,
             g.gym_id, 
