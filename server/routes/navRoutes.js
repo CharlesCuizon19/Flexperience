@@ -59,8 +59,6 @@ router.get('/complete-order', async (req, res) => {
     }
 });
 
-
-
 router.get('/complete-client-payment', async (req, res) => {
     try {
         const token = req.query.token;

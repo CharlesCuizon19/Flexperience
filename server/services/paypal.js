@@ -48,7 +48,7 @@ exports.createSubscription = async (admin_id, gym_id, planID, subscriptionID, su
                 email_address: 'customer@example.com'
             },
             application_context: {
-                return_url: `${process.env.BASE_URL}/complete-order?admin_id=${admin_id}&gym_id=${gym_id}&price=${price}&subscriptionID=${subscriptionID}&subscriptionName=${encodeURIComponent(subscriptionName)}&days=${days}&planID=${planID}`,
+                return_url: `https://capstone-erxk.onrender.com/complete-order?admin_id=${admin_id}&gym_id=${gym_id}&price=${price}&subscriptionID=${subscriptionID}&subscriptionName=${encodeURIComponent(subscriptionName)}&days=${days}&planID=${planID}`,
                 cancel_url: process.env.BASE_URL + '/cancel-order',
             }
         }
@@ -56,7 +56,7 @@ exports.createSubscription = async (admin_id, gym_id, planID, subscriptionID, su
 
     const paypalsubscriptionId = response.data.id;
     const approvalLink = response.data.links.find(link => link.rel === 'approve').href;
-    const completeOrderUrl = `${process.env.BASE_URL}/complete-order?admin_id=${admin_id}&gym_id=${gym_id}&paypalsubscriptionID=${paypalsubscriptionId}&subscriptionID=${subscriptionID}&subscriptionName=${encodeURIComponent(subscriptionName)}&days=${days}&planID=${planID}`;
+    const completeOrderUrl = `https://capstone-erxk.onrender.com/complete-order?admin_id=${admin_id}&gym_id=${gym_id}&paypalsubscriptionID=${paypalsubscriptionId}&subscriptionID=${subscriptionID}&subscriptionName=${encodeURIComponent(subscriptionName)}&days=${days}&planID=${planID}`;
 
     return {
         paypalsubscriptionId: paypalsubscriptionId,
