@@ -45,7 +45,7 @@ router.get('/complete-order', async (req, res) => {
             await addSubscriptionRecord(admin_id, gym_id, subscription_id, day); // Use the plan ID here
 
             // Redirect to the success page
-            return res.redirect('/gym_admin/success');
+            return res.redirect('https://flexperience.pro/views/features/login.html'); // Redirect to an external URL
         } else {
             throw new Error(result.message);
         }
