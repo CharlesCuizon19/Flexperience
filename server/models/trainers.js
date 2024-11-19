@@ -156,9 +156,7 @@ const getStudents = async (trainer_id) => {
                 WHEN p.plan_type = 'Workout Plan' THEN COALESCE(mw.status, "Not assigned yet")
                 WHEN p.plan_type = 'Comprehensive' THEN 
                     CASE 
-                        WHEN COALESCE(mm.status, "Not assigned yet") = 'On going' AND COALESCE(mw.status, "Not assigned yet") = 'On going' THEN 'Both On going'
-                        WHEN COALESCE(mm.status, "Not assigned yet") = 'On going' THEN 'Meal Plan On going'
-                        WHEN COALESCE(mw.status, "Not assigned yet") = 'On going' THEN 'Workout Plan On going'
+                        WHEN mm.status = 'On going' AND mw.status = "On going"  THEN 'Both On going'
                         ELSE 'Not assigned yet'
                     END
                 ELSE 'Not assigned yet'
