@@ -6,7 +6,7 @@ const { getAllTrainers, getGymTrainers, insertGymTrainers, insertWorkoutTemplate
     insertWorkoutTemplateExercise, getGymTrainersById, updateWorkoutTemplateExercise,
     removeTemplateExercise, inputFilter, insertMealTemplates, insertMealTemplatesItems,
     insertMealTemplatesSteps, insertProposal, insertNotification,getStudents,assignWorkoutPlan,insertStudentWorkouts, getProgressOftheDay, getStudentActivity,
-    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay, insertPremadeMealImage,checkAvailability } = require('../models/trainers');
+    assignMealPlan, insertStudentMeals, insertPremadeMeals, getPremadeMeals, getMealProgressOftheDay, insertPremadeMealImage,checkAvailability, removePremadeMeal } = require('../models/trainers');
 
 module.exports = {
 
@@ -392,6 +392,17 @@ module.exports = {
             res.status(200).send("Workout template exercise deleted successfully");
         } catch (error) {
             console.error("Error deleting workout template exercise:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    removePremadeMeal: async (req, res) => {
+        const { pre_made_meal_id } = req.query; // Change this line
+        console.log("received data", pre_made_meal_id);
+        try {
+            await removePremadeMeal(pre_made_meal_id);
+            res.status(200).send("pre made meal deleted successfully");
+        } catch (error) {
+            console.error("Error deleting pre made meal", error.message);
             res.status(500).send("Internal Server Error");
         }
     },

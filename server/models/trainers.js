@@ -84,6 +84,13 @@ const removeTemplateExercise = async (template_exercise_id) => {
     );
     return rows.length > 0 ? rows : null;
 };
+const removePremadeMeal = async (pre_made_meal_id) => {
+    const [rows] = await pool.query(
+        'DELETE FROM pre_made_meals WHERE pre_made_meal_id = ?',
+        [pre_made_meal_id]
+    );
+    return rows.length > 0 ? rows : null;
+};
 async function inputFilter(input, trainer_id) {
     const [result] = await pool.query(`
         SELECT * FROM workout_plan_templates
@@ -421,6 +428,7 @@ module.exports = {
     insertMealTemplates,
     inputFilter,
     removeTemplateExercise,
+    removePremadeMeal,
     updateWorkoutTemplateExercise,
     insertWorkoutTemplateExercise,
     insertGymTrainers,

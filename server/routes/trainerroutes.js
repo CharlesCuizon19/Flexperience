@@ -36,6 +36,7 @@ router.post("/insertPremadeMealImage", trainerController.insertPremadeMealImage)
 router.post("/insertStudentMeals", trainerController.insertStudentMeals); 
 router.put("/ModifyWorkoutTemplateExercises", trainerController.updateWorkoutTemplateExercise); 
 router.delete("/RemoveWorkoutTemplateExercises", trainerController.removeTemplateExercise); 
+router.delete("/removePremadeMeal", trainerController.removePremadeMeal); 
 
 module.exports = router;
 

@@ -414,11 +414,8 @@ function showNearby(gym) {
         </p>
     </div>
     <div class="flex justify-between mt-6 px-2">
-        <button id="openStreetView" data-src="${gym.street_view}" class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm flex items-center shadow-md">
-            <i class="fas fa-eye mr-2"></i> Street view
-        </button>
         <button id="viewGymButton" data-src="${gym.id}" class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm flex items-center shadow-md">
-            View Gym
+            Visit Gym
         </button>
     </div>
 `;
@@ -442,6 +439,7 @@ function showNearby(gym) {
             });
             gymbutton.addEventListener('click', function (event) {
                 event.stopPropagation();
+                alert("clicked")
                 const gymid = this.getAttribute('data-src');
                 window.location.href = `./viewGym.html?gymid=${gymid}`;
             });
