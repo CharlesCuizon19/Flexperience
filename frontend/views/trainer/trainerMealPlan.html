@@ -1046,7 +1046,7 @@
 
                             mealCard.innerHTML = `
                                 <a class="relative mx-3 mt-3 flex h-30 overflow-hidden rounded-xl" href="#">
-                                    <img class="object-cover w-full h-40" src=http://localhost:3000/uploads/${meal.filename} alt="mealplan image" />
+                                    <img class="object-cover w-full h-40" src=https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${meal.filename} alt="mealplan image" />
                                 </a>
                                 <div class="mt-4 px-5 pb-5 flex flex-col h-full">
                                     <a href="#" class="flex items-center justify-center h-12 overflow-hidden">
@@ -1122,7 +1122,7 @@
                         }
                     })
                         .then((response) => {
-                            const fileName = response.data.fileName; // Assuming filePath contains the uploaded file name
+                            const fileName = response.data.fileUrl; // Assuming filePath contains the uploaded file name
                             console.log("Uploaded file name: ", fileName);
 
                             // After successful upload, send trainer_id and fileName to the new endpoint
