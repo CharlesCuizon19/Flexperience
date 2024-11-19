@@ -103,7 +103,7 @@ exports.createClientToTrainerPayment = async (contract_id, price, planType, dura
                 }
             ],
             application_context: {
-                return_url: `${process.env.BASE_URL}/complete-client-payment?contract_id=${contract_id}&price=${price}`,
+                return_url: `https://capstone-erxk.onrender.com/complete-client-payment?contract_id=${contract_id}&price=${price}`,
                 cancel_url: process.env.BASE_URL + '/cancel-client-payment',
                 shipping_preference: 'NO_SHIPPING',
                 user_action: 'PAY_NOW',

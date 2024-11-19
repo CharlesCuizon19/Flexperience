@@ -25,7 +25,8 @@
             --custom-light-blue: #E0F7FA;
         }
 
-        #success-toast, #error-toast {
+        #success-toast,
+        #error-toast {
             z-index: 9999;
         }
     </style>
@@ -623,13 +624,21 @@
             // Open the modal when the "Send Proposal" button is clicked
             sendProposalButton.addEventListener('click', async () => {
                 try {
-                    const response = await axios.get('http://localhost:3000/checkAvailability?member_id=9');
+                    const response = await axios.get(`http://localhost:3000/checkAvailability?member_id=${memberid}`);
                     const data = response.data;
 
-                    if (data[0][0].contract_availability === 'Available') {
+                    // Check if the response is null
+                    if (data === null) {
+                        // Handle null response
                         proposalModalBackground.classList.remove('hidden');
-                    } else {
-                        showToast("error", "The student is not available for a new proposal at this time.")
+                    }
+                    else if (data[0] && data[0][0] && data[0][0].contract_availability === 'Available') {
+                        // Handle available contract
+                        proposalModalBackground.classList.remove('hidden');
+                    }
+                    else {
+                        // If not null and not available
+                        showToast("error", "The student is not available for a new proposal at this time.");
                     }
                 } catch (error) {
                     console.error("Error fetching availability:", error);
