@@ -338,9 +338,31 @@
                     <canvas id="membersChart" class="bg-div_color"></canvas>
                 </div>
             </div>
+
             <div class="p-4 pl-[22px] shadow-md">
                 <h2 class="text-white text-2xl ml-10 font-bold mb-4 mt-10">Sales Trends Overview</h2>
                 <canvas id="lineChart" class="bg-div_color"></canvas>
+            </div>
+
+            <!-- Table Section -->
+            <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
+                <h2 class="text-white text-2xl font-bold mb-4">Member Registrations Overview</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-div_color rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-50 text-white">
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Membership Type</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Date Started</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Date End</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Registration Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberTableBody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -486,7 +508,7 @@
             }
         });
 
- 
+
         async function loadGyms() {
             try {
                 // Replace '14' with the specific admin_id if dynamic; otherwise, use variable

@@ -61,6 +61,27 @@ const getSalesById = async (gym_id) => {
 
     return rows;
 };
+const getActiveCustomers = async (gym_id) => {
+    const [rows] = await pool.query(
+        `SELECT 
+            gym_id,
+            name, 
+            membership_type, 
+            amount_paid, 
+            DATE(date_created) AS date_started, 
+            DATE(DATE_ADD(date_created, INTERVAL 1 MONTH)) AS date_end,
+            CASE 
+                WHEN CURRENT_DATE > DATE(DATE_ADD(date_created, INTERVAL 1 MONTH)) THEN 'Expired'
+                ELSE 'Active'
+            END AS registration_status
+        FROM 
+            member_registrations
+        WHERE 
+            gym_id = ?`,
+        [gym_id]);
+
+    return rows;
+};
 
 
 async function AddTrainerProfile(trainer_id, filename) {
@@ -95,5 +116,6 @@ module.exports = {
     insertMemberRegistration,
     insertPlan,
     getVerifiedAdmins,
-    AddTrainerProfile
+    AddTrainerProfile,
+    getActiveCustomers
 };

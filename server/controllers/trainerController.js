@@ -396,7 +396,7 @@ module.exports = {
         }
     },
     removePremadeMeal: async (req, res) => {
-        const { pre_made_meal_id } = req.query; // Change this line
+        const { pre_made_meal_id } = req.query; // Change this line 
         console.log("received data", pre_made_meal_id);
         try {
             await removePremadeMeal(pre_made_meal_id);

@@ -26,6 +26,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     return null;
   }
 
+  async function fetchAndPopulateTable(gymId) {
+    const endpoint = `http://localhost:3000/getActiveCustomers?gym_id=${gymId}`;
+    const memberTableBody = document.getElementById("memberTableBody");
+    try {
+      const response = await axios.get(endpoint);
+      const members = response.data;
+      console.log(members)
+      // Clear the table before appending new data
+      memberTableBody.innerHTML = "";
+
+      // Populate the table
+      members.forEach(member => {
+        const statusClass =
+          member.registration_status === "Active"
+            ? "bg-green-500 text-white px-3 py-1 rounded-full"
+            : "bg-red-500 text-white px-3 py-1 rounded-full";
+
+        const row = `
+            <tr class="text-white">
+                <td class="px-6 py-3 border-b border-gray-800">${member.name}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${member.membership_type}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${new Date(member.date_started).toLocaleDateString()}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${new Date(member.date_end).toLocaleDateString()}</td>
+                <td class="px-6 py-3 border-b border-gray-800">
+                    <span class="${statusClass}">${member.registration_status}</span>
+                </td>
+            </tr>
+        `;
+        memberTableBody.innerHTML += row;
+      });
+    } catch (error) {
+      console.error("Error fetching member data:", error);
+    }
+  }
+
   async function loadGymDropdowns(id) {
     try {
       const response = await axios.get(`http://localhost:3000/getAdminGyms?id=${id}`);
@@ -43,6 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       gymId = gyms[0].gym_id; // Set initial gymId based on the first gym
       await fetchSalesData(gymId); // Fetch sales data for the initial gym
+      await fetchAndPopulateTable(gymId)
 
     } catch (error) {
       console.error('Error fetching gyms:', error);
@@ -55,6 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selectedGymId = event.target.value;
     gymId = selectedGymId;
     await fetchSalesData(gymId); // Fetch data for the newly selected gym
+    await fetchAndPopulateTable(gymId)
   });
 
   async function fetchSalesData(gymId) {
@@ -81,7 +118,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Error fetching sales data:', error);
     }
   }
-
 
   // Function to update the charts
   function updateCharts() {
