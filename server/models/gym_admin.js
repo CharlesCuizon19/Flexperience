@@ -77,7 +77,9 @@ const getActiveCustomers = async (gym_id) => {
         FROM 
             member_registrations
         WHERE 
-            gym_id = ?`,
+            gym_id = ?
+        AND
+            membership_type = 'Monthly'`,
         [gym_id]);
 
     return rows;
