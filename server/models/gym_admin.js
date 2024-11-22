@@ -8,6 +8,7 @@ const getVerifiedAdmins = async () => {
             CONCAT(ga.lastname, ', ', ga.firstname) AS gym_admin,
             g.gym_name,
             g.street_address,
+            p.amount,
             (SELECT plan_name FROM subscriptions WHERE subscription_id = p.subscription_id) AS Subscription,
             CASE 
                 WHEN p.subscription_id = 1 THEN DATE_ADD(p.payment_date, INTERVAL 1 MONTH)

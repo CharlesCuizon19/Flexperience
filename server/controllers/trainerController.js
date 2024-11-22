@@ -279,6 +279,7 @@ module.exports = {
         const { gymid, firstname, lastname, bio, experience, rates, trainerType } = req.body;
         try {
             const trainerId = await insertGymTrainers(gymid, firstname, lastname, bio, experience, rates, trainerType);
+            console.log("returned ID: " + trainerId)
             res.status(200).json({ message: "Trainer added successfully", trainerId: trainerId });
 
         } catch (error) {

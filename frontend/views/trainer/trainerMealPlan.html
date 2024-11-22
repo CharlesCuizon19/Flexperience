@@ -20,7 +20,8 @@
     <style>
         #templateModal,
         #templateModal2,
-        #modifyMealModal {
+        #modifyMealModal,
+        #createMealModal {
             z-index: 9999;
         }
 
@@ -464,8 +465,8 @@
                     </div>
                 </div>
                 <div id="createMealModal"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-                    <div class="bg-white p-8 rounded-lg shadow-lg max-w-5xl w-full h-[70vh] overflow-hidden relative">
+                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center  hidden">
+                    <div class="bg-white p-8 rounded-lg shadow-lg max-w-5xl w-full h-[80vh] overflow-hidden relative">
                         <!-- Close button for the modal -->
                         <button id="closeModalBtn"
                             class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
@@ -1188,7 +1189,6 @@
 
             async function insertMealImage(preMadeMealId) {
                 try {
-                    alert(preMadeMealId)
                     const profileImageFile = document.getElementById("mealImage").files[0];
 
                     if (!profileImageFile) {

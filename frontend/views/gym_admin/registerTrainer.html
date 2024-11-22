@@ -55,6 +55,10 @@
                 <input type="number" id="experience" class="w-80 h-10 rounded-lg shadow-51 shadow-inner text-black pl-5"
                     placeholder="Years of experience"> <br>
                 <br>
+                <label for="email" class="font-semibold">Email</label> <br>
+                <input type="email" id="email" class="w-80 h-10 rounded-lg shadow-51 shadow-inner text-black pl-5"
+                    placeholder="email"> <br>
+                <br>
             </div>
             <div>
                 <label for="gym_select" class="font-semibold">Assign to Gym</label> <br>
@@ -188,11 +192,12 @@
         const LastName = document.getElementById('last_name').value;
         const Bio = document.getElementById('bio').value;
         const Experience = document.getElementById('experience').value;
+        const Email = document.getElementById('email').value;
         const GymId = document.getElementById('gym_select').value;
         const Rates = document.getElementById('rate').value;
 
         try {
-            const accountAdded = await AddToAccounts(Username, Password);
+            const accountAdded = await AddToAccounts(Username, Password, Email);
 
             if (accountAdded) {
                 await RegisterTrainer(GymId, FirstName, LastName, Bio, Experience, Rates);
@@ -233,12 +238,14 @@
         setTimeout(() => toast.classList.add('hidden'), 300);  // Hide completely after transition
     });
 
-    async function AddToAccounts(Username, Password) {
+    async function AddToAccounts(Username, Password, email) {
         try {
             const formData = {
                 username: Username,
                 password: Password,
-                usertype: "Trainer"
+                usertype: "Trainer",
+                email: email
+
             };
             const response = await axios.post('http://localhost:3000/auth/Register', formData);
             console.log('Registration successful:', response.data);
@@ -312,7 +319,7 @@
                     alert(`File uploaded successfully: ${fileName}`);
 
                     // After successful upload, send trainer_id and fileName to the new endpoint
-                    return axios.post('http://localhost:3000/insertTrainerImage', {
+                    return axios.post('http://localhost:3000/   ', {
                         trainer_id: trainer_id,
                         filename: fileName
                     });
