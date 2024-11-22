@@ -149,9 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
+    const id = getCookie("trainer_id");
+    alert(id)
     // Fetch data using Axios
-    axios.get('http://localhost:3000/getTrainerSales')
+    axios.get(`http://localhost:3000/getTrainerSales?trainer_id=${id}`)
         .then(response => {
             const salesData = response.data;
 
@@ -177,5 +178,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error("Error fetching sales data: ", error);
         });
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
 
 })

@@ -60,6 +60,43 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error("Error fetching member data:", error);
     }
   }
+  async function fetchAndPopulateTrainerSales(gymId) {
+    const endpoint = `http://localhost:3000/getAdminTrainers?gym_id=${gymId}`;
+    const commissionTableBody = document.getElementById("commissionTableBody");
+
+    // Array of month names
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
+    try {
+      const response = await axios.get(endpoint);
+      const members = response.data;
+
+      // Clear the table before appending new data
+      commissionTableBody.innerHTML = "";
+
+      // Populate the table
+      members.forEach(trainer => {
+        const monthName = monthNames[trainer.month - 1];  // Convert number to month name
+
+        const row = `
+          <tr class="text-white">
+              <td class="px-6 py-3 border-b border-gray-800">${trainer.Name}</td>
+              <td class="px-6 py-3 border-b border-gray-800">${monthName}</td>
+              <td class="px-6 py-3 border-b border-gray-800">${trainer.total_amount}</td>
+              <td class="px-6 py-3 border-b border-gray-800">${trainer.member_count}</td>
+              <td class="px-6 py-3 border-b border-gray-800">${trainer.gym_commission}</td>
+          </tr>
+        `;
+        commissionTableBody.innerHTML += row;
+      });
+    } catch (error) {
+      console.error("Error fetching member data:", error);
+    }
+  }
+
 
   async function loadGymDropdowns(id) {
     try {
@@ -79,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       gymId = gyms[0].gym_id; // Set initial gymId based on the first gym
       await fetchSalesData(gymId); // Fetch sales data for the initial gym
       await fetchAndPopulateTable(gymId)
+      await fetchAndPopulateTrainerSales(gymId)
 
     } catch (error) {
       console.error('Error fetching gyms:', error);
@@ -92,6 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     gymId = selectedGymId;
     await fetchSalesData(gymId); // Fetch data for the newly selected gym
     await fetchAndPopulateTable(gymId)
+    await fetchAndPopulateTrainerSales(gymId)
   });
 
   async function fetchSalesData(gymId) {

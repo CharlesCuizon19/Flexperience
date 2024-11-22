@@ -8,6 +8,7 @@ router.get("/getVerifiedAdmins", gymAdmin.getVerifiedAdmins);
 router.get("/getSales", gymAdmin.getSales); 
 router.get("/getActiveCustomers", gymAdmin.getActiveCustomers); 
 router.get("/getSalesById", gymAdmin.getSalesById); 
+router.get("/getAdminTrainers", gymAdmin.getAdminTrainers); 
 router.get("/getTrainerSales", gymAdmin.getTrainerSales); 
 router.post("/insertTrainerImage", gymAdmin.AddTrainerProfile); 
 router.post("/insertPlan", gymAdmin.insertPlan); 

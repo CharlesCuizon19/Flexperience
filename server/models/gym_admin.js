@@ -32,6 +32,37 @@ const getVerifiedAdmins = async () => {
 
     return rows;
 };
+const getAdminTrainers = async (gym_id) => {
+    const [rows] = await pool.query(
+        `SELECT 
+            t.gym_id, 
+            p.trainer_id AS trainer_id, 
+            CONCAT(t.firstname, ' ', t.lastname) AS Name, 
+            MONTH(m.payment_date) AS month, 
+            YEAR(m.payment_date) AS year, 
+            SUM(m.amount) AS total_amount, 
+            SUM(m.amount) * 0.10 AS gym_commission, -- 10% commission column
+            COUNT(m.payment_id) AS member_count
+        FROM 
+            member_payments m
+        LEFT JOIN 
+            contracts_table c ON c.contract_id = m.contract_id
+        LEFT JOIN 
+            proposals p ON p.proposal_id = c.proposal_id
+        LEFT JOIN 
+            trainers t ON t.trainer_id = p.trainer_id
+        WHERE 
+            t.gym_id = ?
+            AND MONTH(m.payment_date) = MONTH(CURRENT_DATE)
+            AND YEAR(m.payment_date) = YEAR(CURRENT_DATE)
+        GROUP BY 
+            YEAR(m.payment_date), MONTH(m.payment_date)
+        ORDER BY 
+            year, month;
+`, [gym_id]);
+
+    return rows;
+};
 const getAdminGyms = async (id) => {
     const [rows] = await pool.query(
         `SELECT * FROM gyms WHERE admin_id = ?`,
@@ -114,6 +145,7 @@ async function insertMemberRegistration(gym_id, name, membership_type, amount_pa
 
 
 module.exports = {
+    getAdminTrainers,
     getSalesById,
     getAdminGyms,
     insertMemberRegistration,

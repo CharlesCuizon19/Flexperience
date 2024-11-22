@@ -271,7 +271,6 @@
     // Fetch and assign member information when the page loads
     fetchTrainerInfo();
     function fetchTrainerInfo() {
-      console.log(id)
       axios.get('http://localhost:3000/getTrainerInfo', {
         params: {
           user_id: id
@@ -280,6 +279,7 @@
         .then(response => {
           const trainerData = response.data[0];
           trainerid = trainerData.trainer_id;
+          setCookie('trainer_id', trainerid, 1);
           console.log(response.data[0])
           console.log(trainerid)
           document.getElementById("user-name").textContent = response.data[0].firstname

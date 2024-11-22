@@ -1,5 +1,5 @@
 const { GetGymAdminInfo, getSales, getTrainerSales } = require('../models/database');
-const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers } = require('../models/gym_admin');
+const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers, getAdminTrainers } = require('../models/gym_admin');
 
 module.exports = {
     GetGymAdminInfo: async (req, res) => {
@@ -51,9 +51,20 @@ module.exports = {
             res.status(500).send("Internal Server Error");
         }
     },
+    getAdminTrainers: async (req, res) => {
+        try {
+            const { gym_id } = req.query;
+            const data = await getAdminTrainers(gym_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching trainers sales:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
     getTrainerSales: async (req, res) => {
         try {
-            const data = await getTrainerSales();
+            const { trainer_id } = req.query;
+            const data = await getTrainerSales(trainer_id);
             res.json(data);
         } catch (error) {
             console.error("Error fetching trainer sales data:", error.message);
