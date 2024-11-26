@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const { handleAddPaymentRecord, addSubscriptionRecord, handleClientPayment } = require('../controllers/orderController');
+const { handleAddPaymentRecord, addSubscriptionRecord, handleClientPayment, insertGymAdminPayment } = require('../controllers/orderController');
 const { VerifyGym } = require('../controllers/gymController');
 const paypal = require('../services/paypal');
 
@@ -85,6 +85,45 @@ router.get('/complete-client-payment', async (req, res) => {
                 console.log("SUCCESS")
                 // Redirect to the success page
                 return res.redirect('https://flexperience.pro/views/features/login.html');
+            } else {
+                console.log("ERROR")
+                throw new Error(result.message);
+            }
+        } else {
+            throw new Error('Payment capture was not successful.');
+        }
+    } catch (error) {
+        console.error("Error completing the client order:", error.message);
+        // Ensure headers are sent only once
+        if (!res.headersSent) {
+            res.status(500).send("Error: " + error.message);
+        }
+    }
+});
+router.get('/complete-admin-payment', async (req, res) => {
+    try {
+        const token = req.query.token;
+        const admin_id = req.query.admin_id;
+        const subscription_id = req.query.subscription_id;
+        const amount = req.query.amount;
+        console.log("inside the complete admin payment partt")
+        // Capture the payment using the token from PayPal
+        const captureResponse = await paypal.captureGymAdminPayment(token);
+
+        if (captureResponse && captureResponse.status === 'COMPLETED') {
+            // Payment was successful, proceed to add payment record to the database
+            const paymentData = {
+                admin_id: admin_id,
+                subscription_id: subscription_id,
+                amount: amount
+            };
+
+            // Call the controller to add the payment record
+            const result = await insertGymAdminPayment(paymentData.admin_id, paymentData.subscription_id, paymentData.amount);
+
+            if (result.success) {
+                console.log("SUCCESS")
+                return res.redirect('../../frontend/views/features/login.html');
             } else {
                 console.log("ERROR")
                 throw new Error(result.message);

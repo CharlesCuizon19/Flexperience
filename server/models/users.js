@@ -7,12 +7,29 @@ const createUser = async ({ username, password, usertype, email }) => {
         [username, password, usertype, email]
     );
 };
-const createGymAdmin = async ({ firstname, lastname, email }) => {
-    return db.query(
-        'INSERT INTO gym_admin (account_id,firstname, lastname, email) VALUES((SELECT account_id FROM user_accounts ORDER BY account_id desc LIMIT 1),?,?,?)',
-        [firstname, lastname, email]
-    );
+const createGymAdmin = async (firstname, lastname, email) => {
+    try {
+        // Execute the query
+        const result = await db.query(
+            `INSERT INTO gym_admin (account_id, firstname, lastname, email) 
+            VALUES ((SELECT account_id FROM user_accounts ORDER BY account_id DESC LIMIT 1), ?, ?, ?)`,
+            [firstname, lastname, email]
+        );
+
+        console.log("Query Result:", result); // Log the full result to understand its structure
+
+        // Access insertId based on the structure of the result
+        if (result && result.insertId) {
+            return result.insertId;
+        } else {
+            throw new Error("insertId is not available in the result.");
+        }
+    } catch (error) {
+        console.error("Error in createGymAdmin:", error.message);
+        throw error; // Rethrow the error to be handled in the controller
+    }
 };
+
 const createMember = async ({ firstname, lastname, weight, bodytype, }) => {
     return db.query(
         'INSERT INTO members (account_id,firstname, lastname, weight, bodytype) VALUES((SELECT account_id FROM user_accounts ORDER BY account_id desc LIMIT 1),?,?,?,?)',

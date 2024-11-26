@@ -5,29 +5,22 @@ const { pool } = require('./database');
 const getVerifiedAdmins = async () => {
     const [rows] = await pool.query(
         `   SELECT 
-            CONCAT(ga.lastname, ', ', ga.firstname) AS gym_admin,
-            g.gym_name,
-            g.street_address,
-            p.amount,
-            (SELECT plan_name FROM subscriptions WHERE subscription_id = p.subscription_id) AS Subscription,
-            CASE 
-                WHEN p.subscription_id = 1 THEN DATE_ADD(p.payment_date, INTERVAL 1 MONTH)
-                WHEN p.subscription_id = 2 THEN DATE_ADD(p.payment_date, INTERVAL 3 MONTH)
-                WHEN p.subscription_id = 3 THEN DATE_ADD(p.payment_date, INTERVAL 1 YEAR)
-            END AS Upcoming_Payment_Date,
-            p.subscription_id,
-            CASE
-                WHEN NOW() <= CASE 
-                                WHEN p.subscription_id = 1 THEN DATE_ADD(p.payment_date, INTERVAL 1 MONTH)
-                                WHEN p.subscription_id = 2 THEN DATE_ADD(p.payment_date, INTERVAL 3 MONTH)
-                                WHEN p.subscription_id = 3 THEN DATE_ADD(p.payment_date, INTERVAL 1 YEAR)
-                            END 
-                THEN 'Active'
-                ELSE 'Inactive'
-            END AS membership_status
-        FROM gym_admin ga
-        JOIN gyms g ON ga.admin_id = g.admin_id
-        JOIN payments_table p ON p.gym_id = g.gym_id;
+                CONCAT(ga.lastname, ', ', ga.firstname) AS gym_admin,
+                p.amount,
+                (SELECT plan_name FROM subscriptions WHERE subscription_id = p.subscription_id) AS Subscription,
+                DATE_ADD(p.payment_date, INTERVAL 1 MONTH) AS Upcoming_Payment_Date,
+                CASE
+                    WHEN NOW() <= CASE 
+                                    WHEN p.subscription_id = 1 THEN DATE_ADD(p.payment_date, INTERVAL 1 MONTH)
+                                    WHEN p.subscription_id = 2 THEN DATE_ADD(p.payment_date, INTERVAL 3 MONTH)
+                                    WHEN p.subscription_id = 3 THEN DATE_ADD(p.payment_date, INTERVAL 1 YEAR)
+                                END
+                    THEN 'Active'
+                    WHEN p.payment_date > NOW() THEN 'Inactive'
+                    ELSE 'Inactive'
+                END AS membership_status
+            FROM gym_admin ga
+            JOIN gym_admin_payments p ON p.admin_id = ga.admin_id;
 `,);
 
     return rows;

@@ -19,6 +19,10 @@
         overflow-x: hidden;
         scroll-behavior: smooth;
     }
+
+    #success-toast {
+        z-index: 9999;
+    }
 </style>
 
 <body class="bg-eerieBlack text-white font-[Poppins]">
@@ -40,90 +44,116 @@
         </nav>
     </header>
     <br><br>
-    <main class="flex justify-center items-center h-screen">
-        <div class="flex flex-row w-full mx-40 pt-20 pb-10">
-            <div class="bg-customBodyColor p-8 rounded-tr-none rounded-br-none rounded-bl-lg rounded-tl-lg rounded shadow-lg w-full lg:flex md:hidden sm:hidden">
+    <main class="flex flex-col justify-center items-center h-screen">
+        <div class="flex flex-col lg:flex-row w-full lg:mx-40 pt-10 pb-6 space-y-6 lg:space-y-0 lg:space-x-8">
+            <!-- Logo Section -->
+            <div
+                class="bg-customBodyColor p-8 rounded-tl-lg rounded-bl-lg rounded-br-none rounded-tr-none shadow-lg w-full lg:flex md:hidden sm:hidden">
                 <img class="h-full w-full" src="../img/Logo (1).png" alt="">
             </div>
-            <form class="bg-customBodyColor p-8 rounded-tl-none rounded-bl-none rounded-br-lg rounded-tr-lg shadow-lg w-full">
-                <h2 class="text-2xl text-white font-bold text-center mb-6">Sign up to showcase your gym</h2>
-                <div class="mb-4">
+            <!-- Form Section -->
+            <form
+                class="bg-customBodyColor p-8 rounded-tl-none rounded-bl-none rounded-br-lg rounded-tr-lg shadow-lg w-full">
+                <br><br><br><br>
+                <h2 class="text-2xl text-white font-bold text-center mb-4">Sign up to showcase your gym</h2>
+                <!-- Input Fields -->
+                <div class="space-y-4">
                     <input type="text" id="firstName" placeholder="First name"
                         class="w-full p-3 border border-gray-300 rounded text-black" required>
-                </div>
-                <div class="mb-4">
                     <input type="text" id="lastName" placeholder="Last name"
                         class="w-full p-3 border border-gray-300 rounded text-black" required>
-                </div>
-                <div class="mb-4">
                     <input type="email" id="email" placeholder="Email address"
                         class="w-full p-3 border border-gray-300 rounded text-black" required>
-                </div>
-                <div class="mb-4">
                     <input type="text" id="username" placeholder="Username"
                         class="w-full p-3 border border-gray-300 rounded text-black" required>
-                </div>
-                <div class="mb-4">
                     <input type="password" id="password" placeholder="Password (8 or more characters)"
                         class="w-full p-3 border border-gray-300 rounded text-black" required>
                 </div>
-    
-                <div class="mb-4 flex items-center">
-                    <input type="checkbox" id="tips" class="mr-2">
-                    <label for="tips" class="text-white">Send me emails with the further updates of this website</label>
+
+                <!-- Subscription Section -->
+                <div class="mt-6">
+                    <p class="text-white font-bold mb-2">Choose Your Subscription Plan:</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <!-- Subscription A -->
+                        <label
+                            class="flex items-center bg-white p-3 rounded shadow cursor-pointer transition border border-transparent hover:border-orange-500">
+                            <input type="radio" name="subscription" value="1" class="mr-3 peer" data-id="1"
+                                data-name="Starter Gym Plan" data-price="500">
+                            <div class="peer-checked:bg-50 p-3 rounded">
+                                <h3 class="text-gray-800 font-bold peer-checked:text-white">Starter Gym Plan</h3>
+                                <p class="text-gray-600 text-sm">Register 1 gym only</p>
+                                <p class="text-gray-800 font-bold mt-2">₱500 / month</p>
+                            </div>
+                        </label>
+
+                        <!-- Subscription B -->
+                        <label
+                            class="flex items-center bg-white p-3 rounded shadow cursor-pointer transition border border-transparent hover:border-orange-500">
+                            <input type="radio" name="subscription" value="2" class="mr-3 peer" data-id="2"
+                                data-name="Pro Gym Plan" data-price="1200">
+                            <div class="peer-checked:bg-50 p-3 rounded">
+                                <h3 class="text-gray-800 font-bold peer-checked:text-white">Pro Gym Plan</h3>
+                                <p class="text-gray-600 text-sm">Register 2-5 gyms only</p>
+                                <p class="text-gray-800 font-bold mt-2">₱1,200 / month</p>
+                            </div>
+                        </label>
+
+                        <!-- Subscription C -->
+                        <label
+                            class="flex items-center bg-white p-3 rounded shadow cursor-pointer transition border border-transparent hover:border-orange-500">
+                            <input type="radio" name="subscription" value="3" class="mr-3 peer" data-id="3"
+                                data-name="Unlimited Gym Plan" data-price="3500">
+                            <div class="peer-checked:bg-50 p-3 rounded">
+                                <h3 class="text-gray-800 font-bold peer-checked:text-white">Unlimited Gym Plan</h3>
+                                <p class="text-gray-600 text-sm">Register unlimited gyms</p>
+                                <p class="text-gray-800 font-bold mt-2">₱3,500 / month</p>
+                            </div>
+                        </label>
+                    </div>
                 </div>
+
+                <!-- Placeholder for dynamic values -->
+                <div class="mt-4">
+                    <p id="selectedPlanName"></p>
+                    <p id="selectedPlanPrice"></p>
+                </div>
+
+                <!-- Submit Button -->
                 <button id="signup"
-                    class="transition-transform transform bg-50 text-white py-2 px-4 rounded w-full hover:bg-orange-600 hover:scale-105">
+                    class="transition-transform transform bg-50 text-white py-2 px-4 rounded w-full hover:bg-orange-600 hover:scale-105 mt-4">
                     Sign Up
                 </button>
             </form>
-        </div>
-        <div id="error-toast"
-            class="fixed top-5 right-5 bg-white border-l-4 border-orange-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
-            <div class="flex items-center">
-                <div class="flex items-center justify-center w-8 h-8 bg-orange-500 rounded-full">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
+            <div id="success-toast"
+                class="fixed top-5 right-5 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+                <div class="flex items-center">
+                    <!-- Ensures the circle stays round even if the text is long -->
+                    <div class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full flex-shrink-0">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12l5 5L20 7">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h2 class="text-lg font-semibold text-green-600">Success</h2>
+                        <p id="success-message-toast" class="text-sm text-gray-600">Your success message here</p>
+                    </div>
+                    <button id="close-success-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
                 </div>
-                <div class="ml-3">
-                    <h2 class="text-lg font-semibold text-orange-600">Form Error</h2>
-                    <p id="error-message-toast" class="text-sm text-gray-600">Your error message here</p>
-                </div>
-                <button id="close-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="success-toast"
-            class="fixed top-5 right-5 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
-            <div class="flex items-center">
-                <div class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12l5 5L20 7"></path>
-                    </svg>
-                </div>
-                <div class="ml-3">
-                    <h2 class="text-lg font-semibold text-green-600">Success</h2>
-                    <p id="success-message-toast" class="text-sm text-gray-600">Your success message here</p>
-                </div>
-                <button id="close-success-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
             </div>
         </div>
     </main>
+
+
+
 
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -133,10 +163,40 @@
             duration: 2000,
         });
 
+        // Get all the radio buttons
+        const radioButtons = document.querySelectorAll('input[name="subscription"]');
+
+        // Function to update the dynamic content
+        function updatePlanDetails(event) {
+            const selectedRadio = event.target;
+            const planName = selectedRadio.getAttribute('data-name');
+            const planPrice = selectedRadio.getAttribute('data-price');
+
+            // Update the placeholders with the selected plan details
+            document.getElementById('selectedPlanName').textContent = `Plan Name: ${planName}`;
+            document.getElementById('selectedPlanPrice').textContent = `Price: ₱${planPrice} / month`;
+        }
+
+        // Add event listeners to all radio buttons
+        radioButtons.forEach(radio => {
+            radio.addEventListener('change', updatePlanDetails);
+        });
+
         document.getElementById("signup").addEventListener("click", async function (event) {
             event.preventDefault();
 
+            // Get selected subscription details
+            const selectedRadio = document.querySelector('input[name="subscription"]:checked');
+            const planName = selectedRadio ? selectedRadio.getAttribute('data-name') : '';
+            const planPrice = selectedRadio ? selectedRadio.getAttribute('data-price') : '';
 
+            // Ensure a plan is selected
+            if (!planName || !planPrice) {
+                alert('Please select a subscription plan');
+                return;
+            }
+
+            // Capture form input
             const firstName = document.getElementById("firstName").value;
             const lastName = document.getElementById("lastName").value;
             const email = document.getElementById("email").value;
@@ -148,14 +208,38 @@
                 const accountAdded = await AddToAccounts(username, password, email);
 
                 if (accountAdded) {
-                    await RegisterGymAdmin(firstName, lastName, email);
-                }
+                    const gymAdminId = await RegisterGymAdmin(firstName, lastName, email);
 
+                    // Now call PayPal payment route
+                    const paymentDetails = {
+                        admin_id: gymAdminId,
+                        subscription_id: selectedRadio.value, // ID from the radio button value
+                        amount: planPrice,
+                        planName: planName
+                    };
+
+                    // Call your backend to get the PayPal approval URL using axios
+                    axios.post('http://localhost:3000/GymAdminPayment', paymentDetails)
+                        .then(response => {
+                            // Get the PayPal approval link from the response
+                            const approvalLink = response.data.url; // Use the URL returned from PayPal
+                            console.log('Redirecting to PayPal:', approvalLink);
+
+                            // Redirect to PayPal subscription approval
+                            window.location.href = approvalLink; // Redirect to PayPal first
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
 
             } catch (error) {
                 console.error('Error submitting form:', error);
             }
         });
+
+
+
 
         async function AddToAccounts(Username, Password, email) {
             try {
@@ -188,36 +272,36 @@
                     email: email
                 };
                 const response = await axios.post('http://localhost:3000/auth/RegisterAdmin', formData);
-                if (response.status == 200) {
-                    showToast('success', 'Account created successfully');
+
+                if (response.status === 200) {
+                    const gymAdminId = response.data.gymAdminId; // Extract the insertId from the response
+
+                    console.log("here")
+                    return gymAdminId
+                    //showToast(`Account created successfully. Gym Admin ID: ${gymAdminId}`);
                 }
             } catch (error) {
                 if (error.response && error.response.data.message) {
                     const errorMessage = error.response.data.message;  // Access the error message directly
                     console.log(errorMessage);
-                    showToast('error', errorMessage);  // Display the error message in a modal
+                    //showToast('error', errorMessage);  // Display the error message in a modal
                 } else {
                     console.error('Error submitting Gym Admin Registration:', error.message);
                 }
                 return false;  // Indicate failure
             }
         }
-        function showToast(type, message) {
-            const toast = type === 'success' ? document.getElementById('success-toast') : document.getElementById('error-toast');
-            const messageElement = type === 'success' ? document.getElementById('success-message-toast') : document.getElementById('error-message-toast');
 
-            // Set the message
+        function showToast(message) {
+            const toast = document.getElementById("success-toast");
+            const messageElement = document.getElementById("success-message-toast");
             messageElement.textContent = message;
 
-            // Show and slide in the toast
-            toast.classList.remove('hidden', 'translate-x-full'); // Remove hidden and off-screen translation
-            toast.classList.add('translate-x-0'); // Move the toast in view
+            // Show the toast
+            toast.classList.remove("hidden");
+            toast.classList.remove("translate-x-full");
+            toast.classList.add("translate-x-0");
 
-            // Auto-hide the toast after 3 seconds
-            setTimeout(() => {
-                toast.classList.add('translate-x-full');  // Slide toast out to the right
-                setTimeout(() => toast.classList.add('hidden'), 300);  // Hide completely after the transition
-            }, 3000);
         }
 
         // Close button functionality

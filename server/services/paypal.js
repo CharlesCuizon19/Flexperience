@@ -26,6 +26,19 @@ async function generateAccessToken2() {
 
     return response.data.access_token;
 };
+async function generateAccessToken3() {
+    const response = await axios({
+        url: process.env.PAYPAL_BASE_URL + '/v1/oauth2/token',
+        method: 'post',
+        data: 'grant_type=client_credentials',
+        auth: {
+            username: process.env.PAYPAL_CLIENT_ID_ADMIN,
+            password: process.env.PAYPAL_SECRET_ADMIN
+        }
+    });
+
+    return response.data.access_token;
+};
 
 exports.createSubscription = async (admin_id, gym_id, planID, subscriptionID, subscriptionName, days, price) => {
     const access_token = await generateAccessToken();
@@ -114,6 +127,75 @@ exports.createClientToTrainerPayment = async (contract_id, price, planType, dura
 
     return response.data.links.find(link => link.rel === 'approve').href;
 };
+exports.createPayment = async (admin_id, subscription_id, amount, planName) => {
+    try {
+        const access_token = await generateAccessToken3();
+        console.log("GENERATED V3 TOKEN: ", access_token);
+
+        const response = await axios({
+            url: process.env.PAYPAL_BASE_URL + '/v2/checkout/orders',
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + access_token
+            },
+            data: JSON.stringify({
+                intent: 'CAPTURE',
+                purchase_units: [
+                    {
+                        items: [
+                            {
+                                name: planName,
+                                description: `Payment for ${planName} plan subscription`,
+                                quantity: '1',
+                                unit_amount: {
+                                    currency_code: 'PHP', // Currency for the transaction
+                                    value: amount // Use `amount` passed to the function, not `price`
+                                }
+                            }
+                        ],
+                        amount: {
+                            currency_code: 'PHP',
+                            value: amount, // Use `amount` here too
+                            breakdown: {
+                                item_total: {
+                                    currency_code: 'PHP',
+                                    value: amount // Ensure this matches
+                                }
+                            }
+                        }
+                    }
+                ],
+                application_context: {
+                    return_url: process.env.BASE_URL + `/complete-admin-payment?admin_id=${admin_id}&subscription_id=${subscription_id}&amount=${amount}`,
+                    cancel_url: process.env.BASE_URL + '/cancel-client-payment',
+                    shipping_preference: 'NO_SHIPPING',
+                    user_action: 'PAY_NOW',
+                    brand_name: 'PLAN PAYMENT'
+                }
+            })
+        });
+
+        // Log the entire response to inspect its structure
+        console.log("PayPal Response: ", response.data);
+
+        // Check if `response.data.links` exists and find the 'approve' link
+        const approvalLink = response.data.links ? response.data.links.find(link => link.rel === 'approve') : null;
+
+        // If the approval link is found, return its href; otherwise, log an error
+        if (approvalLink) {
+            console.log("Approval Link: ", approvalLink.href);
+            return approvalLink.href;
+        } else {
+            throw new Error("Approval link not found in PayPal response");
+        }
+
+    } catch (error) {
+        console.error('Error creating PayPal payment:', error.message);
+        throw error;
+    }
+};
+
 
 exports.capturePayment = async (orderId) => {
     const accessToken = await generateAccessToken();
@@ -131,6 +213,20 @@ exports.capturePayment = async (orderId) => {
 };
 exports.captureClientPayment = async (orderId) => {
     const accessToken = await generateAccessToken2();
+
+    const response = await axios({
+        url: process.env.PAYPAL_BASE_URL + `/v2/checkout/orders/${orderId}/capture`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+        }
+    });
+
+    return response.data;
+};
+exports.captureGymAdminPayment = async (orderId) => {
+    const accessToken = await generateAccessToken3();
 
     const response = await axios({
         url: process.env.PAYPAL_BASE_URL + `/v2/checkout/orders/${orderId}/capture`,

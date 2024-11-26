@@ -54,23 +54,31 @@ module.exports = {
     createGymAdmin: async (req, res) => {
         try {
             const { firstname, lastname, email } = req.body;
-
-            await users.createGymAdmin({ firstname, lastname, email });
-
+            console.log("DATA")
+            console.log(firstname)
+            console.log(lastname)
+            console.log(email)
+            // Call the function and retrieve the insertId
+            const gymAdminId = await users.createGymAdmin(firstname, lastname, email);
+            console.log("returned gym admin id: " + gymAdminId)
             // Create a token for email verification
             const verificationToken = createTokens({ email }); // Assuming you create a token with email as the payload
 
             // Construct the verification URL
-            const verificationUrl = `https://capstone-erxk.onrender.com/auth/verify-email?token=${verificationToken}`;
-            
+            //const verificationUrl = `https://capstone-erxk.onrender.com/auth/verify-email?token=${verificationToken}`;
+
             // Send verification email
-            await sendEmail(
-                email,
-                'Verify Your Email',
-                `Thank you for signing up! Please verify your email by clicking on the link below: \n\n ${verificationUrl}`
-            );
-            
-            res.status(201).json({ message: "Gym admin successfully created!" });
+            // await sendEmail(
+            //     email,
+            //     'Verify Your Email',
+            //     `Thank you for signing up! Please verify your email by clicking on the link below: \n\n ${verificationUrl}`
+            // );
+
+            // Respond with success message and the new gym_admin_id
+            res.status(200).json({
+                message: "Gym admin successfully created!",
+                gymAdminId: gymAdminId // Include the gym_admin_id in the response
+            });
         } catch (error) {
             console.error("Create Gym Admin Error:", error.message);
             res.status(500).json({ error: "Internal Server Error" });
@@ -130,7 +138,7 @@ module.exports = {
             await users.activateUser(user.account_id);
 
             // Redirect to the desired URL after successful email verification
-            res.redirect('https://flexperience.pro');
+            res.redirect('https://flexperience.pro/views/features/login.html');
         } catch (error) {
             console.error('Verification Error:', error);
             res.status(400).send('Invalid or expired verification link.');
