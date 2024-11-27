@@ -127,7 +127,7 @@ exports.createClientToTrainerPayment = async (contract_id, price, planType, dura
 
     return response.data.links.find(link => link.rel === 'approve').href;
 };
-exports.createPayment = async (admin_id, subscription_id, amount, planName) => {
+exports.createPayment = async (admin_id, subscription_id, amount, planName, daysRemaining, isRenewal) => {
     try {
         const access_token = await generateAccessToken3();
         console.log("GENERATED V3 TOKEN: ", access_token);
@@ -167,7 +167,7 @@ exports.createPayment = async (admin_id, subscription_id, amount, planName) => {
                     }
                 ],
                 application_context: {
-                    return_url: process.env.BASE_URL + `/complete-admin-payment?admin_id=${admin_id}&subscription_id=${subscription_id}&amount=${amount}`,
+                    return_url: process.env.BASE_URL + `/complete-admin-payment?admin_id=${admin_id}&subscription_id=${subscription_id}&amount=${amount}&isRenewal=${isRenewal}&daysRemaining=${daysRemaining}`,
                     cancel_url: process.env.BASE_URL + '/cancel-client-payment',
                     shipping_preference: 'NO_SHIPPING',
                     user_action: 'PAY_NOW',

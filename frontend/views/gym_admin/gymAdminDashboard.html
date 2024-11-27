@@ -253,6 +253,16 @@
                         <span class="mt-1 ms-3">Verified</span>
                     </a>
                 </li>
+                <li>
+                    <a href="../gym_admin/membershipDashboard.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="shield-checkmark-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Subscription</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </aside>
@@ -596,8 +606,15 @@
                     }
                 });
                 const data = response.data[0]; // Assuming the response data contains the member info
+                console.log(data)
                 id = data.admin_id
                 setCookie('gymAdminId', data.admin_id, 1); // Expires in 1 day
+                setCookie('plan_name', data.subscription, 1); // Expires in 1 day
+                setCookie('description', data.description, 1); // Expires in 1 day
+                setCookie('payment_date', data.next_payment_date, 1); // Expires in 1 day
+                setCookie('subscription_id', data.subscription_id, 1); // Expires in 1 day
+                setCookie('amount', data.amount, 1); // Expires in 1 day
+                setCookie('days_remaining', data.days_remaining, 1); // Expires in 1 day
                 return data.admin_id; // Return the admin_id
             } catch (error) {
                 console.error('Error fetching gym admin info:', error.message);

@@ -106,7 +106,10 @@ router.get('/complete-admin-payment', async (req, res) => {
         const admin_id = req.query.admin_id;
         const subscription_id = req.query.subscription_id;
         const amount = req.query.amount;
-        console.log("inside the complete admin payment partt")
+        const isRenewal = req.query.isRenewal; // Direct from query
+        const daysRemaining = req.query.daysRemaining; // Direct from query
+        console.log("Received isRenewal Query Parameter:", isRenewal); // Log it
+
         // Capture the payment using the token from PayPal
         const captureResponse = await paypal.captureGymAdminPayment(token);
 
@@ -115,30 +118,34 @@ router.get('/complete-admin-payment', async (req, res) => {
             const paymentData = {
                 admin_id: admin_id,
                 subscription_id: subscription_id,
-                amount: amount
+                amount: amount,
+                isRenewal: isRenewal,
+                daysRemaining: daysRemaining
             };
+            console.log("Payment Data Passed to Insert Function:", paymentData);
 
-            // Call the controller to add the payment record
-            const result = await insertGymAdminPayment(paymentData.admin_id, paymentData.subscription_id, paymentData.amount);
+            // Pass the entire paymentData object to the insertGymAdminPayment function
+            const result = await insertGymAdminPayment(paymentData);
 
             if (result.success) {
-                console.log("SUCCESS")
+                console.log("Payment recorded successfully");
                 return res.redirect('../../frontend/views/features/login.html');
             } else {
-                console.log("ERROR")
+                console.log("Payment record error");
                 throw new Error(result.message);
             }
         } else {
             throw new Error('Payment capture was not successful.');
         }
     } catch (error) {
-        console.error("Error completing the client order:", error.message);
-        // Ensure headers are sent only once
+        console.error("Error completing the admin payment:", error.message);
         if (!res.headersSent) {
             res.status(500).send("Error: " + error.message);
         }
     }
 });
+
+
 
 router.get('/cancel-order', (req, res) => {
     res.redirect('/');

@@ -106,6 +106,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const dropdown = document.getElementById('gymDropdown');
       dropdown.innerHTML = ''; // Clear existing options
 
+      if (!gyms || gyms.length === 0) {
+        alert('No gyms found for this admin.');
+        return; // Exit the function early if no gyms are found
+      }
+
       gyms.forEach(gym => {
         const option = document.createElement('option');
         option.value = gym.gym_id;
@@ -113,16 +118,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         dropdown.appendChild(option);
       });
 
-      gymId = gyms[0].gym_id; // Set initial gymId based on the first gym
-      await fetchSalesData(gymId); // Fetch sales data for the initial gym
-      await fetchAndPopulateTable(gymId)
-      await fetchAndPopulateTrainerSales(gymId)
-
+      const initialGymId = gyms[0]?.gym_id; // Check if gyms[0] exists before accessing gym_id
+      if (initialGymId) {
+        await fetchSalesData(initialGymId); // Fetch sales data for the initial gym
+        await fetchAndPopulateTable(initialGymId);
+        await fetchAndPopulateTrainerSales(initialGymId);
+      }
     } catch (error) {
       console.error('Error fetching gyms:', error);
       alert('Could not load gyms. Please try again later.');
     }
   }
+
 
   // Add event listener to update the charts when a gym is selected from the dropdown
   document.getElementById('gymDropdown').addEventListener('change', async (event) => {
