@@ -608,6 +608,7 @@
                 const data = response.data[0]; // Assuming the response data contains the member info
                 console.log(data)
                 id = data.admin_id
+                setCookie('userId', userId, 1); // Expires in 1 day
                 setCookie('gymAdminId', data.admin_id, 1); // Expires in 1 day
                 setCookie('plan_name', data.subscription, 1); // Expires in 1 day
                 setCookie('description', data.description, 1); // Expires in 1 day
@@ -615,6 +616,7 @@
                 setCookie('subscription_id', data.subscription_id, 1); // Expires in 1 day
                 setCookie('amount', data.amount, 1); // Expires in 1 day
                 setCookie('days_remaining', data.days_remaining, 1); // Expires in 1 day
+                setCookie('eligibility', data.eligibility_status, 1); // Expires in 1 day
                 return data.admin_id; // Return the admin_id
             } catch (error) {
                 console.error('Error fetching gym admin info:', error.message);
