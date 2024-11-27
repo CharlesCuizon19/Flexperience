@@ -129,7 +129,7 @@ router.get('/complete-admin-payment', async (req, res) => {
 
             if (result.success) {
                 console.log("Payment recorded successfully");
-                return res.redirect('../../frontend/views/features/login.html');
+                return res.redirect('https://flexperience.pro/views/features/login.html');
             } else {
                 console.log("Payment record error");
                 throw new Error(result.message);
