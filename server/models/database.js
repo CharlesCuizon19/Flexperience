@@ -483,7 +483,7 @@ async function GetGymAdminInfo(account_id) {
     ON
         g.admin_id = gp.admin_id
     WHERE 
-        account_id = 216
+        account_id = ?
     GROUP BY 
         ga.admin_id, ga.account_id, ga.firstname, ga.lastname, gp.subscription_id, gp.amount, gp.payment_date, ga.email;
     `, [account_id])
