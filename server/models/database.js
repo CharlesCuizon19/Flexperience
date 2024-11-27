@@ -452,40 +452,40 @@ async function GetGymData(gym_id) {
 }
 async function GetGymAdminInfo(account_id) {
     const [result] = await pool.query(`
-    SELECT 
-        ga.admin_id, 
-        ga.account_id, 
-        ga.firstname, 
-        ga.lastname,
-        COUNT(g.gym_id) AS gym_count,
-        gp.subscription_id,
-        (SELECT plan_name FROM subscriptions WHERE subscription_id = gp.subscription_id) AS subscription,
-        gp.amount,
-        (SELECT description FROM subscriptions WHERE subscription_id = gp.subscription_id) AS description,
-        gp.payment_date,
-        DATE_ADD(gp.payment_date, INTERVAL 1 MONTH) AS next_payment_date,
-        DATEDIFF(DATE_ADD(gp.payment_date, INTERVAL 1 MONTH), CURRENT_DATE) AS days_remaining,
-        ga.email,
-        CASE
-            WHEN gp.subscription_id = 1 AND COUNT(g.gym_id) < 1 THEN 'Eligible to add a gym'
-            WHEN gp.subscription_id = 2 AND COUNT(g.gym_id) < 5 THEN 'Eligible to add a gym'
-            WHEN gp.subscription_id = 3 THEN 'Eligible to add a gym'
-            ELSE 'Not eligible to add a gym'
-        END AS eligibility_status
-    FROM 
-        gym_admin ga
-    JOIN 
-        gym_admin_payments gp 
-    ON 
-        ga.admin_id = gp.admin_id
-    JOIN
-        gyms g
-    ON
-        g.admin_id = gp.admin_id
-    WHERE 
-        account_id = ?
-    GROUP BY 
-        ga.admin_id, ga.account_id, ga.firstname, ga.lastname, gp.subscription_id, gp.amount, gp.payment_date, ga.email;
+        SELECT 
+            ga.admin_id, 
+            ga.account_id, 
+            ga.firstname, 
+            ga.lastname,
+            COUNT(g.gym_id) AS gym_count,
+            gp.subscription_id,
+            (SELECT plan_name FROM subscriptions WHERE subscription_id = gp.subscription_id) AS subscription,
+            gp.amount,
+            (SELECT description FROM subscriptions WHERE subscription_id = gp.subscription_id) AS description,
+            gp.payment_date,
+            DATE_ADD(gp.payment_date, INTERVAL 1 MONTH) AS next_payment_date,
+            DATEDIFF(DATE_ADD(gp.payment_date, INTERVAL 1 MONTH), CURRENT_DATE) AS days_remaining,
+            ga.email,
+            CASE
+                WHEN gp.subscription_id = 1 AND COUNT(g.gym_id) < 1 THEN 'Eligible to add a gym'
+                WHEN gp.subscription_id = 2 AND COUNT(g.gym_id) < 5 THEN 'Eligible to add a gym'
+                WHEN gp.subscription_id = 3 THEN 'Eligible to add a gym'
+                ELSE 'Not eligible to add a gym'
+            END AS eligibility_status
+        FROM 
+            gym_admin ga
+        JOIN 
+            gym_admin_payments gp 
+        ON 
+            ga.admin_id = gp.admin_id
+        LEFT JOIN
+            gyms g
+        ON
+            g.admin_id = ga.admin_id
+        WHERE 
+            ga.account_id = ?
+        GROUP BY 
+            ga.admin_id, ga.account_id, ga.firstname, ga.lastname, gp.subscription_id, gp.amount, gp.payment_date, ga.email;
     `, [account_id])
 
     return result

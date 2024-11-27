@@ -600,6 +600,7 @@
 
         async function fetchGymAdminInfo() {
             try {
+                console.log("--"+userId)
                 const response = await axios.get('http://localhost:3000/getGymAdminInfo', {
                     params: {
                         account_id: userId
