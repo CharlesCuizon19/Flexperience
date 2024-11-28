@@ -398,7 +398,7 @@ async function getVerifiedGyms(admin_id) {
 async function ApproveRequest(gym_id) {
     const result = await pool.query(`
         UPDATE gyms
-        SET status = 'Approved - Payment Pending'
+        SET status = 'Verified'
         WHERE gym_id = ?;
         `, [gym_id])
 
