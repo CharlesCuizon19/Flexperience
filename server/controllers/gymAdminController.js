@@ -1,5 +1,6 @@
 const { GetGymAdminInfo, getSales, getTrainerSales } = require('../models/database');
-const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers, getAdminTrainers } = require('../models/gym_admin');
+const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers, getAdminTrainers,
+     getTrainerssz, searchFilter,insertTrainerClient } = require('../models/gym_admin');
 
 module.exports = {
     GetGymAdminInfo: async (req, res) => {
@@ -61,6 +62,26 @@ module.exports = {
             res.status(500).send("Internal Server Error");
         }
     },
+    getTrainerss: async (req, res) => {
+        try {
+            const { gym_id } = req.query;
+            const data = await getTrainerssz(gym_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching gym admin trainers:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    searchFilter: async (req, res) => {
+        try {
+            const { member_id } = req.query;
+            const data = await searchFilter(member_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error filtering members:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
     getTrainerSales: async (req, res) => {
         try {
             const { trainer_id } = req.query;
@@ -103,6 +124,18 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error adding plan:", error);
+            res.status(500).send("Internal Server Error", error.message);
+        }
+    },
+    insertTrainerClient: async (req, res) => {
+        try {
+            const { gym_id,trainer_id,member_id,plan_type } = req.body;
+            console.log("received insert client data:")
+            console.log(req.body)
+            const data = await insertTrainerClient(gym_id,trainer_id,member_id,plan_type);
+            res.json(data);
+        } catch (error) {
+            console.error("Error adding client:", error);
             res.status(500).send("Internal Server Error", error.message);
         }
     },

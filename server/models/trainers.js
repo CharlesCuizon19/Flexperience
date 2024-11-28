@@ -152,12 +152,8 @@ const getStudents = async (trainer_id) => {
         SELECT
             m.member_id, 
             CONCAT(m.lastname, ',', m.firstname) AS Name,
-            p.plan_type, 
-            mp.amount AS amount_paid,
-            DATE(c.start_date) AS start_date, 
-            DATE(c.end_date) AS end_date,  
-            DATEDIFF(c.end_date, NOW()) AS days_remaining,
-            
+            p.plan_type,
+
             CASE 
                 WHEN p.plan_type = 'Meal Plan' THEN COALESCE(mm.status, "Not assigned yet")
                 WHEN p.plan_type = 'Workout Plan' THEN COALESCE(mw.status, "Not assigned yet")
@@ -167,31 +163,19 @@ const getStudents = async (trainer_id) => {
                         ELSE 'Not assigned yet'
                     END
                 ELSE 'Not assigned yet'
-            END AS plan_status,
-            
-            CASE 
-                WHEN CURDATE() BETWEEN c.start_date AND c.end_date THEN 'On going'
-                WHEN CURDATE() > c.end_date THEN 'Expired'
-                ELSE 'Not Started'
-            END AS contract_availability
-
+            END AS plan_status
+    
             FROM 
                 members m
             LEFT JOIN 
-                proposals p ON m.member_id = p.member_id
-            LEFT JOIN 
-                contracts_table c ON c.proposal_id = p.proposal_id
-            LEFT JOIN 
-                member_payments mp ON mp.contract_id = c.contract_id
+                trainer_clients p ON m.member_id = p.member_id
             LEFT JOIN
                 member_workout_plan mw ON mw.member_id = p.member_id
             LEFT JOIN
                 member_meal_plan mm ON mm.member_id = p.member_id
             WHERE 
-                c.status = 'On going' 
-                AND p.trainer_id = ?
+				 p.trainer_id = ?
         ) AS subquery
-        WHERE contract_availability = 'On going'
     `,
         [trainer_id]
     );
@@ -275,7 +259,7 @@ const getProgressOftheDay = async (trainer_id) => {
         FROM 
             member_workout_plan m
         WHERE 
-            m.trainer_id = 6),
+            m.trainer_id = ?),
     CTE_WORKOUT AS (
             SELECT
                 mes.plan_id, 

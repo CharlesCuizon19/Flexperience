@@ -9,9 +9,12 @@ router.get("/getSales", gymAdmin.getSales);
 router.get("/getActiveCustomers", gymAdmin.getActiveCustomers); 
 router.get("/getSalesById", gymAdmin.getSalesById); 
 router.get("/getAdminTrainers", gymAdmin.getAdminTrainers); 
+router.get("/getTrainersd", gymAdmin.getTrainerss); 
+router.get("/getSearchFilter", gymAdmin.searchFilter); 
 router.get("/getTrainerSales", gymAdmin.getTrainerSales); 
 router.post("/insertTrainerImage", gymAdmin.AddTrainerProfile); 
 router.post("/insertPlan", gymAdmin.insertPlan); 
+router.post("/insertTrainerClient", gymAdmin.insertTrainerClient); 
 router.post("/insertMemberRegistration", gymAdmin.insertMemberRegistration); 
 
 

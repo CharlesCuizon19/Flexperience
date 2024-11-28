@@ -236,9 +236,6 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-3">NAME</th>
                                     <th scope="col" class="px-6 py-3">PLAN TYPE</th>
-                                    <th scope="col" class="px-6 py-3">START DATE</th>
-                                    <th scope="col" class="px-6 py-3">END DATE</th>
-                                    <th scope="col" class="px-6 py-3">DAYS REMAINING</th>
                                     <th scope="col" class="px-6 py-3">ACTION</th>
                                 </tr>
                             </thead>
@@ -349,11 +346,7 @@
         tableBody.innerHTML = ''; // Clear the table before populating
         
         members.forEach(member => {
-            const { member_id, Name, plan_type, start_date, end_date, days_remaining, plan_status } = member;
-            // Calculate days remaining
-            const currentDate = new Date();
-            const end = new Date(end_date);
-            const daysRemaining = Math.ceil((end - currentDate) / (1000 * 60 * 60 * 24));
+            const { member_id, Name, plan_type, plan_status } = member;
 
             // Determine button label based on plan_type
             let buttonLabel;
@@ -371,9 +364,6 @@
             row.innerHTML = `
                 <td class="px-6 py-3">${Name}</td>
                 <td class="px-6 py-3">${plan_type}</td>
-                <td class="px-6 py-3">${formatDate(start_date)}</td>
-                <td class="px-6 py-3">${formatDate(end_date)}</td>
-                <td class="px-6 py-3">${daysRemaining}</td>
                 <td class="px-6 py-3">
                     ${member.plan_status === "Not assigned yet"
                     ? `<button onClick="AddPlan(${trainerid}, ${member_id}, '${plan_type}')" class="flex items-center gap-2 bg-div_color border border-white p-2 rounded-lg text-white hover:bg-white hover:text-black transition duration-300">

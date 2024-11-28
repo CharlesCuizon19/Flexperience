@@ -355,6 +355,26 @@
             </div>
 
             <!-- Table Section -->
+
+            <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
+                <h2 class="text-white text-2xl font-bold mb-4">Trainers</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-div_color rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-50 text-white">
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Experience</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Rates</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trainerTableBody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
                 <h2 class="text-white text-2xl font-bold mb-4">Member Registrations Overview</h2>
                 <div class="overflow-x-auto">
@@ -374,6 +394,44 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div id="assignModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Assign Client</h2>
+                    <div class="mb-4">
+                        <label for="searchId" class="text-sm text-gray-600">Search for an account ID</label>
+                        <div class="relative mt-2">
+                            <input id="searchId" type="text" class="w-full px-4 py-2 border border-gray-300 rounded"
+                                placeholder="Enter member ID" oninput="fetchFilteredResults()" />
+                            <!-- Dropdown -->
+                            <ul id="dropdownList"
+                                class="absolute left-0 right-0 bg-white border border-gray-300 rounded mt-2 max-h-48 overflow-auto hidden">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="plan" class="text-sm text-gray-600">Choose Plan</label>
+                        <select id="plan" class="w-full px-4 py-2 border border-gray-300 rounded mt-2">
+                            <option value="">Select a plan</option>
+                            <option value="Workout Plan">Workout Plan</option>
+                            <option value="Meal Plan">Meal Plan</option>
+                            <option value="Comprehensive Plan">Comprehensive Plan</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+                            onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
+                            onclick="submitModal()">
+                            Assign
+                        </button>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
                 <h2 class="text-white text-2xl font-bold mb-4">Gym Commission</h2>
@@ -395,10 +453,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
 
         <div id="registerMemberModal"
             class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex items-center justify-center">
@@ -600,7 +654,7 @@
 
         async function fetchGymAdminInfo() {
             try {
-                console.log("--"+userId)
+                console.log("--" + userId)
                 const response = await axios.get('http://localhost:3000/getGymAdminInfo', {
                     params: {
                         account_id: userId

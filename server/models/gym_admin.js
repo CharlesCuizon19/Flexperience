@@ -56,6 +56,26 @@ const getAdminTrainers = async (gym_id) => {
 
     return rows;
 };
+const getTrainerssz = async (gym_id) => {
+    const [rows] = await pool.query(
+        `SELECT trainer_id, CONCAT(lastname, ', ', firstname) AS trainer_name,
+        experience,
+        rates
+        FROM trainers
+    WHERE gym_id = ?
+`, [gym_id]);
+
+    return rows;
+};
+async function searchFilter(input) {
+    const [result] = await pool.query(`
+        SELECT * FROM members
+        WHERE member_id LIKE ?;
+    `, [`${input}%`]);
+
+    return [result]
+}
+
 const getAdminGyms = async (id) => {
     const [rows] = await pool.query(
         `SELECT * FROM gyms WHERE admin_id = ?`,
@@ -127,6 +147,14 @@ async function insertPlan(planName, price, intervalUnit, Description) {
 
     return result
 }
+async function insertTrainerClient(gym_id,trainer_id,member_id,plan_type) {
+    const result = await pool.query(`
+    INSERT INTO trainer_clients (gym_id,trainer_id,member_id,plan_type) 
+    VALUES (?,?,?,?)
+    `, [gym_id,trainer_id,member_id,plan_type])
+
+    return result
+}
 async function insertMemberRegistration(gym_id, name, membership_type, amount_paid) {
     const result = await pool.query(`
     INSERT INTO member_registrations (gym_id, name,membership_type,amount_paid) 
@@ -138,6 +166,9 @@ async function insertMemberRegistration(gym_id, name, membership_type, amount_pa
 
 
 module.exports = {
+    insertTrainerClient,
+    searchFilter,
+    getTrainerssz,
     getAdminTrainers,
     getSalesById,
     getAdminGyms,

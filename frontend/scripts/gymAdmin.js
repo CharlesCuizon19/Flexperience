@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
+  let gymId;
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const id = getCookie("gymAdminId");
-  let gymId;
 
   // Initialize empty data arrays for registered members and amount
   const registeredMembersData = new Array(12).fill(0); // Monthly registered members count
@@ -15,15 +15,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Fetch sales data from the endpoint
   loadGymDropdowns(id);
 
-  function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+
+  function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Days to milliseconds
+      expires = "; expires=" + date.toUTCString();
     }
-    return null;
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
   }
 
   async function fetchAndPopulateTable(gymId) {
@@ -60,6 +60,52 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error("Error fetching member data:", error);
     }
   }
+  async function fetchAndPopulateTrainers(gymId) {
+    const endpoint = `http://localhost:3000/getTrainersd?gym_id=${gymId}`;
+    const trainerTableBody = document.getElementById("trainerTableBody");
+
+    try {
+      const response = await axios.get(endpoint);
+      const trainers = response.data;
+      console.log("-x-x-xx-");
+      console.log(trainers);
+
+      // Clear the table before appending new data
+      trainerTableBody.innerHTML = "";
+
+      // Populate the table
+      trainers.forEach(trainer => {
+        const row = `
+            <tr class="text-white">
+                <td class="px-6 py-3 border-b border-gray-800">${trainer.trainer_name}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${trainer.experience}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${trainer.rates}</td>
+                <td class="px-6 py-3 border-b border-gray-800 flex gap-2">
+                    <button 
+                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2" 
+                        onclick="alert('Viewing clients for Trainer ID: ${trainer.trainer_id}')">
+                        <i class="fas fa-users"></i> View Clients
+                    </button>
+                    <button
+                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2"
+                        onclick="openModal(${trainer.trainer_id})">
+                        <i class="fas fa-user-plus"></i> Assign Client
+                    </button>
+                    <button 
+                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2" 
+                        onclick="alert('Sending payment to Trainer ID: ${trainer.trainer_id}')">
+                        <i class="fas fa-dollar-sign"></i> Send Payment
+                    </button>
+                </td>
+            </tr>
+        `;
+        trainerTableBody.innerHTML += row;
+      });
+    } catch (error) {
+      console.error("Error fetching member data:", error);
+    }
+  }
+
   async function fetchAndPopulateTrainerSales(gymId) {
     const endpoint = `http://localhost:3000/getAdminTrainers?gym_id=${gymId}`;
     const commissionTableBody = document.getElementById("commissionTableBody");
@@ -119,10 +165,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       const initialGymId = gyms[0]?.gym_id; // Check if gyms[0] exists before accessing gym_id
+      setCookie('gymId', initialGymId, 1); // Expires in 1 day
       if (initialGymId) {
         await fetchSalesData(initialGymId); // Fetch sales data for the initial gym
         await fetchAndPopulateTable(initialGymId);
         await fetchAndPopulateTrainerSales(initialGymId);
+        await fetchAndPopulateTrainers(initialGymId)
       }
     } catch (error) {
       console.error('Error fetching gyms:', error);
@@ -135,9 +183,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('gymDropdown').addEventListener('change', async (event) => {
     const selectedGymId = event.target.value;
     gymId = selectedGymId;
+    setCookie('gymId', gymId, 1); // Expires in 1 day
     await fetchSalesData(gymId); // Fetch data for the newly selected gym
     await fetchAndPopulateTable(gymId)
     await fetchAndPopulateTrainerSales(gymId)
+    await fetchAndPopulateTrainers(gymId)
   });
 
   async function fetchSalesData(gymId) {
@@ -319,3 +369,109 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
 });
+let trainerId;
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+function openModal(trainer_id) {
+  trainerId = trainer_id
+  document.getElementById('assignModal').classList.remove('hidden');
+}
+
+function closeModal() {
+  document.getElementById('assignModal').classList.add('hidden');
+}
+
+async function submitModal() {
+  const accountId = document.getElementById('searchId').value;
+  const plan = document.getElementById('plan').value;
+  const gymId = getCookie("gymId");
+
+  if (!accountId || !plan) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  // Prepare the payload for the POST request
+  const payload = {
+    gym_id: gymId,
+    trainer_id: trainerId,
+    member_id: accountId,
+    plan_type: plan
+  };
+
+  try {
+    // Make the POST request using Axios
+    const response = await axios.post('http://localhost:3000/insertTrainerClient', payload);
+
+    if (response.status === 200) {
+      alert(`Successfully assigned account ID ${accountId} to the ${plan} plan.`);
+      closeModal(); // Assuming this closes the modal
+    } else {
+      alert('Failed to assign client. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error submitting data:', error);
+    alert('An error occurred while assigning the client. Please try again.');
+  }
+}
+
+
+async function fetchFilteredResults() {
+  const input = document.getElementById('searchId').value;
+  const dropdown = document.getElementById('dropdownList');
+
+  // If input is empty, hide dropdown
+  if (input.trim() === '') {
+    dropdown.classList.add('hidden');
+    dropdown.innerHTML = '';
+    return;
+  }
+
+  try {
+    // Fetch data from the API
+    const response = await fetch(`http://localhost:3000/getSearchFilter?member_id=${input}`);
+    const data = await response.json();
+
+    // Clear previous dropdown content
+    dropdown.innerHTML = '';
+    dropdown.classList.remove('hidden');
+
+    // Check if we have matching results
+    if (data[0].length === 0) {
+      const noResultsItem = document.createElement('li');
+      noResultsItem.textContent = 'No results found';
+      noResultsItem.className = 'px-4 py-2 text-gray-500';
+      dropdown.appendChild(noResultsItem);
+    } else {
+      // Loop through the returned data and create list items
+      data[0].forEach((item) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.firstname} ${item.lastname} (ID: ${item.member_id})`;
+        listItem.className =
+          'px-4 py-2 hover:bg-gray-200 cursor-pointer';
+        listItem.onclick = () => selectMember(item);
+
+        dropdown.appendChild(listItem);
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+function selectMember(member) {
+  // Populate the input field with the selected member
+  document.getElementById('searchId').value = ` ${member.member_id}`;
+  // Hide the dropdown
+  document.getElementById('dropdownList').classList.add('hidden');
+}
+
