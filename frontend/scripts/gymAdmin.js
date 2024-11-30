@@ -60,6 +60,34 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error("Error fetching member data:", error);
     }
   }
+
+  async function fetchAndPopulatePaymentLogsTable(gymId) {
+    const endpoint = `http://localhost:3000/getPaymentsLog?gym_id=${gymId}`;
+    const PaymentsLogTableBody = document.getElementById("PaymentsLogTableBody");
+    try {
+      const response = await axios.get(endpoint);
+      const members = response.data;
+      console.log(members)
+      // Clear the table before appending new data
+      PaymentsLogTableBody.innerHTML = "";
+
+      // Populate the table
+      members.forEach(member => {
+        const row = `
+            <tr class="text-white">
+                <td class="px-6 py-3 border-b border-gray-800">${member.member_name}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${member.trainer_name}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${member.payment_method}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${member.amount}</td>
+                <td class="px-6 py-3 border-b border-gray-800">${member.formatted_payment_date}</td>
+            </tr>
+        `;
+        PaymentsLogTableBody.innerHTML += row;
+      });
+    } catch (error) {
+      console.error("Error fetching member data:", error);
+    }
+  }
   async function fetchAndPopulateTrainers(gymId) {
     const endpoint = `http://localhost:3000/getTrainersd?gym_id=${gymId}`;
     const trainerTableBody = document.getElementById("trainerTableBody");
@@ -169,6 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (initialGymId) {
         await fetchSalesData(initialGymId); // Fetch sales data for the initial gym
         await fetchAndPopulateTable(initialGymId);
+        await fetchAndPopulatePaymentLogsTable(initialGymId)
         await fetchAndPopulateTrainerSales(initialGymId);
         await fetchAndPopulateTrainers(initialGymId)
       }
@@ -186,6 +215,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setCookie('gymId', gymId, 1); // Expires in 1 day
     await fetchSalesData(gymId); // Fetch data for the newly selected gym
     await fetchAndPopulateTable(gymId)
+    await fetchAndPopulatePaymentLogsTable(gymId)
     await fetchAndPopulateTrainerSales(gymId)
     await fetchAndPopulateTrainers(gymId)
   });

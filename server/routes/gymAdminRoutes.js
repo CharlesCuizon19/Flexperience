@@ -12,6 +12,7 @@ router.get("/getAdminTrainers", gymAdmin.getAdminTrainers);
 router.get("/getTrainersd", gymAdmin.getTrainerss); 
 router.get("/getSearchFilter", gymAdmin.searchFilter); 
 router.get("/getTrainerSales", gymAdmin.getTrainerSales); 
+router.get("/getPaymentsLog", gymAdmin.getPaymentsLog); 
 router.post("/insertTrainerImage", gymAdmin.AddTrainerProfile); 
 router.post("/insertPlan", gymAdmin.insertPlan); 
 router.post("/insertTrainerClient", gymAdmin.insertTrainerClient); 

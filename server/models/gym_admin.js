@@ -129,6 +129,24 @@ const getActiveCustomers = async (gym_id) => {
 
     return rows;
 };
+const getPaymentsLog = async (gym_id) => {
+    const [rows] = await pool.query(
+        `SELECT 
+            mp.gym_id,
+            CONCAT(m.firstname, ', ', m.lastname) AS member_name, 
+            CONCAT(t.firstname, ', ', t.lastname) AS trainer_name, 
+            mp.payment_method,
+            amount, 
+            DATE_FORMAT(mp.payment_date, '%M %d, %Y') AS formatted_payment_date
+        FROM member_payments mp
+        JOIN trainers t ON t.trainer_id = mp.trainer_id
+        JOIN members m ON mp.member_id = m.member_id
+        WHERE mp.gym_id = ?
+        `,
+        [gym_id]);
+
+    return rows;
+};
 
 
 async function AddTrainerProfile(trainer_id, filename) {
@@ -176,5 +194,6 @@ module.exports = {
     insertPlan,
     getVerifiedAdmins,
     AddTrainerProfile,
-    getActiveCustomers
+    getActiveCustomers,
+    getPaymentsLog
 };

@@ -1,6 +1,6 @@
 const { GetGymAdminInfo, getSales, getTrainerSales } = require('../models/database');
 const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers, getAdminTrainers,
-     getTrainerssz, searchFilter,insertTrainerClient } = require('../models/gym_admin');
+     getTrainerssz, searchFilter,insertTrainerClient, getPaymentsLog } = require('../models/gym_admin');
 
 module.exports = {
     GetGymAdminInfo: async (req, res) => {
@@ -86,6 +86,16 @@ module.exports = {
         try {
             const { trainer_id } = req.query;
             const data = await getTrainerSales(trainer_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching trainer sales data:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    getPaymentsLog: async (req, res) => {
+        try {
+            const { gym_id } = req.query;
+            const data = await getPaymentsLog(gym_id);
             res.json(data);
         } catch (error) {
             console.error("Error fetching trainer sales data:", error.message);
