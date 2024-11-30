@@ -46,11 +46,37 @@ async function insertGymAdminPayment(paymentData) {
         throw error; // Re-throw the error so it can be handled by the calling code
     }
 }
+async function insertclientToGymAdminPayment(paymentData) {
+    try {
+        const { member_id, gym_id, trainer_id, payment_method, amount } = paymentData; // Destructure the object
+
+        let query;
+        let values;
+
+        console.log("------ is renewal false")
+        // Insert new payment record for the first-time subscription
+        query = `
+                INSERT INTO member_payments (member_id, gym_id, trainer_id, payment_method, amount) 
+                VALUES (?,?,?,?,?)
+            `;
+        values = [member_id, gym_id, trainer_id, payment_method, amount];
+
+
+        const [result] = await pool.query(query, values);
+
+        console.log("DB Query Result:", result); // Log result here
+        return result;
+    } catch (error) {
+        console.error("Error managing client payment:", error);
+        throw error; // Re-throw the error so it can be handled by the calling code
+    }
+}
 
 
 
 
 module.exports = {
     insertClientPayment,
-    insertGymAdminPayment
+    insertGymAdminPayment,
+    insertclientToGymAdminPayment
 };

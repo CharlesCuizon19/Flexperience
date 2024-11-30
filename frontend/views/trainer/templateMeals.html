@@ -267,6 +267,7 @@
         let template_item_id = 0
         const templateName = getCookie("template_name");
         let templateId = getCookie('template_id');
+        let trainer_id = getCookie('trainer_id');
         let selectedPreMadeMealId = null;
 
         const modal = document.getElementById("mealModal");
@@ -352,7 +353,7 @@
 
         openMealModal.addEventListener("click", async () => {
             modal.classList.remove("hidden");
-            await loadMeals(); // Load meals when the modal opens
+            await loadMeals(trainer_id); // Load meals when the modal opens
         });
 
 
@@ -362,9 +363,9 @@
 
         let meals = []; // Declare meals globally
 
-        async function loadMeals() {
+        async function loadMeals(trainer_id) {
             try {
-                const response = await axios.get("http://localhost:3000/getPremadeMeals?trainer_id=6");
+                const response = await axios.get(`http://localhost:3000/getPremadeMeals?trainer_id=${trainer_id}`);
                 meals = response.data[0]; // Populate the meals variable
 
                 // Clear existing meal cards
@@ -378,7 +379,7 @@
                         <div class="h-32 overflow-hidden rounded-lg">
                             <img src="https://img.freepik.com/free-vector/hand-drawn-meal-prep-illustration_23-2149344804.jpg?semt=ais_hybrid" alt="${meal.meal_name}" class="w-full h-full object-cover" />
                         </div>
-                        <h4 class="text-lg font-semibold text-white mt-4">${meal.meal_name}</h4>
+                        <h4 class="text-lg font-semibold text-black mt-4">${meal.meal_name}</h4>
                         <p class="text-gray-600">Carbs: <span class="font-medium">${meal.carbs}g</span></p>
                         <p class="text-gray-600">Fats: <span class="font-medium">${meal.fats}g</span></p>
                         <p class="text-gray-600">Protein: <span class="font-medium">${meal.protein}g</span></p>

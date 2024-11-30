@@ -2,7 +2,7 @@
 const express = require('express');
 const path = require('path');
 const router = express.Router();
-const { handleAddPaymentRecord, addSubscriptionRecord, handleClientPayment, insertGymAdminPayment } = require('../controllers/orderController');
+const { handleAddPaymentRecord, addSubscriptionRecord, handleClientPayment, insertGymAdminPayment, insertclientToGymAdminPayment } = require('../controllers/orderController');
 const { VerifyGym } = require('../controllers/gymController');
 const paypal = require('../services/paypal');
 
@@ -126,6 +126,49 @@ router.get('/complete-admin-payment', async (req, res) => {
 
             // Pass the entire paymentData object to the insertGymAdminPayment function
             const result = await insertGymAdminPayment(paymentData);
+
+            if (result.success) {
+                console.log("Payment recorded successfully");
+                return res.redirect('https://flexperience.pro/views/features/login.html');
+            } else {
+                console.log("Payment record error");
+                throw new Error(result.message);
+            }
+        } else {
+            throw new Error('Payment capture was not successful.');
+        }
+    } catch (error) {
+        console.error("Error completing the admin payment:", error.message);
+        if (!res.headersSent) {
+            res.status(500).send("Error: " + error.message);
+        }
+    }
+});
+router.get('/complete-clientToGymAdmin-payment', async (req, res) => {
+    try {
+        const token = req.query.token;
+        const member_id = req.query.member_id;
+        const gym_id = req.query.gym_id;
+        const trainer_id = req.query.trainer_id;
+        const payment_method = req.query.payment_method; // Direct from query
+        const amount = req.query.amount; // Direct from query
+
+        // Capture the payment using the token from PayPal
+        const captureResponse = await paypal.captureClientToGymAdminPayment(token);
+
+        if (captureResponse && captureResponse.status === 'COMPLETED') {
+            // Payment was successful, proceed to add payment record to the database
+            const paymentData = {
+                member_id: member_id,
+                gym_id: gym_id,
+                trainer_id: trainer_id,
+                payment_method: payment_method,
+                amount: amount
+            };
+            console.log("Payment Data Passed to Insert Function:", paymentData);
+
+            // Pass the entire paymentData object to the insertGymAdminPayment function
+            const result = await insertclientToGymAdminPayment(paymentData);
 
             if (result.success) {
                 console.log("Payment recorded successfully");

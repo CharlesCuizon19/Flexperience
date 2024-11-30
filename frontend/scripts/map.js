@@ -417,6 +417,9 @@ function showNearby(gym) {
         <button id="viewGymButton" data-src="${gym.id}" class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm flex items-center shadow-md">
             Visit Gym
         </button>
+        <button id="openStreetView" data-src="${gym.id}" class="bg-gray-700 hover:bg-gray-600 px-3 py-2 rounded-md text-sm flex items-center shadow-md">
+            Visit Gym
+        </button>
     </div>
 `;
 

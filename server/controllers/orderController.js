@@ -1,5 +1,5 @@
 const { addPaymentRecord: addPaymentRecordToDb, addSubscriptionRecord } = require('../models/database');
-const { insertClientPayment, insertGymAdminPayment } = require('../models/payment');
+const { insertClientPayment, insertGymAdminPayment, insertclientToGymAdminPayment } = require('../models/payment');
 
 module.exports = {
     handleAddPaymentRecord: async (admin_id, gym_id, subscription_id, amount, payment_status) => {
@@ -47,6 +47,23 @@ module.exports = {
                 return { success: true, message: "Gym admin Payment record added successfully" };
             } else {
                 return { success: false, message: "Failed to add gym admin payment record" };
+            }
+        } catch (error) {
+            console.error("Error adding gym admin payment record:", error);
+            throw new Error("Internal Server Error");
+        }
+    },
+    insertclientToGymAdminPayment: async (member_id, gym_id, trainer_id, payment_method, amount) => {
+        try {
+            const result = await insertclientToGymAdminPayment(member_id, gym_id, trainer_id, payment_method, amount);
+
+            console.log("Database result:", result); // Log the result
+
+            // Check if result is in expected format
+            if (result && result.affectedRows > 0) {
+                return { success: true, message: "Client Payment record added successfully" };
+            } else {
+                return { success: false, message: "Failed to add client payment record" };
             }
         } catch (error) {
             console.error("Error adding gym admin payment record:", error);

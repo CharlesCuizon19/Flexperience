@@ -268,56 +268,87 @@
 
     <!-- Content -->
     <div class="sm:ml-64">
-        <div class="m-4 p-6 mt-20 bg-div_color rounded-lg shadow-lg">
-            <div class="flex flex-col md:flex-row items-center justify-between">
+        <!-- Main Container -->
+        <div class="m-4 p-8 mt-20 bg-customGray rounded-lg shadow-lg">
+            <!-- Gym Profile Section -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
                 <!-- Gym Logo -->
-                <div class="flex-shrink-0 mb-6 md:mb-0">
-                    <img src="../img/elavation_sampleimage.png"
-                        class="gym-logo w-32 h-32 rounded-lg object-cover border-4 border-gray-300 shadow-md"
-                        alt="gym profile">
+                <div class="flex justify-center">
+                    <img src=""
+                        class="gym-logo w-40 h-40 rounded-full object-cover border-4 border-transparent shadow-lg"
+                        alt="Gym Logo">
                 </div>
-
                 <!-- Gym Info -->
-                <div class="flex flex-col md:flex-1 md:ml-6 text-center md:text-left">
-                    <span class="gym-name mb-2 text-3xl font-bold text-white">Elevation Fitness Gym</span>
-                    <span class="gym-location mb-4 text-gray-300">Location, Davao City</span>
-
-                    <div class="flex justify-center md:justify-start space-x-8 mt-4 text-white">
-                        <div class="text-sm font-medium">
-                            <div>Rating:</div>
-                            <div>Contact:</div>
-                            <div>Session:</div>
-                            <div>Monthly:</div>
-                        </div>
-                        <div class="text-sm">
-                            <div class="flex items-center">
-                                <span class="fa fa-star checked text-yellow-500"></span>
-                                <span class="fa fa-star checked text-yellow-500"></span>
-                                <span class="fa fa-star checked text-yellow-500"></span>
-                                <span class="fa fa-star text-gray-400"></span>
-                                <span class="fa fa-star text-gray-400"></span>
-                            </div>
-                            <div class="contact">09222837121</div>
-                            <div class="gym-session-rate">₱ 50 per session</div>
-                            <div class="gym-monthly-rate">₱ 500 per month</div>
-                        </div>
+                <div class="col-span-2 text-center md:text-left">
+                    <h1 class="gym-name text-4xl font-bold text-white"></h1>
+                    <p class="gym-location text-gray-300 mt-2"></p>
+                    <div class="flex items-center justify-center md:justify-start mt-4 space-x-2">
+                        <span class="fa fa-star text-yellow-500"></span>
+                        <span class="fa fa-star text-yellow-500"></span>
+                        <span class="fa fa-star text-yellow-500"></span>
+                        <span class="fa fa-star text-gray-400"></span>
+                        <span class="fa fa-star text-gray-400"></span>
                     </div>
                 </div>
             </div>
 
+            <!-- Rates Section -->
+            <div class="mt-10 bg-gray-700 p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-white">Rates</h2>
+                <div class="grid grid-cols-2 gap-6 mt-4 text-gray-300">
+                    <div>
+                        <span class="font-bold">Session:</span> <span class="gym-session-rate"></span>
+                    </div>
+                    <div>
+                        <span class="font-bold">Monthly:</span> <span class="gym-monthly-rate"></span>
+                    </div>
+                    <div>
+                        <span class="font-bold">Contact:</span> <span class="contact"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PayPal Button -->
+            <div class="mt-8 flex justify-center">
+                <!-- PayPal Button with Icon -->
+                <button
+                    class="bg-50 hover:bg-orange-700 text-white py-3 px-6 rounded-lg shadow-lg text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center gap-2"
+                    id="proceed-to-payment">
+                    <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal Logo" class="w-6 h-6">
+                    <span>Proceed to Trainer Payment</span>
+                </button>
+
+            </div>
+
             <!-- Photos Section -->
-            <h3 class="my-8 text-xl font-semibold text-white text-center">Photos</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center" id="gym-images">
-                <!-- Images will be dynamically inserted here -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-semibold text-white text-center">Gallery</h2>
+                <div id="gym-images" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6"></div>
             </div>
 
             <!-- Trainers Section -->
-            <h3 class="mt-12 text-xl font-semibold text-white text-center">Meet the Trainers</h3>
-            <div id="trainers-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
-                <!-- Trainers will be dynamically inserted here -->
+            <div class="mt-12">
+                <h2 class="text-2xl font-semibold text-white text-center">Meet Our Trainers</h2>
+                <div id="trainers-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6"></div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="trainer-modal"
+            class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg w-2/3 max-h-3/4 overflow-y-auto p-5 shadow-lg">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h2 class="text-lg font-bold text-black">Select a Trainer</h2>
+                    <button id="close-modal" class="text-black hover:text-black font-bold text-xl">&times;</button>
+                </div>
+                <div id="trainers-container2" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <!-- Trainer cards will be populated here -->
+                </div>
             </div>
         </div>
     </div>
+
+
 
 
     <script>
@@ -329,101 +360,66 @@
             // Fetch gym data
             axios.get(`http://localhost:3000/gymdata?gymid=${gymId}`)
                 .then(response => {
-                    console.log("Response data:", response.data); // Log the response data to check its structure
+                    const data = response.data;
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        const gymInfo = data[0];
 
-                    const data = response.data; // Get all gym data
-                    console.log(data);
-                    if (data && Array.isArray(data) && data.length > 0) { // Check if data is an array and not empty
-                        // Assuming the first object contains the gym info (you can adjust as needed)
-                        const gymInfo = data[0]; // This contains general gym info
                         // Fill in basic gym info
                         document.querySelector('.gym-name').textContent = gymInfo.gym_name;
                         document.querySelector('.gym-location').textContent = gymInfo.street_address;
                         document.querySelector('.contact').textContent = gymInfo.contact_no;
                         document.querySelector('.gym-session-rate').textContent = `₱ ${gymInfo.daily_rate}`;
                         document.querySelector('.gym-monthly-rate').textContent = `₱ ${gymInfo.monthly_rate}`;
+                        document.querySelector('.gym-logo').src = `https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${gymInfo.img_path}`;
 
-                        // Display the gym logo
-                        document.querySelector('.gym-logo').src = "https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/" + gymInfo.img_path;
-
-                        // Get the gym images and dynamically insert them into the HTML
+                        // Populate gym images
                         const gymImagesContainer = document.getElementById('gym-images');
-                        gymImagesContainer.innerHTML = ""; // Clear previous images
-
-                        // Create two rows for the images
-                        let firstRow = document.createElement('div');
-                        firstRow.classList.add('flex');
-                        let secondRow = document.createElement('div');
-                        secondRow.classList.add('flex');
-
+                        gymImagesContainer.innerHTML = "";
                         let imageCount = 0;
-                        // Loop through the entire `data` array and insert images of type "image"
+
                         data.forEach(item => {
                             if (item.type === 'image') {
-                                console.log("Image path:", item.img_path); // Log the image path to check
-
                                 const imgElement = document.createElement('img');
-                                imgElement.src = "https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/" + item.img_path;
+                                imgElement.src = `https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${item.img_path}`;
                                 imgElement.alt = `${item.gym_name} Image ${imageCount + 1}`;
-
-                                // Add images to the correct row
-                                if (imageCount < 2) {
-                                    firstRow.appendChild(imgElement);
-                                } else {
-                                    secondRow.appendChild(imgElement);
-                                }
-
+                                imgElement.className = 'w-full h-40 rounded-lg object-cover';
+                                gymImagesContainer.appendChild(imgElement);
                                 imageCount++;
                             }
                         });
-
-                        // Append rows to the container
-                        gymImagesContainer.appendChild(firstRow);
-                        gymImagesContainer.appendChild(secondRow);
-                    } else {
-                        console.error("Invalid or empty gym data:", data); // Log an error if the data is invalid or empty
                     }
                 })
                 .catch(error => {
                     console.error("Error fetching gym data:", error);
                 });
 
-
-            // Fetch trainers data and dynamically populate the trainer cards
-            // Fetch trainers data and dynamically populate the trainer cards
+            // Fetch trainers data
             axios.get(`http://localhost:3000/getGymTrainer?gymid=${gymId}`)
                 .then(response => {
-                    const trainers = response.data; // Response contains the list of trainers
+                    const trainers = response.data;
                     const trainersContainer = document.getElementById('trainers-container');
-                    trainersContainer.innerHTML = ''; // Clear existing trainer cards
+                    trainersContainer.innerHTML = '';
 
-                    // Check if the response contains valid data
                     if (!trainers || trainers.length === 0) {
-                        trainersContainer.innerHTML = '<p>No trainers found.</p>'; // Show message if no trainers found
+                        trainersContainer.innerHTML = '<p class="text-gray-400">No trainers found.</p>';
                         return;
                     }
 
-                    // Loop through each trainer and create a dynamic card
                     trainers.forEach(trainer => {
                         const trainerCard = `
-                        <div class="trainer-card flex flex-col py-5 bg-div_color items-center rounded-lg shadow-black drop-shadow-lg cursor-pointer" data-trainer-id="${trainer.trainer_id}">
-                            <div>
-                                <img src="http://localhost:3000/uploads/${trainer.filename}" 
-                                     class="w-24 h-24 rounded-full object-cover" 
-                                     alt="trainer profile">
-                            </div>
-                            <span>${trainer.firstname} ${trainer.lastname}</span>
-                            <span>Trainer</span>
-                        </div>
-                    `;
-
-                        // Append each trainer's card to the container
+                <div class="trainer-card flex flex-col py-5 bg-gray-700 items-center rounded-lg shadow-lg cursor-pointer" data-trainer-id="${trainer.trainer_id}">
+                    <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${trainer.filename}" 
+                         class="w-24 h-24 rounded-full object-cover" 
+                         alt="Trainer Profile">
+                    <span class="text-white mt-2">${trainer.firstname} ${trainer.lastname}</span>
+                    <span class="text-gray-400">Trainer</span>
+                </div>
+            `;
                         trainersContainer.insertAdjacentHTML('beforeend', trainerCard);
                     });
 
-                    // Add event listener to each trainer card
                     document.querySelectorAll('.trainer-card').forEach(card => {
-                        card.addEventListener('click', (event) => {
+                        card.addEventListener('click', () => {
                             const trainerId = card.getAttribute('data-trainer-id');
                             console.log(`Trainer ID clicked: ${trainerId}`);
                             setCookie('trainer_id', trainerId, 1);
@@ -460,7 +456,114 @@
                 }
                 return null;
             }
+
+
+            document.getElementById('proceed-to-payment').addEventListener('click', () => {
+                const modal = document.getElementById('trainer-modal');
+                const trainersContainer = document.getElementById('trainers-container2');
+                // Clear existing trainer cards
+                trainersContainer.innerHTML = '';
+
+                // Show modal
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                // Fetch trainers from API
+                axios.get(`http://localhost:3000/getGymTrainer?gymid=${gymId}`)
+                    .then(response => {
+                        const trainers = response.data;
+
+                        // Check if data exists
+                        if (trainers.length === 0) {
+                            trainersContainer.innerHTML = '<p class="col-span-full text-center">No trainers found.</p>';
+                            return;
+                        }
+
+                        // Populate trainer cards
+                        trainers.forEach(trainer => {
+                            const trainerCard = `
+                            <div class="trainer-card bg-gradient-to-r from-50 to-orange-300 p-4 rounded-lg shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-400 transition-transform transform hover:-translate-y-1 cursor-pointer" data-trainer-id="${trainer.trainer_id}">
+                                <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${trainer.filename}" 
+                                    class="w-20 h-20 rounded-full mx-auto object-cover border-2 border-orange-700" 
+                                    alt="${trainer.firstname} ${trainer.lastname}">
+                                <div class="mt-3 text-center">
+                                    <h3 class="font-bold text-lg text-gray-800">${trainer.firstname} ${trainer.lastname}</h3>
+                                    <p class="text-white text-sm">${trainer.bio}</p>
+                                    <p class="text-white font-medium">₱ ${trainer.rates}/month</p>
+                                    <button onClick="selectTrainer(${trainer.trainer_id}, '${trainer.rates}', ${trainer.gym_id})" class="mt-2 bg-orange-600 hover:bg-orange-700 text-white py-1 px-3 rounded-lg shadow-md focus:outline-none">
+                                        Hire ${trainer.firstname}
+                                    </button>
+
+
+                                </div>
+                            </div>
+                            `;
+                            trainersContainer.insertAdjacentHTML('beforeend', trainerCard);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching trainers:', error);
+                        trainersContainer.innerHTML = '<p class="col-span-full text-center text-red-600">Failed to load trainers. Please try again later.</p>';
+                    });
+            });
+
+            // Close modal on button click
+            document.getElementById('close-modal').addEventListener('click', () => {
+                const modal = document.getElementById('trainer-modal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            });
+
+            // Function to handle trainer selection
+
         })
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Days to milliseconds
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function selectTrainer(trainerId, amount, gymid) {
+            const member_id = getCookie('member_id')
+
+            // Now call PayPal payment route
+            const paymentDetails = {
+                member_id: member_id,
+                gym_id: gymid, // ID from the radio button value
+                trainer_id: trainerId,
+                payment_method: "PayPal",
+                amount: amount
+            };
+            console.log(paymentDetails)
+            // Call your backend to get the PayPal approval URL using axios
+            axios.post('http://localhost:3000/clientToGymAdminPayment', paymentDetails)
+                .then(response => {
+                    // Get the PayPal approval link from the response
+                    const approvalLink = response.data.url; // Use the URL returned from PayPal
+                    console.log('Redirecting to PayPal:', approvalLink);
+
+                    // Redirect to PayPal subscription approval
+                    window.location.href = approvalLink; // Redirect to PayPal first
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
     </script>
 
 </body>

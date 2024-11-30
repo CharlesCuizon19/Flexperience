@@ -150,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     const id = getCookie("trainer_id");
-    alert(id)
     // Fetch data using Axios
     axios.get(`http://localhost:3000/getTrainerSales?trainer_id=${id}`)
         .then(response => {

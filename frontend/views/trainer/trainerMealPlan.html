@@ -1044,10 +1044,9 @@
 
             async function fetchAndDisplayMeals() {
                 try {
-                    const trainerId = 6; // Update this ID as needed
                     console.log("---------");
-                    console.log(trainerId);
-                    const response = await axios.get(`http://localhost:3000/getPremadeMeals?trainer_id=${trainerId}`);
+                    console.log(trainerid);
+                    const response = await axios.get(`http://localhost:3000/getPremadeMeals?trainer_id=${trainerid}`);
                     const meals = response.data[0]; // Access the first array in the response
                     console.log(meals);
                     const gridContainer = document.getElementById('templateContainer2'); // Use the unique ID
