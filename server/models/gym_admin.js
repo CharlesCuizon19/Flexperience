@@ -132,12 +132,14 @@ const getActiveCustomers = async (gym_id) => {
 const getPaymentsLog = async (gym_id) => {
     const [rows] = await pool.query(
         `SELECT 
+			mp.payment_id,
             mp.gym_id,
             CONCAT(m.firstname, ', ', m.lastname) AS member_name, 
             CONCAT(t.firstname, ', ', t.lastname) AS trainer_name, 
             mp.payment_method,
             amount, 
-            DATE_FORMAT(mp.payment_date, '%M %d, %Y') AS formatted_payment_date
+            DATE_FORMAT(mp.payment_date, '%M %d, %Y') AS formatted_payment_date,
+            mp.payment_status
         FROM member_payments mp
         JOIN trainers t ON t.trainer_id = mp.trainer_id
         JOIN members m ON mp.member_id = m.member_id

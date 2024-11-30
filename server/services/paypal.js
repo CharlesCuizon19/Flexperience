@@ -91,7 +91,7 @@ exports.createSubscription = async (admin_id, gym_id, planID, subscriptionID, su
     };
 };
 // para sa client to trainer payment
-exports.createClientToTrainerPayment = async (contract_id, price, planType, duration) => {
+exports.createClientToTrainerPayment = async (paymentId, price) => {
     const access_token = await generateAccessToken2();
     console.log("GENERATED V2 TOKEN: ", access_token)
     const response = await axios({
@@ -107,8 +107,8 @@ exports.createClientToTrainerPayment = async (contract_id, price, planType, dura
                 {
                     items: [
                         {
-                            name: planType,
-                            description: `Payment for ${duration} week plan with trainer`,
+                            name: "PAYMENT TRANSFER",
+                            description: `TRANSFER PAYMENT TO TRAINER`,
                             quantity: '1',
                             unit_amount: {
                                 currency_code: 'PHP', // Change to your preferred currency
@@ -129,7 +129,7 @@ exports.createClientToTrainerPayment = async (contract_id, price, planType, dura
                 }
             ],
             application_context: {
-                return_url: `https://capstone-erxk.onrender.com/complete-client-payment?contract_id=${contract_id}&price=${price}`,
+                return_url: "https://capstone-erxk.onrender.com" + `/complete-client-payment?paymentId=${paymentId}`,
                 cancel_url: process.env.BASE_URL + '/cancel-client-payment',
                 shipping_preference: 'NO_SHIPPING',
                 user_action: 'PAY_NOW',
@@ -140,6 +140,7 @@ exports.createClientToTrainerPayment = async (contract_id, price, planType, dura
 
     return response.data.links.find(link => link.rel === 'approve').href;
 };
+
 exports.createPayment = async (admin_id, subscription_id, amount, planName, daysRemaining, isRenewal) => {
     try {
         const access_token = await generateAccessToken3();

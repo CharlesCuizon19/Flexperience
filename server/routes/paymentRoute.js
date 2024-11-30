@@ -41,9 +41,11 @@ router.post('/clientToGymAdminPayment', async (req, res) => {
 
 
 router.post('/clientPayment', async (req, res) => {
-    const { contract_id, price, planType, duration } = req.body;
+    const { paymentId, price } = req.body;
     try {
-        const url = await paypal.createClientToTrainerPayment(contract_id, price, planType, duration);
+        const url = await paypal.createClientToTrainerPayment(paymentId, price);
+        console.log("URL")
+        console.log(url)
         res.send(url); // Send the PayPal approval URL
     } catch (error) {
         res.send("ERROR: " + error.message);

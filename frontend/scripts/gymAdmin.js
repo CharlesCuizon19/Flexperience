@@ -64,23 +64,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function fetchAndPopulatePaymentLogsTable(gymId) {
     const endpoint = `http://localhost:3000/getPaymentsLog?gym_id=${gymId}`;
     const PaymentsLogTableBody = document.getElementById("PaymentsLogTableBody");
+
     try {
       const response = await axios.get(endpoint);
       const members = response.data;
-      console.log(members)
+      console.log(members);
+
       // Clear the table before appending new data
       PaymentsLogTableBody.innerHTML = "";
 
       // Populate the table
       members.forEach(member => {
+        const transferButton = member.payment_status === "Awaiting Transfer"
+        ? `<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="handleTransfer('${member.payment_id}', '${member.amount}')">Transfer Money</button>`
+        : "Transferred";
+
         const row = `
-            <tr class="text-white">
-                <td class="px-6 py-3 border-b border-gray-800">${member.member_name}</td>
-                <td class="px-6 py-3 border-b border-gray-800">${member.trainer_name}</td>
-                <td class="px-6 py-3 border-b border-gray-800">${member.payment_method}</td>
-                <td class="px-6 py-3 border-b border-gray-800">${member.amount}</td>
-                <td class="px-6 py-3 border-b border-gray-800">${member.formatted_payment_date}</td>
-            </tr>
+          <tr class="text-white">
+            <td class="px-6 py-3 border-b border-gray-800">${member.member_name}</td>
+            <td class="px-6 py-3 border-b border-gray-800">${member.trainer_name}</td>
+            <td class="px-6 py-3 border-b border-gray-800">${member.payment_method}</td>
+            <td class="px-6 py-3 border-b border-gray-800">${member.amount}</td>
+            <td class="px-6 py-3 border-b border-gray-800">${member.formatted_payment_date}</td>
+            <td class="px-6 py-3 border-b border-gray-800">${transferButton}</td>
+          </tr>
         `;
         PaymentsLogTableBody.innerHTML += row;
       });
@@ -88,6 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error("Error fetching member data:", error);
     }
   }
+
   async function fetchAndPopulateTrainers(gymId) {
     const endpoint = `http://localhost:3000/getTrainersd?gym_id=${gymId}`;
     const trainerTableBody = document.getElementById("trainerTableBody");
@@ -503,5 +511,19 @@ function selectMember(member) {
   document.getElementById('searchId').value = ` ${member.member_id}`;
   // Hide the dropdown
   document.getElementById('dropdownList').classList.add('hidden');
+}
+
+// Function to handle the "Transfer Money" button click
+async function handleTransfer(paymentId, price) {
+  console.log(`Transfer initiated for payment ID: ${paymentId} and price of ${price}`);
+
+  const response = await axios.post('http://localhost:3000/clientPayment', {
+    paymentId: paymentId,
+    price: price,
+
+  });
+
+  const result = response.data;
+  window.location.href = result;
 }
 

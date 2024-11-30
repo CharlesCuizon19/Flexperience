@@ -62,8 +62,7 @@ router.get('/complete-order', async (req, res) => {
 router.get('/complete-client-payment', async (req, res) => {
     try {
         const token = req.query.token;
-        const contract_id = req.query.contract_id;
-        const price = req.query.price;
+        const paymentId = req.query.paymentId;
 
         // Capture the payment using the token from PayPal
         const captureResponse = await paypal.captureClientPayment(token);
@@ -71,12 +70,11 @@ router.get('/complete-client-payment', async (req, res) => {
         if (captureResponse && captureResponse.status === 'COMPLETED') {
             // Payment was successful, proceed to add payment record to the database
             const paymentData = {
-                contract_id: contract_id,
-                amount: price,
+                paymentId: paymentId,
             };
 
             // Call the controller to add the payment record
-            const result = await handleClientPayment(paymentData.contract_id, paymentData.amount);
+            const result = await handleClientPayment(paymentId);
 
             if (result.success) {
                 // Call VerifyGym if payment record was added successfully

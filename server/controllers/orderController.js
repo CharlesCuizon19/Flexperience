@@ -19,9 +19,9 @@ module.exports = {
             throw new Error("Internal Server Error");
         }
     },
-    handleClientPayment: async (contract_id, amount) => {
+    handleClientPayment: async (paymentId) => {
         try {
-            const result = await insertClientPayment(contract_id, amount);
+            const result = await insertClientPayment(paymentId);
 
             console.log("Database result:", result); // Log the result
 
