@@ -324,6 +324,10 @@
                         class="text-center w-full bg-div_color border border-50 rounded-lg font-customFont py-5 shadow-lg shadow-black hover:shadow-none hover:bg-[#d47142] hover:text-2xl hover:font-bold duration-300">
                         <i class="fas fa-user-plus mr-2"></i>Record Walk-In Fees
                     </a>
+                    <a href="#" id="openModalBtn"
+                        class="text-center w-full bg-div_color border border-50 rounded-lg font-customFont py-5 shadow-lg shadow-black hover:shadow-none hover:bg-[#d47142] hover:text-2xl hover:font-bold duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>Record On-Site Trainer Payments
+                    </a>
                 </div>
             </div>
         </div><br><br>
@@ -429,6 +433,75 @@
                             Assign
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <div id="paymentModal"
+                class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-700">Record Payment</h2>
+                        <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <form id="paymentForm">
+                        <!-- Search for Client -->
+                        <div class="mb-4 relative">
+                            <label for="gymSelect2" class="block text-gray-700">Select Gym</label>
+                            <select id="gymSelect2" class="w-full border border-gray-300 rounded-lg p-2" required>
+                                <option value="">-- Choose a Gym --</option>
+                                <!-- Gym options will be populated here dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-4 relative">
+                            <label for="clientSearch" class="block text-gray-600 font-medium mb-1">Search for a
+                                Client</label>
+                            <div class="flex items-center">
+                                <input type="text" id="clientSearch" placeholder="Enter client username"
+                                    class="border border-gray-300 rounded-l-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    oninput="fetchClientSuggestions(this.value)">
+                            </div>
+                            <!-- Dropdown for suggestions -->
+                            <div id="clientDropdown"
+                                class="absolute left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-48 overflow-y-auto hidden z-10">
+                                <!-- Dynamic options will be appended here -->
+                            </div>
+                        </div>
+
+
+
+                        <!-- Search for Trainer -->
+                        <div class="mb-4">
+                            <label for="trainerDropdown" class="block text-gray-600 font-medium mb-1">Select a
+                                Trainer</label>
+                            <div class="relative">
+                                <select id="trainerDropdown"
+                                    class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    <option value="">Loading trainers...</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <!-- Amount Paid -->
+                        <div class="mb-4">
+                            <label for="amountPaid" class="block text-gray-600 font-medium mb-1">Amount Paid</label>
+                            <input type="number" id="amountPaid" placeholder="Enter amount"
+                                class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                                Save Payment
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -644,6 +717,31 @@
 
                 // Populate the dropdown with gym options
                 gyms.forEach(gym => {
+                    console.log(gym.gym_name)
+                    const option = document.createElement('option');
+                    option.value = gym.gym_id;
+                    option.textContent = gym.gym_name;
+                    gymSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching gyms:', error);
+                alert('Could not load gyms. Please try again laterrr.');
+            }
+        }
+        async function loadGyms2() {
+            try {
+                // Replace '14' with the specific admin_id if dynamic; otherwise, use variable
+                const response = await axios.get(`http://localhost:3000/getAdminGyms?id=${id}`);
+                const gyms = response.data;
+
+                // Get the dropdown element
+                const gymSelect = document.getElementById('gymSelect2');
+                // Clear any existing options (except the placeholder)
+                gymSelect.innerHTML = '<option value="">-- Choose a Gym --</option>';
+
+                // Populate the dropdown with gym options
+                gyms.forEach(gym => {
+                    console.log(gym.gym_name)
                     const option = document.createElement('option');
                     option.value = gym.gym_id;
                     option.textContent = gym.gym_name;
@@ -710,6 +808,8 @@
                 setCookie('amount', data.amount, 1); // Expires in 1 day
                 setCookie('days_remaining', data.days_remaining, 1); // Expires in 1 day
                 setCookie('eligibility', data.eligibility_status, 1); // Expires in 1 day
+                loadGyms()
+                loadGyms2()
                 return data.admin_id; // Return the admin_id
             } catch (error) {
                 console.error('Error fetching gym admin info:', error.message);
@@ -735,5 +835,141 @@
             url.searchParams.delete('status'); // Remove the 'status' parameter
             window.history.replaceState({}, document.title, url); // Update the URL without reloading
         }
+
+        // Modal toggle logic
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const paymentModal = document.getElementById('paymentModal');
+
+        openModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            paymentModal.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            paymentModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside of it
+        paymentModal.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                paymentModal.classList.add('hidden');
+            }
+        });
+
     }
+    async function fetchClientSuggestions() {
+        const clientDropdown = document.getElementById('clientDropdown');
+        const clientSearchInputVal = document.getElementById('clientSearch').value;
+
+        // If input is empty, hide the dropdown and clear its content
+        if (clientSearchInputVal.trim() === '') {
+            clientDropdown.classList.add('hidden');
+            clientDropdown.innerHTML = '';
+            return;
+        }
+
+        try {
+            // Fetch data from the API using the input directly in the query string
+            const response = await axios.get(`http://localhost:3000/getSearchFilter?member_id=${clientSearchInputVal}`);
+            const data = response.data[0];
+
+            // Clear previous dropdown content
+            clientDropdown.innerHTML = '';
+            clientDropdown.classList.remove('hidden'); // Ensure dropdown is visible
+
+            // Check if there are results
+            if (data.length === 0) {
+                const noResultsItem = document.createElement('li');
+                noResultsItem.textContent = 'No results found';
+                noResultsItem.className = 'px-4 py-2 text-gray-500';
+                clientDropdown.appendChild(noResultsItem);
+            } else {
+                // Populate dropdown with the returned data
+                data.forEach((item) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${item.firstname} ${item.lastname}`; // Set text as name
+                    listItem.dataset.memberId = item.member_id; // Store member_id in a data attribute
+                    listItem.className = 'px-4 py-2 hover:bg-gray-200 cursor-pointer';
+
+                    // Handle item selection
+                    listItem.onclick = () => {
+                        document.getElementById('clientSearch').value = `${item.firstname} ${item.lastname}`;
+                        console.log('Selected Member ID:', item.member_id); // Log the member_id
+                        document.getElementById('clientSearch').dataset.memberId = item.member_id; // Store member_id in dataset
+                        alert(document.getElementById('clientSearch').dataset)
+                        clientDropdown.classList.add('hidden'); // Hide dropdown after selection
+                        clientDropdown.innerHTML = ''; // Clear dropdown
+                    };
+
+                    clientDropdown.appendChild(listItem);
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+
+            // Handle fetch error
+            clientDropdown.innerHTML = '<li class="px-4 py-2 text-red-500">Error loading results</li>';
+            clientDropdown.classList.remove('hidden');
+        }
+    }
+
+
+    // Example function to handle item selection
+    function selectMember(item) {
+        document.getElementById('clientSearch').value = `${item.firstname} ${item.lastname}`; // Display name
+        const clientDropdown = document.getElementById('clientDropdown');
+        clientDropdown.classList.add('hidden'); // Hide dropdown after selection
+        clientDropdown.innerHTML = ''; // Clear dropdown
+    }
+
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+        const clientSearchInput = document.getElementById('clientSearch');
+        const clientDropdown = document.getElementById('clientDropdown');
+
+        if (!clientSearchInput.contains(event.target) && !clientDropdown.contains(event.target)) {
+            clientDropdown.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting
+
+        // Get the values of the form fields
+        const selectedGym = document.getElementById('gymSelect2').value;
+        const clientSearch = document.getElementById('clientSearch').value;
+        const memberId = document.getElementById('clientSearch').dataset.memberId; // Get stored member_id
+        const selectedTrainer = document.getElementById('trainerDropdown').value;
+        const amountPaid = document.getElementById('amountPaid').value;
+
+        // Log the data
+        console.log('Selected Gym:', selectedGym);
+        console.log('Client Name:', clientSearch);
+        console.log('Selected Member ID:', memberId); // Log member_id
+        console.log('Selected Trainer:', selectedTrainer);
+        console.log('Amount Paid:', amountPaid);
+
+        const paymentDetails = {
+            member_id: memberId,
+            gym_id: selectedGym, // ID from the radio button value
+            trainer_id: selectedTrainer,
+            payment_method: "Cash",
+            amount: amountPaid
+        };
+        console.log(paymentDetails)
+        // Call your backend to get the PayPal approval URL using axios
+        axios.post('http://localhost:3000/insertclientToGymAdminPaymentCash', paymentDetails)
+            .then(response => {
+                alert("Payment Recorded Successfully!")
+                window.location.reload()
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+
+
 </script>

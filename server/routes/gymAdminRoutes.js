@@ -16,6 +16,7 @@ router.get("/getPaymentsLog", gymAdmin.getPaymentsLog);
 router.get("/getTrainersMembers", gymAdmin.getTrainersMembers); 
 router.post("/insertTrainerImage", gymAdmin.AddTrainerProfile); 
 router.post("/insertPlan", gymAdmin.insertPlan); 
+router.post("/insertclientToGymAdminPaymentCash", gymAdmin.insertclientToGymAdminPayment); 
 router.post("/insertTrainerClient", gymAdmin.insertTrainerClient); 
 router.post("/insertMemberRegistration", gymAdmin.insertMemberRegistration); 
 

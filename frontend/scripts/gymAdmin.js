@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </button>
                     <button
                         class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2"
-                        onclick="openModal(${trainer.trainer_id})">
+                        onclick="opensModal(${trainer.trainer_id})">
                         <i class="fas fa-user-plus"></i> Assign Client
                     </button>
                     <button 
@@ -208,12 +208,49 @@ document.addEventListener('DOMContentLoaded', async () => {
         await fetchAndPopulatePaymentLogsTable(initialGymId)
         await fetchAndPopulateTrainerSales(initialGymId);
         await fetchAndPopulateTrainers(initialGymId)
+        await loadGymTrainers(initialGymId)
       }
     } catch (error) {
       console.error('Error fetching gyms:', error);
       alert('Could not load gyms. Please try again later.');
     }
   }
+  async function loadGymTrainers(id) {
+    try {
+      const trainerDropdown = document.getElementById('trainerDropdown');
+
+      // Fetch trainer data using Axios
+      const response = await axios.get(`http://localhost:3000/getTrainersd`, {
+        params: {
+          gym_id: id
+        }
+      });
+
+      console.log("Response:", response);
+
+      if (response.status !== 200) {
+        throw new Error(`Failed to fetch trainers: ${response.statusText}`);
+      }
+
+      const trainers = response.data;
+
+      // Clear the initial placeholder option
+      trainerDropdown.innerHTML = '<option value="">Select a Trainer</option>';
+
+      // Populate dropdown with trainer data
+      trainers.forEach(trainer => {
+        const option = document.createElement('option');
+        option.value = trainer.trainer_id; // Use trainer_id as the value
+        option.textContent = `${trainer.trainer_name}`;
+        trainerDropdown.appendChild(option);
+      });
+    } catch (error) {
+      console.error('Error fetching trainers:', error);
+      const trainerDropdown = document.getElementById('trainerDropdown');
+      trainerDropdown.innerHTML = '<option value="">Failed to load trainers</option>';
+    }
+  }
+
 
 
   // Add event listener to update the charts when a gym is selected from the dropdown
@@ -226,6 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchAndPopulatePaymentLogsTable(gymId)
     await fetchAndPopulateTrainerSales(gymId)
     await fetchAndPopulateTrainers(gymId)
+    await loadGymTrainers(gymId)
   });
 
   async function fetchSalesData(gymId) {
@@ -406,6 +444,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+
+
+
 });
 let trainerId;
 function getCookie(name) {
@@ -419,7 +460,7 @@ function getCookie(name) {
   return null;
 }
 
-function openModal(trainer_id) {
+function opensModal(trainer_id) {
   trainerId = trainer_id
   document.getElementById('assignModal').classList.remove('hidden');
 }
@@ -473,7 +514,6 @@ async function fetchFilteredResults() {
     dropdown.innerHTML = '';
     return;
   }
-
   try {
     // Fetch data from the API
     const response = await fetch(`http://localhost:3000/getSearchFilter?member_id=${input}`);

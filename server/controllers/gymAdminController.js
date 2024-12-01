@@ -1,6 +1,6 @@
 const { GetGymAdminInfo, getSales, getTrainerSales } = require('../models/database');
 const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers, getAdminTrainers,
-     getTrainerssz, searchFilter,insertTrainerClient, getPaymentsLog, getTrainersMembers } = require('../models/gym_admin');
+     getTrainerssz, searchFilter,insertTrainerClient, getPaymentsLog, getTrainersMembers, insertclientToGymAdminPayment } = require('../models/gym_admin');
 
 module.exports = {
     GetGymAdminInfo: async (req, res) => {
@@ -157,6 +157,18 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error adding client:", error);
+            res.status(500).send("Internal Server Error", error.message);
+        }
+    },
+    insertclientToGymAdminPayment: async (req, res) => {
+        try {
+            const { member_id, gym_id, trainer_id, payment_method, amount } = req.body;
+            console.log("received insert client data:")
+            console.log(req.body)
+            const data = await insertclientToGymAdminPayment(member_id, gym_id, trainer_id, payment_method, amount);
+            res.json(data);
+        } catch (error) {
+            console.error("Error adding client cash payment:", error);
             res.status(500).send("Internal Server Error", error.message);
         }
     },

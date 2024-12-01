@@ -66,7 +66,7 @@ const getTrainerssz = async (gym_id) => {
 async function searchFilter(input) {
     const [result] = await pool.query(`
         SELECT * FROM members
-        WHERE member_id LIKE ?;
+        WHERE firstname LIKE ?;
     `, [`${input}%`]);
 
     return [result]
@@ -177,11 +177,11 @@ async function insertPlan(planName, price, intervalUnit, Description) {
 
     return result
 }
-async function insertTrainerClient(gym_id,trainer_id,member_id,plan_type) {
+async function insertTrainerClient(gym_id, trainer_id, member_id, plan_type) {
     const result = await pool.query(`
     INSERT INTO trainer_clients (gym_id,trainer_id,member_id,plan_type) 
     VALUES (?,?,?,?)
-    `, [gym_id,trainer_id,member_id,plan_type])
+    `, [gym_id, trainer_id, member_id, plan_type])
 
     return result
 }
@@ -194,8 +194,32 @@ async function insertMemberRegistration(gym_id, name, membership_type, amount_pa
     return result
 }
 
+async function insertclientToGymAdminPayment(member_id, gym_id, trainer_id, payment_method, amount) {
+    try {
+
+        let query;
+        let values;
+
+        query = `
+                INSERT INTO member_payments (member_id, gym_id, trainer_id, payment_method, amount) 
+                VALUES (?,?,?,?,?)
+            `;
+        values = [member_id, gym_id, trainer_id, payment_method, amount];
+
+
+        const [result] = await pool.query(query, values);
+
+        console.log("DB Query Result:", result); // Log result here
+        return result;
+    } catch (error) {
+        console.error("Error managing client payment:", error);
+        throw error; // Re-throw the error so it can be handled by the calling code
+    }
+}
+
 
 module.exports = {
+    insertclientToGymAdminPayment,
     getTrainersMembers,
     insertTrainerClient,
     searchFilter,
