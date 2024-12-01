@@ -29,7 +29,7 @@ const getAdminTrainers = async (gym_id) => {
     const [rows] = await pool.query(
         `SELECT 
             t.gym_id, 
-            p.trainer_id AS trainer_id, 
+            m.trainer_id AS trainer_id, 
             CONCAT(t.firstname, ' ', t.lastname) AS Name, 
             MONTH(m.payment_date) AS month, 
             YEAR(m.payment_date) AS year, 
@@ -39,13 +39,9 @@ const getAdminTrainers = async (gym_id) => {
         FROM 
             member_payments m
         LEFT JOIN 
-            contracts_table c ON c.contract_id = m.contract_id
-        LEFT JOIN 
-            proposals p ON p.proposal_id = c.proposal_id
-        LEFT JOIN 
-            trainers t ON t.trainer_id = p.trainer_id
+            trainers t ON t.trainer_id = m.trainer_id
         WHERE 
-            t.gym_id = ?
+            t.gym_id = 248
             AND MONTH(m.payment_date) = MONTH(CURRENT_DATE)
             AND YEAR(m.payment_date) = YEAR(CURRENT_DATE)
         GROUP BY 

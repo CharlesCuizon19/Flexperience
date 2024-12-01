@@ -397,15 +397,23 @@
                         updateGauge(proteinGauge, meal.protein, 'Protein');
                         updateGauge(fatsGauge, meal.fats, 'Fats');
 
-                        // Populate ingredients list
                         const ingredientsContainer = document.getElementById("ingredientsContainer");
                         ingredientsContainer.innerHTML = ""; // Clear previous ingredients
-                        meal.ingredients.forEach(ingredient => {
+
+                        // Log ingredients
+                        console.log(meal.ingredients);
+
+                        // Split ingredients into an array if it's a newline-separated string
+                        const ingredients = meal.ingredients[0].split('\n');
+
+                        // Loop through each ingredient and create a list item
+                        ingredients.forEach(ingredient => {
                             const ingredientItem = document.createElement("li");
                             ingredientItem.textContent = ingredient;
                             ingredientItem.classList.add("text-gray-800", "bg-gray-100", "p-2", "rounded-md", "mb-1"); // Add styling
                             ingredientsContainer.appendChild(ingredientItem);
                         });
+
 
                         // Populate steps list
                         const stepsContainer = document.getElementById("stepsContainer");
