@@ -149,6 +149,20 @@ const getPaymentsLog = async (gym_id) => {
 
     return rows;
 };
+const getTrainersMembers = async (trainer_id) => {
+    const [rows] = await pool.query(
+        `SELECT CONCAT(m.firstname, ' ', m.lastname) AS member_name, 
+            tc.plan_type,
+            DATE_FORMAT(tc.start_date, '%M %d, %Y') AS start_date,
+            DATE_FORMAT(DATE_ADD(tc.start_date, INTERVAL 1 MONTH), '%M %d, %Y') AS end_date
+        FROM trainer_clients tc
+        JOIN members m ON m.member_id = tc.member_id
+        WHERE tc.trainer_id = ?;
+        `,
+        [trainer_id]);
+
+    return rows;
+};
 
 
 async function AddTrainerProfile(trainer_id, filename) {
@@ -186,6 +200,7 @@ async function insertMemberRegistration(gym_id, name, membership_type, amount_pa
 
 
 module.exports = {
+    getTrainersMembers,
     insertTrainerClient,
     searchFilter,
     getTrainerssz,

@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Populate the table
       members.forEach(member => {
         const transferButton = member.payment_status === "Awaiting Transfer"
-        ? `<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="handleTransfer('${member.payment_id}', '${member.amount}')">Transfer Money</button>`
-        : "Transferred";
+          ? `<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="handleTransfer('${member.payment_id}', '${member.amount}')">Transfer Money</button>`
+          : "Transferred";
 
         const row = `
           <tr class="text-white">
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="px-6 py-3 border-b border-gray-800 flex gap-2">
                     <button 
                         class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded flex items-center gap-2" 
-                        onclick="alert('Viewing clients for Trainer ID: ${trainer.trainer_id}')">
+                        onclick="openModal(${trainer.trainer_id})">
                         <i class="fas fa-users"></i> View Clients
                     </button>
                     <button
@@ -525,5 +525,49 @@ async function handleTransfer(paymentId, price) {
 
   const result = response.data;
   window.location.href = result;
+}
+
+// Function to open the modal and fetch data
+async function openModal(trainerId) {
+  // Show the modal
+  const modal = document.getElementById('clientModal');
+  modal.classList.remove('hidden');
+
+  // Fetch data from the endpoint
+  const endpoint = `http://localhost:3000/getTrainersMembers?trainer_id=${trainerId}`;
+  const modalContent = document.getElementById('modalContent');
+  modalContent.innerHTML = `<p class="text-gray-500">Loading...</p>`;
+
+  try {
+    const response = await fetch(endpoint);
+    const data = await response.json();
+
+    if (data.length > 0) {
+      // Populate modal content
+      modalContent.innerHTML = `
+                  <div class="grid grid-cols-1 gap-4">
+                      ${data.map(member => `
+                          <div class="p-4 border rounded-lg shadow-sm bg-gray-100">
+                              <h3 class="font-semibold">${member.member_name}</h3>
+                              <p class="text-sm text-gray-600">Plan Type: ${member.plan_type}</p>
+                              <p class="text-sm text-gray-600">Start Date: ${member.start_date}</p>
+                              <p class="text-sm text-gray-600">End Date: ${member.end_date}</p>
+                          </div>
+                      `).join('')}
+                  </div>
+              `;
+    } else {
+      modalContent.innerHTML = `<p class="text-gray-500">No clients found for this trainer.</p>`;
+    }
+  } catch (error) {
+    modalContent.innerHTML = `<p class="text-red-500">Error fetching data. Please try again later.</p>`;
+    console.error(error);
+  }
+}
+
+// Function to close the modal
+function closeModal() {
+  const modal = document.getElementById('clientModal');
+  modal.classList.add('hidden');
 }
 
