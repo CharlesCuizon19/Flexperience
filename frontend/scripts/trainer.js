@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     axios.get(`http://localhost:3000/getTrainerSales?trainer_id=${id}`)
         .then(response => {
             const salesData = response.data;
-
+            console.log(salesData)
             // Initialize arrays for monthly sales and registered gyms with 12 slots (one for each month)
             const monthlySales = Array(12).fill(0);  // For sales amounts
             const membersRegistered = Array(12).fill(0);  // For gym registrations

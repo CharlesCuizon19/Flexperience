@@ -641,7 +641,14 @@
 
 
         fetchGymAdminInfo()
-
+        setTimeout(() => {
+            const days = getCookie('days_remaining');
+            console.log("days")
+            console.log(days)
+            if (days < 1) {
+                window.location.href = "membershipDashboard.html"
+            }
+        }, 2000);
         // JavaScript to open and close the modal
         const registerMemberLink = document.getElementById('registerMemberLink');
         const registerMemberModal = document.getElementById('registerMemberModal');
