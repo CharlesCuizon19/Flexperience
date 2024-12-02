@@ -614,7 +614,7 @@ async function getTrainerSales(trainer_id) {
     const [result] = await pool.query(`
         SELECT m.trainer_id AS trainer_id, MONTH(m.payment_date) AS month, YEAR(m.payment_date) AS year, SUM(m.amount) AS total_amount, COUNT(m.payment_id) AS member_count
         FROM member_payments m
-        WHERE m.trainer_id = 57 AND m.payment_status = 'Transferred'
+        WHERE m.trainer_id = ? AND m.payment_status = 'Transferred'
         GROUP BY YEAR(m.payment_date), MONTH(m.payment_date)
         ORDER BY year, month;
     `,[trainer_id]);

@@ -41,7 +41,7 @@ const getAdminTrainers = async (gym_id) => {
         LEFT JOIN 
             trainers t ON t.trainer_id = m.trainer_id
         WHERE 
-            t.gym_id = 248
+            t.gym_id = ?
             AND MONTH(m.payment_date) = MONTH(CURRENT_DATE)
             AND YEAR(m.payment_date) = YEAR(CURRENT_DATE)
         GROUP BY 
