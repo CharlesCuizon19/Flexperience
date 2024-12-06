@@ -537,7 +537,12 @@ async function fetchFilteredResults() {
         listItem.textContent = `${item.firstname} ${item.lastname} (ID: ${item.member_id})`;
         listItem.className =
           'px-4 py-2 hover:bg-gray-200 cursor-pointer';
-        listItem.onclick = () => selectMember(item);
+        listItem.onclick = (event) => {
+          event.stopPropagation();
+          document.getElementById('searchId').value = ` ${item.member_id}`;
+          document.getElementById('dropdownList').classList.add('hidden');
+        };
+
 
         dropdown.appendChild(listItem);
       });
@@ -548,9 +553,9 @@ async function fetchFilteredResults() {
 }
 
 function selectMember(member) {
-  // Populate the input field with the selected member
+  console.log('Inside selectMember:', member); // Debugging
+  alert('hi');
   document.getElementById('searchId').value = ` ${member.member_id}`;
-  // Hide the dropdown
   document.getElementById('dropdownList').classList.add('hidden');
 }
 

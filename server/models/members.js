@@ -22,6 +22,28 @@ const getMealPlanId = async (member_id) => {
     );
     return rows.length > 0 ? rows : null;
 };
+const getTrainerInformation = async (member_id) => {
+    const [rows] = await pool.query(
+        `SELECT 
+            CONCAT(t.lastname, ', ', t.firstname) AS trainer_name, 
+            t.trainer_id,
+            t.rates,
+            ti.filename, 
+            g.gym_id, 
+            g.gym_name, 
+            tc.start_date, 
+            DATE_ADD(tc.start_date, INTERVAL 1 MONTH) AS end_date
+        FROM trainer_clients tc
+        JOIN members m ON tc.member_id = m.member_id
+        JOIN trainers t ON t.trainer_id = tc.trainer_id
+        JOIN trainer_images ti ON t.trainer_id = ti.trainer_id
+        JOIN gyms g ON g.gym_id = tc.gym_id
+        WHERE tc.member_id = ?
+`,
+        [member_id]
+    );
+    return rows.length > 0 ? rows : null;
+};
 const getProposals = async (member_id, proposal_id) => {
     const [rows] = await pool.query(
         'SELECT * FROM proposals WHERE member_id = ? AND proposal_id = ?',
@@ -376,5 +398,6 @@ module.exports = {
     getMealoftheDay,
     getNotifications,
     getProposals,
-    insertContract
+    insertContract,
+    getTrainerInformation
 };

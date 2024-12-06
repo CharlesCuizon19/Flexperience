@@ -577,8 +577,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="amountPaid" class="block text-gray-700">Amount Paid</label>
-                        <input type="number" id="amountPaid" class="w-full border border-gray-300 rounded-lg p-2"
+                        <label for="amount_paid" class="block text-gray-700">Amount Paid</label>
+                        <input type="number" id="amount_paid" class="w-full border border-gray-300 rounded-lg p-2"
                             placeholder="Enter amount" min="5" step="5" required>
                     </div>
 
@@ -681,16 +681,16 @@
             // Get input values
             const name = document.getElementById('memberName').value;
             const membershipType = document.getElementById('membershipType').value;
-            const amountPaid = document.getElementById('amountPaid').value;
+            const amountPaid = document.getElementById('amount_paid').value;
             const gym_id = document.getElementById('gymSelect').value;
-
             const data = {
                 gym_id: gym_id,
                 name: name,
                 membership_type: membershipType,
                 amount_paid: amountPaid,
             };
-
+            console.log("dataaa:")
+            console.log(data)
             try {
 
                 const response = await axios.post('http://localhost:3000/insertMemberRegistration', data);
