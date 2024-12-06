@@ -45,9 +45,9 @@ const getAdminTrainers = async (gym_id) => {
             AND MONTH(m.payment_date) = MONTH(CURRENT_DATE)
             AND YEAR(m.payment_date) = YEAR(CURRENT_DATE)
         GROUP BY 
-            YEAR(m.payment_date), MONTH(m.payment_date)
+            m.trainer_id, YEAR(m.payment_date), MONTH(m.payment_date)
         ORDER BY 
-            year, month;
+            m.trainer_id, year, month;
 `, [gym_id]);
 
     return rows;
