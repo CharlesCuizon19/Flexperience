@@ -480,30 +480,56 @@ async function submitModal() {
     return;
   }
 
-  // Prepare the payload for the POST request
-  const payload = {
-    gym_id: gymId,
-    trainer_id: trainerId,
-    member_id: accountId,
-    plan_type: plan
-  };
-
   try {
-    // Make the POST request using Axios
+    // Step 1: Check member availability
+    const availabilityResponse = await axios.get(`http://localhost:3000/checkMemberAvailability?member_id=${accountId}`);
+    const memberData = availabilityResponse.data[0]; // Assuming it returns an array with one object
+
+    if (!memberData || memberData.member_availability === "Not Available") {
+      showToast(`This member is currently not available.`);
+      return;
+    }
+
+    // Step 2: Prepare the payload for the POST request
+    const payload = {
+      gym_id: gymId,
+      trainer_id: trainerId,
+      member_id: accountId,
+      plan_type: plan
+    };
+
+    // Step 3: Make the POST request to assign the client
     const response = await axios.post('http://localhost:3000/insertTrainerClient', payload);
 
     if (response.status === 200) {
-      alert(`Successfully assigned account ID ${accountId} to the ${plan} plan.`);
+      alert(`Client successfully assigned`);
       closeModal(); // Assuming this closes the modal
     } else {
       alert('Failed to assign client. Please try again.');
     }
   } catch (error) {
-    console.error('Error submitting data:', error);
-    alert('An error occurred while assigning the client. Please try again.');
+    console.error('Error:', error);
+    alert('An error occurred. Please try again.');
   }
 }
 
+function showToast(message) {
+  const toast = document.getElementById('error-toast');
+  const errorMessageElement = document.getElementById('error-message-toast');
+
+  // Set the error message
+  errorMessageElement.textContent = message;
+
+  // Show and slide in the toast
+  toast.classList.remove('hidden', 'translate-x-full'); 
+  toast.classList.add('translate-x-0'); 
+
+  // Auto-hide the toast after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('translate-x-full');
+    setTimeout(() => toast.classList.add('hidden'), 300); 
+  }, 4000);
+}
 
 async function fetchFilteredResults() {
   const input = document.getElementById('searchId').value;

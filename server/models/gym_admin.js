@@ -102,6 +102,39 @@ const getSalesById = async (gym_id) => {
 
     return rows;
 };
+const checkAvailability = async (member_id) => {
+    const [rows] = await pool.query(
+        `   SELECT 
+                mw.member_id,
+                DATE_FORMAT(mw.date_started, '%M %e, %Y') AS workout_plan_start_date,
+                CASE 
+                    WHEN DATE_ADD(mw.date_started, INTERVAL 1 MONTH) > NOW() THEN 'On going'
+                    ELSE 'Expired'
+                END AS workout_plan_status,
+                DATE_FORMAT(mp.date_started, '%M %e, %Y') AS meal_plan_start_date,
+                CASE 
+                    WHEN DATE_ADD(mp.date_started, INTERVAL 1 MONTH) > NOW() THEN 'On going'
+                    ELSE 'Expired'
+                END AS meal_plan_status,
+                CASE 
+                    WHEN 
+                        (DATE_ADD(mw.date_started, INTERVAL 1 MONTH) > NOW() OR
+                        DATE_ADD(mp.date_started, INTERVAL 1 MONTH) > NOW()) THEN 'Not Available'
+                    ELSE 'Available'
+                END AS member_availability
+            FROM 
+                member_workout_plan mw
+            LEFT JOIN
+                member_meal_plan mp
+            ON
+                mp.member_id = mw.member_id
+            WHERE 
+                mw.member_id = ?;
+    `,
+        [member_id]);
+
+    return rows;
+};
 const getActiveCustomers = async (gym_id) => {
     const [rows] = await pool.query(
         `SELECT 
@@ -232,5 +265,6 @@ module.exports = {
     getVerifiedAdmins,
     AddTrainerProfile,
     getActiveCustomers,
-    getPaymentsLog
+    getPaymentsLog,
+    checkAvailability
 };

@@ -1,6 +1,6 @@
 const { GetGymAdminInfo, getSales, getTrainerSales } = require('../models/database');
 const { getVerifiedAdmins,AddTrainerProfile,insertPlan, insertMemberRegistration, getAdminGyms, getSalesById, getActiveCustomers, getAdminTrainers,
-     getTrainerssz, searchFilter,insertTrainerClient, getPaymentsLog, getTrainersMembers, insertclientToGymAdminPayment } = require('../models/gym_admin');
+     getTrainerssz, searchFilter,insertTrainerClient, getPaymentsLog, getTrainersMembers, insertclientToGymAdminPayment, checkAvailability } = require('../models/gym_admin');
 
 module.exports = {
     GetGymAdminInfo: async (req, res) => {
@@ -89,6 +89,17 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error fetching trainer sales data:", error.message);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    checkAvailability: async (req, res) => {
+        try {
+            const { member_id } = req.query;
+            console.log("id: " + member_id)
+            const data = await checkAvailability(member_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error fetching member availability", error.message);
             res.status(500).send("Internal Server Error");
         }
     },
