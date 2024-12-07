@@ -648,10 +648,12 @@
             axios.get('http://localhost:3000/getPlan', {
                 params: { member_id: member_id }
             })
-                .then(response => {
-                    if (response.data && response.data.length > 0) { // Check if data exists and has elements
+                .then(response => { 
+                    if (response.data && response.data.length > 0 && response.data[0].computed_status == "Active") { // Check if data exists and has elements
                         planId = response.data[0].plan_id;
                         trainer_id = response.data[0].trainer_id;
+                        console.log("---->")
+                        console.log(response.data[0].computed_status)
 
                         console.log("Workout trainer id:", trainer_id);
                         console.log("Workout plan id:", planId);
@@ -679,7 +681,7 @@
                     });
                 })
                 .then(response => {
-                    if (response.data && response.data.length > 0) { // Check if data exists and has elements
+                    if (response.data && response.data.length > 0 && response.data[0].computed_status == "Active") { // Check if data exists and has elements
                         const mealPlanId = response.data[0].plan_id;
                         trainer_id = response.data[0].trainer_id;
                         console.log("Meal plan found for this member")
@@ -968,7 +970,7 @@
                 mealCard.className = 'bg-div_color rounded-3xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col';
 
                 mealCard.innerHTML = `
-                     <div class='h-40 bg-cover bg-center' style='background-image:url("http://localhost:3000/uploads/${meal.filename}");'></div>
+                     <div class='h-40 bg-cover bg-center' style='background-image:url("https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${meal.filename}");'></div>
                     <div class='flex-1 p-4 sm:p-6 flex flex-col justify-between'>
                         <div>
                             <h3 class='font-bold text-white text-lg mb-2'>${meal.meal_name}</h3>

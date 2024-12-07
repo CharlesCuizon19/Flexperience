@@ -20,6 +20,7 @@ router.post("/insertContracts", memberController.insertContract);
 router.post("/insertActivity", memberController.insertActivity); 
 router.put("/updateExerciseStatus", memberController.updateExerciseStatus); 
 router.put("/updateMealStatus", memberController.updateMealStatus); 
+router.put("/updatePlanStatus", memberController.updatePlanStatus); 
 
 module.exports = router;
 

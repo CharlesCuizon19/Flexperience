@@ -224,9 +224,9 @@ module.exports = {
         }
     },
     assignWorkoutPlan: async (req, res) => {
-        const { trainer_id, member_id, template_id, status } = req.body;
+        const { trainer_id, member_id, template_id } = req.body;
         try {
-            const plan_id = await assignWorkoutPlan(trainer_id, member_id, template_id, status);
+            const plan_id = await assignWorkoutPlan(trainer_id, member_id, template_id);
             res.status(200).json({ message: "Template assigned successfully!", plan_id: plan_id });
 
         } catch (error) {
@@ -246,14 +246,14 @@ module.exports = {
         }
     },
     assignMealPlan: async (req, res) => {
-        const { trainer_id, member_id, meal_template_id, status } = req.body;
+        const { trainer_id, member_id, meal_template_id } = req.body;
         console.log("meal plan controller data: ")
         console.log(trainer_id)
         console.log(member_id)
         console.log(meal_template_id)
         console.log(status)
         try {
-            const plan_id = await assignMealPlan(trainer_id, member_id, meal_template_id, status);
+            const plan_id = await assignMealPlan(trainer_id, member_id, meal_template_id);
             res.status(200).json({ message: "Meal Template assigned successfully!", plan_id: plan_id });
 
         } catch (error) {

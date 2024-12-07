@@ -1,6 +1,6 @@
 const { getWorkoutOftheWeek, GetMemberInfo, retrieveTrainerchatLog} = require('../models/database');
 const { getNotifications,getProposals,insertContract,getWorkoutoftheDay,getPlan, updateExerciseStatus,insertActivity, 
-        getMealPlanId,getMealoftheDay, getWorkoutByDay, retrieveMealOfTheDay, getMealoftheWeek,updateMealStatus, getTrainerInformation } = require('../models/members');
+        getMealPlanId,getMealoftheDay, getWorkoutByDay, retrieveMealOfTheDay, getMealoftheWeek,updateMealStatus, getTrainerInformation,updatePlanStatus } = require('../models/members');
 
 module.exports = {
     GetTodaysMeal: async (req, res) => {
@@ -42,6 +42,16 @@ module.exports = {
             res.json(data);
         } catch (error) {
             console.error("Error fetching meal of the day:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    },
+    updatePlanStatus: async (req, res) => {
+        try {
+            const { plan_id } = req.body;
+            const data = await updatePlanStatus(plan_id);
+            res.json(data);
+        } catch (error) {
+            console.error("Error updating plan status:", error);
             res.status(500).send("Internal Server Error");
         }
     },

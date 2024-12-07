@@ -10,14 +10,48 @@ const getNotifications = async (member_id) => {
 };
 const getPlan = async (member_id) => {
     const [rows] = await pool.query(
-        'SELECT plan_id, trainer_id FROM member_workout_plan WHERE member_id = ?',
+        `SELECT *
+            FROM (
+                SELECT 
+                    plan_id, 
+                    trainer_id,
+                    DATE(date_started) AS date_started,
+                    DATE_ADD(date_started, INTERVAL 1 MONTH) AS end_date,
+                    CASE 
+                        WHEN NOW() > DATE_ADD(date_started, INTERVAL 1 MONTH) THEN 'Expired'
+                        ELSE 'Active'
+                    END AS computed_status
+                FROM 
+                    member_workout_plan 
+                WHERE 
+                    member_id = ?
+            ) AS subquery
+            WHERE computed_status = 'Active'`,
         [member_id]
+    );
+    return rows.length > 0 ? rows : null;
+};
+const updatePlanStatus = async (plan_id) => {
+    const [rows] = await pool.query(
+        `UPDATE member_workout_plan
+         SET status = 'Expired'
+         WHERE plan_id = ?`,
+        [plan_id]
     );
     return rows.length > 0 ? rows : null;
 };
 const getMealPlanId = async (member_id) => {
     const [rows] = await pool.query(
-        'SELECT plan_id, trainer_id FROM member_meal_plan WHERE member_id = ?',
+        `SELECT
+            plan_id,
+            trainer_id,
+            DATE(date_started) AS date_started,
+            DATE_ADD(date_started, INTERVAL 1 MONTH) AS end_date,
+        CASE 
+            WHEN NOW() > DATE_ADD(date_started, INTERVAL 1 MONTH) THEN 'Expired'
+            ELSE 'Active'
+            END AS computed_status
+        FROM member_meal_plan WHERE member_id = ?`,
         [member_id]
     );
     return rows.length > 0 ? rows : null;
@@ -386,6 +420,7 @@ const updateMealStatus = async (status, status_id) => {
 
 
 module.exports = {
+    updatePlanStatus,
     updateMealStatus,
     getMealoftheWeek,
     retrieveMealOfTheDay,
