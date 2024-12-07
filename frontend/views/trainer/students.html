@@ -622,8 +622,7 @@
         axios.post('http://localhost:3000/assignWorkoutPlan', {
             trainer_id: trainerId,
             member_id: memberId,
-            template_id: workoutTemplateId,
-            status: "On going"
+            template_id: workoutTemplateId
         })
             .then(function (response) {
                 showToast("success", "The workout plan has been assigned successfully");

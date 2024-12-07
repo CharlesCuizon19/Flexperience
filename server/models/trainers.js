@@ -204,7 +204,7 @@ const getStudentActivity = async (trainer_id) => {
 const assignWorkoutPlan = async (trainer_id, member_id, template_id) => {
     const [rows] = await pool.query(
         'INSERT INTO member_workout_plan (trainer_id, member_id, template_id) VALUES(?,?,?)',
-        [trainer_id, member_id, template_id, status]
+        [trainer_id, member_id, template_id]
     );
     // Return only the insertId
     return rows.insertId;
@@ -223,7 +223,7 @@ const insertStudentWorkouts = async (plan_id, template_id) => {
 const assignMealPlan = async (trainer_id, member_id, meal_template_id) => {
     const [rows] = await pool.query(
         'INSERT INTO member_meal_plan (trainer_id, member_id, meal_template_id) VALUES(?,?,?)',
-        [trainer_id, member_id, meal_template_id, status]
+        [trainer_id, member_id, meal_template_id]
     );
     // Return only the insertId
     return rows.insertId;
