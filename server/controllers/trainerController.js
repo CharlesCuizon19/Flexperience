@@ -247,7 +247,7 @@ module.exports = {
     },
     assignMealPlan: async (req, res) => {
         const { trainer_id, member_id, meal_template_id } = req.body;
-        console.log("meal plan controller data: ")
+        console.log("meal plan controller data:: ")
         console.log(trainer_id)
         console.log(member_id)
         console.log(meal_template_id)
