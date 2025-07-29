@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexperience</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+</head>
+<style>
+    html {
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+</style>
+
+<body class="bg-eerieBlack font-[Poppins]">
+    <header class="fixed w-full z-10">
+        <nav class="bg-customGray shadow-md py-2.5">
+            <div class="flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto">
+                <a href="../Landing Page/index(new).html" class="flex items-center">
+                    <img src="../../img/LOGOTESTING.svg" class="h-6 mr-3 sm:h-9" alt="Flexperiece Logo" />
+                    <span
+                        class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Flexperience</span>
+                </a>
+                <div class="flex items-center gap-2 lg:order-2">
+                    <a href="../features/login.html" target="_blank"
+                        class="text-white font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:hover:text-customOrange focus:outline-none">Login</a>
+                    <a href="signup.html" target="_blank"
+                        class="text-white font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 sm:mr-2 lg:mr-0 dark:bg-customOrange dark:hover:bg-orange-700 focus:outline-none">Register</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <br><br>
+    <main class="flex justify-center items-center h-screen">
+        <div class="flex flex-row w-full mx-40 pt-20 pb-10">
+            <div
+                class=" bg-customBodyColor p-8 rounded-tr-none rounded-br-none rounded-bl-lg rounded-tl-lg rounded shadow-lg w-full lg:flex md:hidden sm:hidden">
+                <img class=" h-full w-full" src="../img/Logo (1).png" alt="">
+            </div>
+            <form
+                class=" bg-customBodyColor p-8 rounded-tl-none rounded-bl-none rounded-br-lg rounded-tr-lg shadow-lg w-full">
+                <h2 class="text-2xl text-white font-bold text-center mb-6">Member signup</h2>
+                <div class="mb-4">
+                    <input type="text" id="firstName" placeholder="First name"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <input type="text" id="lastName" placeholder="Last name"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <input type="email" id="email" placeholder="Email" class="w-full p-3 border border-gray-300 rounded"
+                        required>
+                </div>
+
+                <div class="mb-4">
+                    <input type="number" id="weight" placeholder="Weight"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+
+                <div class="mb-4">
+                    <input type="text" id="bodytype" placeholder="Bodytype"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+
+                <div class="mb-4">
+                    <input type="text" id="username" placeholder="Username"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4">
+                    <input type="password" id="password" placeholder="Password (8 or more characters)"
+                        class="w-full p-3 border border-gray-300 rounded" required>
+                </div>
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" id="tips" class="mr-2">
+                    <label for="tips" class="text-white">Send me emails with the further updates of this website</label>
+                </div>
+
+                <button id="signup"
+                    class="transition-transform transform bg-50 text-white py-2 px-4 rounded w-full hover:bg-orange-600 hover:scale-105">
+                    Sign Up
+                </button>
+
+            </form>
+
+        </div>
+        <!-- Success Modal -->
+        <div id="successModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-lg text-center w-11/12 max-w-md">
+                <span class="text-xl font-semibold text-white">Registration Successful!</span>
+                <p class="text-gray-400 mt-2">You are now registered!.</p>
+                <button class="bg-customOrange mt-4 py-2 px-4 rounded hover:bg-orange-800 text-white"
+                    onclick="closeModal()" id="Continue">OK</button>
+            </div>
+        </div>
+        <!-- Modal for Verification Email -->
+        <div id="emailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-md text-center">
+                <h2 class="text-lg font-semibold">Registration Successful</h2>
+                <p>Please check your email to verify your account.</p>
+                <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded">OK</button>
+            </div>
+        </div>
+
+
+    </main>
+
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        AOS.init({
+            duration: 2000,
+        });
+
+        document.getElementById("signup").addEventListener("click", async function (event) {
+            event.preventDefault();
+
+            // Get all input values
+            const firstName = document.getElementById("firstName").value.trim();
+            const lastName = document.getElementById("lastName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const weight = document.getElementById("weight").value.trim();
+            const bodytype = document.getElementById("bodytype").value.trim();
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            // Check for empty fields
+            if (!firstName || !lastName || !email || !weight || !bodytype || !username || !password) {
+                alert("Please fill out all required fields.");
+                return;
+            }
+
+            // Additional validation (e.g., password length)
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters.");
+                return;
+            }
+
+            // Validate email format
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            try {
+                // Call AddToAccounts to register the user in the accounts table
+                await AddToAccounts(username, password, email);
+
+                // Now call RegisterMember to register additional member details
+                await RegisterMember(firstName, lastName, weight, bodytype, email);
+
+                // Show the email verification modal after successful registration
+                showEmailModal();
+            } catch (error) {
+                console.error("Error submitting form:", error);
+            }
+        });
+
+        async function AddToAccounts(Username, Password, Email) {
+            try {
+                const formData = {
+                    username: Username,
+                    password: Password,
+                    usertype: "Member",
+                    email: Email // Add email to the request body
+                };
+                const response = await axios.post('http://localhost:3000/auth/Register', formData);
+            } catch (error) {
+                console.error('Error submitting registration:', error);
+            }
+        }
+
+        async function RegisterMember(firstname, lastname, weight, bodytype, email) {
+            try {
+                const formData = {
+                    firstname: firstname,
+                    lastname: lastname,
+                    weight: weight,
+                    bodytype: bodytype,
+                    email: email // Add email to the request body
+                };
+                const response = await axios.post('http://localhost:3000/auth/RegisterMember', formData);
+                // Assuming the server handles sending the verification email after this point
+            } catch (error) {
+                console.error('Error submitting registration:', error.message);
+            }
+        }
+
+        function showModal() {
+            const modal = document.getElementById("successModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function showEmailModal() {
+            const modal = document.getElementById("emailModal");
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        }
+
+        function closeEmailModal() {
+            const modal = document.getElementById("emailModal");
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+
+            // Reset form inputs
+            resetForm();
+        }
+
+        function resetForm() {
+            // Clear input fields after successful registration and modal closure
+            document.getElementById("firstName").value = "";
+            document.getElementById("lastName").value = "";
+            document.getElementById("weight").value = "";
+            document.getElementById("username").value = "";
+            document.getElementById("password").value = "";
+            document.getElementById("bodytype").value = "";
+            document.getElementById("email").value = ""; // Clear email field if needed
+        }
+
+        function closeModal() {
+            // Get input values (if needed for other purposes)
+            const firstName = document.getElementById("firstName");
+            const lastName = document.getElementById("lastName");
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            const bodytype = document.getElementById("bodytype");
+
+            // Get the modal element
+            const modal = document.getElementById("successModal");
+
+            // Hide the modal
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+
+            // Clear the input fields
+            firstName.value = "";
+            lastName.value = "";
+            weight.value = "";
+            username.value = "";
+            password.value = "";
+            bodytype.value = "";
+        }
+
+    </script>
+</body>
+
+</html>

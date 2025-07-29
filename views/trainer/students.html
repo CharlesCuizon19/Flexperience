@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Portal</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/frontend/scripts/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #workoutModal {
+            z-index: 9999;
+        }
+
+        #success-toast {
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen font-[Poppins] bg-customGray">
+
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:bg-gradient-to-br from-white to-customOrange bg-clip-text text-transparent">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="mr-6 mt-1">
+                            <button>
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Earnings</a>
+                                </li>
+                                <li>
+                                    <a href="index.html" onclick="removeCookie('accessToken');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="index.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a onclick="redirectFunction(1)"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="barbell-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Workout Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a onclick="redirectFunction(2)"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="egg-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Meal Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 bg-customGray text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="people-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Students</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="chat.html"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="chatbubbles-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Chat</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="settings-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!--Dashboard Content-->
+    <div class="sm:ml-64 text-white">
+        <div class="m-4 p-6 border-dashed mt-20 ">
+            <h1 class="font-bold text-2xl">
+                Student Lists
+            </h1>
+        </div>
+
+        <div class="m-4 p-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="inline-block text-left">
+                        <div class="flex gap-3 items-center">
+                            <h3>Show</h3>
+                            <select
+                                class=" w-auto px-2 py-0 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                name="numbers" id="number-dropdown">
+                                <!-- Dropdown Options -->
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10" selected>10</option> <!-- Default selected value -->
+                            </select>
+                            <h3>entries</h3>
+                        </div>
+                    </div>
+                    <form class="mx-3">
+                        <label for="default-search"
+                            class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                </svg>
+                            </div>
+                            <input type="search" id="default-search"
+                                class=" p-2 ps-10 text-sm text-gray-900 border rounded-lg focus:ring-white focus:border-white bg-transparent border-white dark:placeholder-gray-400 dark:text-white dark:focus:ring-white dark:focus:border-white"
+                                placeholder="Search..." required />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="relative overflow-x-auto py-8">
+                <div class="container mx-auto">
+                    <!-- Table container -->
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full text-sm text-left rtl:text-right text-white ">
+                            <thead class="text-xs uppercase bg-transparent border-b border-gray-500">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">NAME</th>
+                                    <th scope="col" class="px-6 py-3">PLAN TYPE</th>
+                                    <th scope="col" class="px-6 py-3">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                <!-- Rows will be dynamically injected via JavaScript -->
+                            </tbody>
+                        </table>
+                        <!-- Pagination controls -->
+                        <div id="pagination" class="flex justify-center items-center space-x-2 mt-4">
+                            <!-- Pagination buttons will be dynamically generated -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!-- Modal -->
+        <div id="workoutModal" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 hidden">
+            <div
+                class="relative bg-white p-6 rounded-lg shadow-lg w-[80%] md:w-[60%] h-auto max-h-[60vh] overflow-y-auto">
+                <!-- X icon to close modal -->
+                <button onclick="closeModal()"
+                    class="absolute top-3 right-3 text-gray-600 hover:text-gray-800 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 class="text-2xl font-bold mb-4 text-center text-black">Select a Workout Plan</h2>
+                <!-- Grid for Workout Templates -->
+                <div id="templateCards" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <!-- Workout templates will be dynamically injected here -->
+                </div>
+            </div>
+        </div>
+        <div id="success-toast"
+            class="fixed top-5 right-5 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+            <div class="flex items-center">
+                <!-- Ensures the circle stays round even if the text is long -->
+                <div class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12l5 5L20 7"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h2 class="text-lg font-semibold text-green-600">Success</h2>
+                    <p id="success-message-toast" class="text-sm text-gray-600">Your success message here</p>
+                </div>
+                <button id="close-success-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    let trainerid;
+    let plan_id;
+    document.addEventListener('DOMContentLoaded', function () {
+
+        id = window.userId;
+        // Fetch and assign member information when the page loads
+        fetchTrainerInfo();
+
+        function fetchTrainerInfo() {
+            console.log(id)
+            axios.get('http://localhost:3000/getTrainerInfo', {
+                params: {
+                    user_id: id
+                }
+            })
+                .then(response => {
+                    const trainerData = response.data[0];
+                    trainerid = trainerData.trainer_id;
+                    console.log(response.data[0])
+                    console.log(trainerid)
+                    fetchMembers();
+                })
+                .catch(error => {
+                    console.error('Error fetching trainer info:', error);
+                });
+        }
+    });
+    // Function to fetch members data from the endpoint
+    function fetchMembers() {
+        console.log("Trainer id: ", trainerid)
+        axios.get(`http://localhost:3000/getTrainerStudents?trainer_id=${trainerid}`)
+            .then(response => {
+                const members = response.data; // Assuming the response is an array of member objects
+                populateTable(members);
+            })
+            .catch(error => {
+                console.error('Error fetching members:', error);
+            });
+    }
+
+    // Function to populate the table with the fetched data
+    function populateTable(members) {
+        const tableBody = document.getElementById('table-body');
+        tableBody.innerHTML = ''; // Clear the table before populating
+        
+        members.forEach(member => {
+            const { member_id, Name, plan_type, plan_status } = member;
+
+            // Determine button label based on plan_type
+            let buttonLabel;
+            if (plan_type === "Workout Plan") {
+                buttonLabel = "Assign Workout Plan";
+            } else if (plan_type === "Meal Plan") {
+                buttonLabel = "Assign Meal Plan";
+            } else if (plan_type === "Comprehensive Plan") {
+                buttonLabel = "Assign Comprehensive Plan";
+            } else {
+                buttonLabel = "Assign Plan"; // default label if plan_type doesn't match
+            }
+            // Create a new table row
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="px-6 py-3">${Name}</td>
+                <td class="px-6 py-3">${plan_type}</td>
+                <td class="px-6 py-3">
+                    ${member.plan_status === "Not assigned yet"
+                    ? `<button onClick="AddPlan(${trainerid}, ${member_id}, '${plan_type}')" class="flex items-center gap-2 bg-div_color border border-white p-2 rounded-lg text-white hover:bg-white hover:text-black transition duration-300">
+                            <span>${buttonLabel}</span>
+                        </button>`
+                    : `<span class="text-white p-1 bg-green-500 rounded-full">Assigned</span>`
+                }
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    }
+
+    // Helper function to format date in a readable format
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString(); // Modify as needed for preferred format
+    }
+    async function AddPlan(trainerId, memberId, planType) {
+        const workoutEndpoint = `http://localhost:3000/getTemplates?trainer_id=${trainerId}&table=workout_plan_templates`;
+        const mealEndpoint = `http://localhost:3000/getTemplates?trainer_id=${trainerId}&table=meal_plan_templates`;
+
+        let selectedWorkoutId = null;
+        let selectedMealId = null;
+
+        try {
+            const modal = document.createElement('div');
+            modal.id = 'workoutModal';
+            modal.classList = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+
+            modal.innerHTML = `
+            <div id="templateCards" class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl max-h-[80vh] overflow-y-auto relative">
+                <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <h2 class="text-2xl font-bold mb-4 text-50">Assign a Plan</h2>
+                <div>
+                    <div id="workoutTemplates" class="grid gap-4 mb-6 p-4 bg-50 rounded-lg hidden"></div>
+                    <div id="mealPlanSection" class="p-4 bg-50 rounded-lg mt-4 hidden"></div>
+                </div>
+                <button id="assignButton" class="w-full mt-4 bg-gray-400 text-white px-4 py-2 rounded-lg transition-all cursor-not-allowed" disabled>
+                    Assign Selected Plans
+                </button>
+            </div>
+        `;
+        
+
+
+            document.body.appendChild(modal);
+
+            const workoutTemplatesContainer = document.getElementById('workoutTemplates');
+            const mealPlanSection = document.getElementById('mealPlanSection');
+            const assignButton = document.getElementById('assignButton');
+
+            if (planType === "Workout Plan" || planType === "Comprehensive Plan") {
+                workoutTemplatesContainer.classList.remove("hidden")
+                const workoutResponse = await fetch(workoutEndpoint);
+                const workoutTemplates = await workoutResponse.json();
+                const workoutHeading = document.createElement('h3');
+                workoutHeading.classList = 'text-xl font-semibold text-white mb-2';
+                workoutHeading.innerText = "Workout Plans";
+                workoutTemplatesContainer.appendChild(workoutHeading);
+                workoutTemplates.forEach(template => {
+                    const card = document.createElement('div');
+                    card.classList = 'p-4 border rounded-lg shadow-lg bg-gray-50 hover:shadow-xl transition-all h-20 flex cursor-pointer relative';
+                    card.innerHTML = `
+                        <div class="flex items-center">
+                            <div class="h-16 w-16 bg-gray-200 rounded-lg overflow-hidden mr-4 flex items-center justify-center">
+                                <img src="https://assets.clevelandclinic.org/transform/26568096-7fcc-4713-898d-ca1ed6c84895/exerciseHowOften-944015592-770x533-1_jpg" alt="Template Image" class="h-full w-full object-cover">
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-bold text-lg text-gray-700 mb-1">${template.template_name}</h3>
+                                <p class="text-gray-500 text-sm">${template.description}</p>
+                            </div>
+                        </div>
+                        <div class="indicator hidden absolute top-2 right-2 bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
+                            ✔
+                        </div>
+                    `;
+                    
+                    card.onclick = () => {
+                        if (selectedWorkoutId) {
+                            const previouslySelectedCard = workoutTemplatesContainer.querySelector(`[data-template-id="${selectedWorkoutId}"]`);
+                            if (previouslySelectedCard) {
+                                previouslySelectedCard.classList.remove('bg-blue-100');
+                                previouslySelectedCard.querySelector('.indicator').classList.add('hidden');
+                            }
+                        }
+                        selectedWorkoutId = template.template_id;
+                        card.classList.add('bg-blue-100');
+                        card.querySelector('.indicator').classList.remove('hidden');
+                        updateAssignButtonState();
+                    };
+                    card.setAttribute('data-template-id', template.template_id);
+                    workoutTemplatesContainer.appendChild(card);
+                });
+            }
+
+            if (planType === "Meal Plan" || planType === "Comprehensive Plan") {
+                mealPlanSection.classList.remove("hidden")
+                const mealResponse = await fetch(mealEndpoint);
+                const mealTemplates = await mealResponse.json();
+                if (mealTemplates.length > 0) {
+                    const mealHeading = document.createElement('h3');
+                    mealHeading.classList = 'text-xl font-semibold text-white mb-2';
+                    mealHeading.innerText = "Meal Plans";
+                    mealPlanSection.appendChild(mealHeading);
+
+                    const mealTemplatesContainer = document.createElement('div');
+                    mealTemplatesContainer.classList = 'grid gap-4';
+                    mealPlanSection.appendChild(mealTemplatesContainer);
+
+                    mealTemplates.forEach(template => {
+                        const card = document.createElement('div');
+                        card.classList = 'p-4 border rounded-lg shadow-lg bg-gray-50 hover:shadow-xl transition-all h-20 flex cursor-pointer relative';
+                        card.innerHTML = `
+                            <div class="flex items-center">
+                                <div class="h-16 w-16 bg-gray-200 rounded-lg overflow-hidden mr-4 flex items-center justify-center">
+                                    <img src="https://img.freepik.com/free-vector/hand-drawn-meal-prep-illustration_23-2149344804.jpg?semt=ais_hybrid" alt="Template Image" class="h-full w-full object-cover">
+                                </div>
+                                <div class="flex-grow">
+                                    <h3 class="font-bold text-lg text-gray-700 mb-1">${template.template_name}</h3>
+                                    <p class="text-gray-500 text-sm">${template.description}</p>
+                                </div>
+                            </div>
+                            <div class="indicator hidden absolute top-2 right-2 bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
+                                ✔
+                            </div>
+                        `;
+
+                        card.onclick = () => {
+                            if (selectedMealId) {
+                                const previouslySelectedCard = mealTemplatesContainer.querySelector(`[data-template-id="${selectedMealId}"]`);
+                                if (previouslySelectedCard) {
+                                    previouslySelectedCard.classList.remove('bg-blue-100');
+                                    previouslySelectedCard.querySelector('.indicator').classList.add('hidden');
+                                }
+                            }
+                            selectedMealId = template.meal_template_id;
+                            card.classList.add('bg-blue-100');
+                            card.querySelector('.indicator').classList.remove('hidden');
+                            updateAssignButtonState();
+                        };
+                        card.setAttribute('data-template-id', template.meal_template_id);
+                        mealTemplatesContainer.appendChild(card);
+                    });
+                }
+            }
+
+            function updateAssignButtonState() {
+                if (planType === "Comprehensive Plan") {
+                    assignButton.disabled = !(selectedWorkoutId && selectedMealId);
+                } else if (planType === "Workout Plan") {
+                    assignButton.disabled = !selectedWorkoutId;
+                } else if (planType === "Meal Plan") {
+                    assignButton.disabled = !selectedMealId;
+                }
+                assignButton.classList.toggle('cursor-not-allowed', assignButton.disabled);
+                assignButton.classList.toggle('bg-gray-300', assignButton.disabled);
+                assignButton.classList.toggle('bg-green-500', !assignButton.disabled);
+            }
+
+            assignButton.onclick = async () => {
+                console.log("Assign button clicked");
+                if (planType === "Workout Plan" && selectedWorkoutId) {
+                    await assignTemplate(trainerId, memberId, selectedWorkoutId);
+                    closeModal();
+                } else if (planType === "Meal Plan" && selectedMealId) {
+                    await assignMeal(selectedMealId, trainerid, memberId);
+                    closeModal();
+                } else if (planType === "Comprehensive Plan" && selectedWorkoutId && selectedMealId) {
+                    await assignSelectedPlans(trainerId, memberId, selectedWorkoutId, selectedMealId);
+                    closeModal();
+                } else {
+                    console.log("Selected plans are missing:", { selectedWorkoutId, selectedMealId });
+                }
+            };
+
+        } catch (error) {
+            console.error('Error fetching templates:', error);
+        }
+    }
+
+
+    // Define individual assign functions for workout and meal plans
+    async function assignWorkout(templateId, trainerid, memberId) {
+        console.log("Assigning workout template:", templateId, "to ", memberId, "from ", trainerid);
+        // Add your implementation here
+    }
+
+    async function assignMeal(templateId, trainerid, memberId) {
+        console.log("Assigning meal template:", templateId, "to ", memberId, "from ", trainerid);
+        axios.post('http://localhost:3000/assignMealPlan', {
+            trainer_id: trainerid,
+            member_id: memberId,
+            meal_template_id: templateId,
+            status: "On going"
+        })
+            .then(function (response) {
+                const plan_id = response.data.plan_id; // get the plan_id from the response
+                // Now insert student workouts using the plan_id and template_id
+                return insertStudentMeals(plan_id, templateId);
+            })
+            .then(function (insertResponse) {
+                // Student workouts inserted successfully
+                console.log('Student workouts inserted:', insertResponse);
+            })
+            .catch(function (error) {
+                if (error.response && error.response.data.message) {
+                    const errorMessage = error.response.data.message;  // Access the error message directly
+                    showErrorToast(errorMessage);
+                } else {
+                    console.error('Error:', error.response ? error.response.data : error.message);
+                }
+            });
+
+        // Close the modal after submission
+        document.getElementById('templateModal').classList.add('hidden');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('workoutModal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+
+
+
+    // Example function to handle posting selected plans
+    async function assignSelectedPlans(trainerId, memberId, workoutTemplateId, mealTemplateId) {
+        try {
+            console.log("Trainer ID:", trainerId);
+            console.log('Workout Plan assigned:', workoutTemplateId);
+            console.log('Meal Plan assigned:', mealTemplateId);
+            console.log("Assigned to:", memberId);
+
+            await assignTemplates(trainerId, memberId, workoutTemplateId, mealTemplateId);
+
+
+        } catch (error) {
+            console.error("Error in assignSelectedPlans:", error);
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('workoutModal').classList.add('hidden');
+    }
+
+
+    function assignTemplates(trainerId, memberId, workoutTemplateId, mealTemplateId) {
+        // Assign workout plan
+        axios.post('http://localhost:3000/assignWorkoutPlan', {
+            trainer_id: trainerId,
+            member_id: memberId,
+            template_id: workoutTemplateId
+        })
+            .then(function (response) {
+                showToast("success", "The workout plan has been assigned successfully");
+
+                const workoutPlanId = response.data.plan_id; // Get the plan_id from the response
+
+                // Insert student workouts using the plan_id and workoutTemplateId
+                return insertStudentWorkouts(workoutPlanId, workoutTemplateId);
+            })
+            .then(function (insertResponse) {
+                // Student workouts inserted successfully
+                console.log('Student workouts inserted:', insertResponse);
+
+                // Now assign meal plan
+                return axios.post('http://localhost:3000/assignMealPlan', {
+                    trainer_id: trainerId,
+                    member_id: memberId,
+                    meal_template_id: mealTemplateId
+                });
+            })
+            .then(function (response) {
+                const mealPlanId = response.data.plan_id; // Get the meal plan ID from the response
+
+                // Insert student meals using the mealPlanId and mealTemplateId
+                return insertStudentMeals(mealPlanId, mealTemplateId);
+            })
+            .then(function (insertResponse) {
+                // Student meals inserted successfully
+                console.log('Student meals inserted:', insertResponse);
+                showToast("success", "The meal plan has been assigned successfully");
+            })
+            .catch(function (error) {
+                if (error.response && error.response.data.message) {
+                    const errorMessage = error.response.data.message;  // Access the error message directly
+                    showErrorToast(errorMessage);
+                } else {
+                    console.error('Error:', error.response ? error.response.data : error.message);
+                }
+            });
+
+        // Close the modal after submission
+        document.getElementById('templateModal').classList.add('hidden');
+    }
+
+
+    function assignTemplate(trainer_id, memberId, templateId) {
+
+        axios.post('http://localhost:3000/assignWorkoutPlan', {
+            trainer_id: trainer_id,
+            member_id: memberId,
+            template_id: templateId
+        })
+            .then(function (response) {
+                showToast("success", "The workout plan has been assigned successfully");
+
+                const plan_id = response.data.plan_id; // get the plan_id from the response
+
+                // Now insert student workouts using the plan_id and template_id
+                return insertStudentWorkouts(plan_id, templateId);
+            })
+            .then(function (insertResponse) {
+                // Student workouts inserted successfully
+                console.log('Student workouts inserted:', insertResponse);
+            })
+            .catch(function (error) {
+                if (error.response && error.response.data.message) {
+                    const errorMessage = error.response.data.message;  // Access the error message directly
+                    showErrorToast(errorMessage);
+                } else {
+                    console.error('Error:', error.response ? error.response.data : error.message);
+                }
+            });
+
+        // Close the modal after submission
+        document.getElementById('templateModal').classList.add('hidden');
+    }
+
+
+    const insertStudentWorkouts = async (plan_id, template_id) => {
+        try {
+            const response = await axios.post('http://localhost:3000/insertStudentWorkouts', {
+                plan_id,        // sending plan_id in the request body
+                template_id     // sending template_id in the request body
+            });
+
+            // handle the success response
+            console.log('Student workouts inserted successfully:', response.data);
+            return response.data;  // return the response if needed
+        } catch (error) {
+            // handle error cases
+            console.error('Error inserting student workouts:', error.response ? error.response.data : error.message);
+            throw error;  // re-throw the error for further handling
+        }
+    };
+    const insertStudentMeals = async (plan_id, meal_template_id) => {
+        try {
+            const response = await axios.post('http://localhost:3000/insertStudentMeals', {
+                plan_id,        // sending plan_id in the request body
+                meal_template_id     // sending template_id in the request body
+            });
+
+            // handle the success response
+            console.log('Student meals inserted successfully:', response.data);
+            return response.data;  // return the response if needed
+        } catch (error) {
+            // handle error cases
+            console.error('Error inserting student meals:', error.response ? error.response.data : error.message);
+            throw error;  // re-throw the error for further handling
+        }
+    };
+
+
+    function showToast(type, message) {
+        const toast = document.getElementById('success-toast'); // You seem to be using only success toast for both types
+        const messageElement = document.getElementById('success-message-toast'); // Adjust accordingly for error
+
+        // Set the message
+        messageElement.textContent = message;
+
+        // Show and slide in the toast
+        toast.classList.remove('hidden', 'translate-x-full'); // Remove hidden and off-screen translation
+        toast.classList.add('translate-x-0'); // Move the toast in view
+
+        // Auto-hide the toast after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');  // Slide toast out to the right
+            setTimeout(() => {
+                toast.classList.add('hidden'); // Hide completely after the transition
+            }, 300);  // Wait for the transition to complete before hiding
+        }, 3000); // Ensure this is set to 3000 ms (3 seconds) for visibility
+    }
+
+
+</script>
+
+</html>

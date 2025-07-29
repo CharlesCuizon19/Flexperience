@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Meal to Template</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.1/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-customGray text-white font-[Poppins]">
+
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:bg-gradient-to-br from-white to-customOrange bg-clip-text text-transparent">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="mr-6 mt-1">
+                            <button>
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Earnings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--breadcrump-->
+    <nav class="mt-20 ml-8 flex" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+                <a href="index.html"
+                    class="inline-flex items-center text-sm font-medium text-white dark:text-gray-400 dark:hover:text-white">
+                    <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                    </svg>
+                    Home
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-white mx-1" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                    <a href="trainerMealPlan.html"
+                        class="ms-1 text-sm font-medium text-white md:ms-2 dark:text-gray-400 dark:hover:text-white">Meal
+                        templates</a>
+                </div>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 9 4-4-4-4" />
+                    </svg>
+                    <span class="ms-1 text-sm font-medium text-white md:ms-2 dark:text-white">Add meal</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <!--Content-->
+    <div
+        class="flex flex-col md:flex md:flex-row md:gap-3 gap-3 md:items-center items-center justify-center md:justify-between mt-5 ml-8 md:mr-0 mr-8">
+        <div class="max-w-4xl w-full p-6 bg-div_color rounded-md shadow-md">
+            <h2 class="text-2xl font-semibold text-white mb-6">Add Meal to Template</h2>
+
+            <!-- Scrollable Form Container -->
+            <div
+                class="overflow-y-auto scrollbar-thin scrollbar-track-div_color scrollbar-thumb-custom-bg h-96 p-4 border border-slate-600 rounded-md bg-div_color">
+                <!-- Meal Template Form -->
+                <form id="meal-form">
+                    <div class="flex flex-col md:flex md:flex-col md:gap-2 gap-2">
+
+                        <!-- Meal Name -->
+                        <div class="mb-4">
+                            <label for="meal_name" class="block text-sm font-semibold text-white">Meal Name</label>
+                            <input type="text" id="meal_name" name="meal_name"
+                                class="block w-full mt-1 p-2 border rounded-md text-black" disabled>
+                        </div>
+
+                        <!-- Classification -->
+                        <div class="mb-4">
+                            <label for="classification"
+                                class="block text-sm font-semibold text-white">Classification</label>
+                            <input type="text" id="classification" name="classification"
+                                class="block w-full mt-1 p-2 border rounded-md text-black" required>
+                        </div>
+
+                        <!-- Week No -->
+                        <div class="mb-4">
+                            <label for="week_no" class="block text-sm font-semibold text-white">Week Number</label>
+                            <input type="number" id="week_no" name="week_no"
+                                class="block w-full mt-1 p-2 border rounded-md text-black" required>
+                        </div>
+
+                        <!-- Day No -->
+                        <div class="mb-4">
+                            <label for="day_no" class="block text-sm font-semibold text-white">Day Number</label>
+                            <input type="number" id="day_no" name="day_no"
+                                class="block w-full mt-1 p-2 border rounded-md text-black" required>
+                        </div>
+
+                        <!-- Button to Open Meal Selection Modal -->
+                        <div class="mb-4">
+                            <button type="button" id="openMealModal" class="bg-50 text-white px-4 py-2 rounded w-full">
+                                Choose Pre-Made Meals
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col gap-2 md:flex md:flex-row md:gap-2 md:justify-between">
+                            <div>
+                                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full">
+                                    Submit Meal Template
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal for Selecting Pre-Made Meals -->
+        <div id="mealModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden">
+            <div class="bg-white rounded-lg shadow-lg p-8 w-3/4 max-w-4xl">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">Select Pre-Made Meals</h3>
+                <div id="mealCards"
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 overflow-y-auto max-h-96">
+                    <!-- Meal cards will be injected here -->
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button id="closeModal"
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300">Close</button>
+                </div>
+            </div>
+        </div>
+        <!--Added meals-->
+        <div class="max-w-4xl w-full p-6 bg-div_color rounded-md shadow-md md:mr-8">
+            <h2 class="text-2xl font-semibold text-white mb-6">Added Meals</h2>
+            <!-- Scrollable Form Container -->
+            <div
+                class="overflow-y-auto scrollbar-thin scrollbar-track-div_color scrollbar-thumb-custom-bg h-96 p-4 rounded-md bg-div_color">
+            </div>
+        </div>
+    </div>
+    <div id="success-toast"
+        class="fixed top-14 right-3 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+        <div class="flex items-center">
+            <!-- Ensures the circle stays round even if the text is long -->
+            <div class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full flex-shrink-0">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12l5 5L20 7"></path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h2 class="text-lg font-semibold text-green-600">Success</h2>
+                <p id="success-message-toast" class="text-sm text-gray-600">Your success message here</p>
+            </div>
+            <button id="close-success-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div id="error-toast"
+        class="fixed top-14 right-3 bg-white border-l-4 border-orange-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+        <div class="flex items-center">
+            <div class="flex items-center justify-center w-8 h-8 bg-orange-500 rounded-full">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h2 class="text-lg font-semibold text-orange-600">Form Error</h2>
+                <p id="error-message-toast" class="text-sm text-gray-600">Your error message here</p>
+            </div>
+            <button id="close-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        let stepCount = 1;
+        let template_item_id = 0
+        const templateName = getCookie("template_name");
+        let templateId = getCookie('template_id');
+        let trainer_id = getCookie('trainer_id');
+        let selectedPreMadeMealId = null;
+
+        const modal = document.getElementById("mealModal");
+        const openMealModal = document.getElementById("openMealModal");
+        const closeModal = document.getElementById("closeModal");
+        const mealCardsContainer = document.getElementById("mealCards");
+
+        // Handle form submission
+        // Form submit event listener
+        document.getElementById('meal-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Construct the payload
+            const payload = {
+                meal_template_id: templateId,
+                pre_made_meal_id: selectedPreMadeMealId, // Use the selected meal ID
+                classification: document.getElementById('classification').value,
+                week_no: document.getElementById('week_no').value,
+                day_no: document.getElementById('day_no').value
+            };
+
+            axios.post('http://localhost:3000/createMealTemplateItems', payload)
+                .then(function (response) {
+                    console.log("Meal template item created successfully:", response.data);
+                    showToast("success", "Meal added to the template")
+                })
+                .catch(function (error) {
+                    if (error.response && error.response.data.message) {
+                        const errorMessage = error.response.data.message;
+                        showErrorToast(errorMessage);
+                    } else {
+                        console.error('Error:', error.response ? error.response.data : error.message);
+                    }
+                });
+        });
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function showToast(type, message) {
+            const toast = document.getElementById('success-toast');
+            const messageElement = document.getElementById('success-message-toast');
+
+            // Set the message
+            messageElement.textContent = message;
+
+            // Show and slide in the toast
+            toast.classList.remove('hidden', 'translate-x-full');
+            toast.classList.add('translate-x-0');
+
+            // Auto-hide the toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                }, 300);
+            }, 2500);
+        }
+        function showErrorToast(message) {
+            const toast = document.getElementById('error-toast');
+            const errorMessageElement = document.getElementById('error-message-toast');
+
+
+            errorMessageElement.textContent = message;
+
+
+            toast.classList.remove('hidden', 'translate-x-full');
+            toast.classList.add('translate-x-0');
+
+
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 3000);
+        }
+
+        openMealModal.addEventListener("click", async () => {
+            modal.classList.remove("hidden");
+            await loadMeals(trainer_id); // Load meals when the modal opens
+        });
+
+
+        closeModal.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+
+        let meals = []; // Declare meals globally
+
+        async function loadMeals(trainer_id) {
+            try {
+                const response = await axios.get(`http://localhost:3000/getPremadeMeals?trainer_id=${trainer_id}`);
+                meals = response.data[0]; // Populate the meals variable
+
+                // Clear existing meal cards
+                mealCardsContainer.innerHTML = '';
+
+                meals.forEach(meal => {
+                    const mealCard = document.createElement("div");
+                    mealCard.className = "border border-gray-300 rounded-lg shadow-md p-4 flex flex-col bg-gray-50";
+
+                    mealCard.innerHTML = `
+                        <div class="h-32 overflow-hidden rounded-lg">
+                            <img src="https://img.freepik.com/free-vector/hand-drawn-meal-prep-illustration_23-2149344804.jpg?semt=ais_hybrid" alt="${meal.meal_name}" class="w-full h-full object-cover" />
+                        </div>
+                        <h4 class="text-lg font-semibold text-black mt-4">${meal.meal_name}</h4>
+                        <p class="text-gray-600">Carbs: <span class="font-medium">${meal.carbs}g</span></p>
+                        <p class="text-gray-600">Fats: <span class="font-medium">${meal.fats}g</span></p>
+                        <p class="text-gray-600">Protein: <span class="font-medium">${meal.protein}g</span></p>
+                        <div class="mt-auto">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg" onclick="selectMeal(${meal.pre_made_meal_id})">Select</button>
+                        </div>
+                    `;
+
+                    mealCardsContainer.appendChild(mealCard);
+                });
+
+            } catch (error) {
+                console.error("Error fetching meals:", error);
+            }
+        }
+
+        // Function to handle meal selection
+        function selectMeal(pre_made_meal_id) {
+            console.log("hi")
+            const selectedMeal = meals.find(meal => meal.pre_made_meal_id === pre_made_meal_id);
+
+            if (selectedMeal) {
+                document.getElementById('meal_name').value = selectedMeal.meal_name;
+                document.getElementById('meal_name').disabled = !false;
+            }
+
+            // Update the global selectedPreMadeMealId variable
+            selectedPreMadeMealId = pre_made_meal_id;
+            console.log(selectedPreMadeMealId)
+
+            // Close the modal
+            document.getElementById('mealModal').classList.add('hidden');
+        }
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>

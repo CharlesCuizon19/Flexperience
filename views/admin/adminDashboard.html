@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="../../dist/tailwind.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"></script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="/frontend/scripts/auth.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+        .page_title {
+            border-bottom: 2px solid;
+            border-image: linear-gradient(to right, #EC7E4A 50%, transparent 50%) 1;
+        }
+
+        .sidebar,
+        .sidebar-links {
+            overflow-x: hidden;
+        }
+
+        .sidebar:hover .Menu {
+            opacity: 1;
+        }
+
+        .sidebar:hover .menu-separator {
+            transition-delay: 0s;
+            transform: scaleX(0);
+        }
+
+        #view_pending th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: #EC7E4A;
+            color: white;
+        }
+
+        #view_pending tr:nth-child(even) {
+            background-color: #5F6163;
+        }
+
+        #view_pending td,
+        #view_pending th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .calendar {
+            padding: 20px;
+        }
+
+        .calendar .days {
+            margin-bottom: 15px;
+        }
+
+        .calendar .weeks li {
+            font-weight: 500;
+        }
+
+
+        .calendar ul {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .calendar ul li {
+            position: relative;
+            width: calc(100% / 7);
+        }
+
+        .calendar .days li {
+            z-index: 1;
+            font-weight: 300;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .days li.inactive {
+            color: #aaa;
+        }
+
+        .days li.active {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .calendar .days li::before {
+            position: absolute;
+            content: "";
+            height: 30px;
+            width: 30px;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .days li:hover::before {
+            background: #878787;
+        }
+
+        .days li.active::before {
+            background: #EC7E4A;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-[#343639] font-[Poppins]">
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span class="self-center text-xl font-semibold sm:text-2xl text-white">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="mr-6 mt-1">
+                            <button>
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-div_color rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Earnings</a>
+                                </li>
+                                <li>
+                                    <a href="index.html" onclick="removeCookie('accessToken');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 bg-customGray text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../admin/Registered.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="shield-checkmark-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Verified Gyms</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../admin/Pending.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="timer-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Pending Gyms</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="sm:ml-64 text-white">
+        <div class="m-4 p-4 mt-20">
+            <span class="nameChange text-[20px] font-bold">Flexperience Admin Dashboard</span>
+        </div>
+        <div class="flex flex-col gap-4 md:flex-row  m-4 p-4">
+            <div class="flex flex-col md:flex-row w-full order-2 md:order-1">
+                <div class="flex flex-col md:flex-col w-full">
+
+                    <div class="flex flex-row md:flex-row bg-div_color w-full rounded-t-lg justify-center items-center">
+                        <div
+                            class="flex flex-col gap-2 items-center justify-center w-full h-auto py-2 px-2 border-2 border-border_color shadow-md bg-div_color hover:bg-50 hover:shadow-md rounded-tl-lg roundedn-bl-lg">
+                            <a href="Registered.html" class="text-white flex items-center justify-center gap-2">
+                                <ion-icon name="checkmark-circle-outline" class="text-3xl text-green-500"></ion-icon>
+                                <span class="text-xl text-white">Verified Gyms</span>
+                            </a>
+                            <span class="text-xl text-white">01</span>
+                        </div>
+                        <div
+                            class="flex flex-col gap-2 items-center justify-center w-full h-50 py-2 px-2 border-2 border-border_color shadow-md bg-div_color hover:bg-50 hover:shadow-md rounded-tr-lg roundedn-br-lg">
+                            <a href="Pending.html" class="text-white flex items-center justify-center gap-2">
+                                <ion-icon name="time-outline" class="text-3xl text-red-500"></ion-icon>
+                                <span class="text-xl text-white">Pending Gyms</span>
+                            </a>
+                            <span class="text-xl text-white">01</span>
+                        </div>
+                    </div>
+
+                    <!-- Overview -->
+                    <div class="bg-[#373D41] p-4 shadow-inner">
+                        <div
+                            class="md:mx-auto md:overflow-none overflow-x-scroll overflow-auto md:overflow-x-none scrollbar-thin md:scrollbar-none scrollbar-track-div_color scrollbar-thumb-50">
+                            <div class="flex flex-row md:flex-row justify-between items-center">
+                                <div>
+                                    <h1 class="text-md font-medium">Gym Admins Registrations</h1>
+                                </div>
+                            </div>
+                            <!--Overview-->
+                            <div class="my-5 md:my-5 lg:my-5 xl:my-5 md:h-50">
+                                <table class="w-full text-white table-auto border-collapse rounded-sm">
+                                    <thead>
+                                        <tr class="bg-50">
+                                            <th
+                                                class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
+                                                Gym Admin</th>
+                                            <th
+                                                class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
+                                                Amount Paid</th>
+                                            <th
+                                                class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
+                                                Renewal Date</th>
+                                            <th
+                                                class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
+                                                Subscription</th>
+                                            <th
+                                                class="p-3 border-b-2 border-border_color text-center text-[12px] font-semibold">
+                                                Subscription Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gym-data">
+                                        <!-- Dynamic data will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Calendar Component -->
+            <div class="flex-1 md:w-1/2 md:order-2 order-1">
+                <div class="dashboard-Content text-sm text-white">
+                    <div class="wrapper w-[320px] bg-div_color shadow-md border-border_color border-2">
+                        <header>
+                            <p class="current-date"></p>
+                            <div class="icons">
+                                <span id="prev" class="materials-symbols-rounded text-black">
+                                    <i class='bx bx-chevron-left text-xl'></i>
+                                </span>
+                                <span id="next" class="materials-symbols-rounded text-black">
+                                    <i class='bx bx-chevron-right text-xl'></i>
+                                </span>
+                            </div>
+                        </header>
+                        <div class="calendar">
+                            <ul class="weeks">
+                                <li>Sun</li>
+                                <li>Mon</li>
+                                <li>Tue</li>
+                                <li>Wed</li>
+                                <li>Thu</li>
+                                <li>Fri</li>
+                                <li>Sat</li>
+                            </ul>
+                            <ul class="days"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-4 p-4">
+            <div class="flex flex-row items-center justify-between bg-div_color rounded-t-lg">
+                <div>
+                    <h2 class="text-white text-xl font-bold mt-4 p-4">Subscription Plans</h2>
+                </div>
+                <div>
+                    <button id="openModalButton"
+                        class="bg-50 hover:bg-orange-600 text-white font-semibold py-2 px-4 mr-4 rounded focus:outline-none focus:shadow-outline">
+                        Create Subscription Plan
+                    </button>
+                </div>
+            </div>
+            <div
+                class="bg-div_color p-2 shadow-xl w-full border-border_color border-2 rounded-b-lg md:mx-auto md:overflow-none overflow-x-scroll overflow-auto md:overflow-x-none scrollbar-thin md:scrollbar-none scrollbar-track-div_color scrollbar-thumb-50">
+                <table class="min-w-full text-white shadow-md overflow-hidden">
+                    <thead>
+                        <tr class="bg-50">
+                            <th class="py-3 px-4 border-border_color text-md font-semibold text-left">Plan ID</th>
+                            <th class="py-3 px-4 border-border_color text-md font-semibold text-left">Plan Name</th>
+                            <th class="py-3 px-4 border-border_color text-md font-semibold text-left">Status</th>
+                            <th class="py-3 px-4 border-border_color text-md font-semibold text-left">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="plansContainer">
+                        <!-- Plans will be dynamically injected here -->
+                    </tbody>
+                </table>
+                <div id="paginationControls" class="flex justify-center mt-4 space-x-2">
+                    <button id="prevPage" class="px-4 py-2 bg-50 text-white rounded flex items-center"
+                            onclick="changePage(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="nextPage" class="px-4 py-2 bg-50 text-white rounded flex items-center"
+                            onclick="changePage(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+
+            </div>
+        </div>
+
+        <!--Chart-->
+        <div class="p-4 m-4">
+            <h2 class="text-white text-2xl font-bold mb-4 mt-10">Monthly Revenue</h2>
+            <div class="bg-div_color p-6 w-full rounded-lg shadow-xl border-border_color border-2">
+                <canvas id="myChart" class="bg-div_color w-full "></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 flex mt-9 items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 max-w-lg w-full">
+            <h1 class="text-2xl font-bold text-gray-700 mb-4 text-center">Create Subscription
+                Plan</h1>
+
+            <form id="createPlanForm" class="space-y-6">
+                <div>
+                    <label for="planName" class="block text-gray-700 font-bold mb-2">Plan Name:</label>
+                    <input type="text" id="planName" name="planName" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div>
+                    <label for="price" class="block text-gray-700 font-bold mb-2">Price:</label>
+                    <input type="number" id="price" name="price" step="1000" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+
+                <div>
+                    <label for="intervalUnit" class="block text-gray-700 font-bold mb-2">Interval
+                        Unit:</label>
+                    <select id="intervalUnit" name="intervalUnit"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="MONTH">Month</option>
+                        <option value="QUARTERLY">Quarterly</option>
+                        <option value="YEAR">Year</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="intervalCount" class="block text-gray-700 font-bold mb-2">Interval
+                        Count:</label>
+                    <input type="number" id="intervalCount" name="intervalCount" min="1" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                </div>
+                <div>
+                    <label for="Description" class="block text-gray-700 font-bold mb-2">Description</label>
+                    <textarea id="Description" name="Description" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        rows="2"></textarea>
+                </div>
+
+                <div>
+                    <label for="productID" class="block text-gray-700 font-bold mb-2 hidden">Product
+                        ID:</label>
+                    <input type="text" id="productID" name="productID" required
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline hidden">
+                </div>
+
+                <div class="flex items-center justify-center">
+                    <button type="submit"
+                        class="bg-50 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Create Plan
+                    </button>
+                </div>
+            </form>
+
+            <p id="message" class="text-center mt-4 text-gray-700"></p>
+
+            <button id="closeModalButton" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+                &times;
+            </button>
+        </div>
+    </div>
+</body>
+
+
+</html>
+<script src="../../scripts/trainer.js"></script>
+<script src="../../scripts/admin.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"></script>
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script>
+    //calendar
+
+    const currentDate = document.querySelector(".current-date"),
+        daysTag = document.querySelector(".days"),
+        prevNextIcon = document.querySelectorAll(".icons span");
+
+    //getting new date, current year and month
+    let date = new Date(),
+        currYear = date.getFullYear(),
+        currMonth = date.getMonth();
+
+    const months = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+
+    const renderCalendar = () => {
+        let firstDayofMonth = new Date(currYear, currMonth, 1).getDay(), //first day
+            lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate(), //last date sa month
+            lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay(), //last day sa month
+            lastDateofLastMonth = new Date(currYear, currMonth, 0).getDate(); //last date previous month
+        let liTag = "";
+
+        for (let i = firstDayofMonth; i > 0; i--) { //previous month last days
+            liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
+        }
+
+        for (let i = 1; i <= lastDateofMonth; i++) { // all days of current month
+
+            //current day,month, year active
+            let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+                && currYear === new Date().getFullYear() ? "active" : "";
+            liTag += `<li class="${isToday}">${i}</li>`;
+        }
+
+        for (let i = lastDayofMonth; i < 6; i++) { //next month first days
+            liTag += `<li class="inactive">${i - lastDayofMonth + 1}</li>`;
+        }
+
+        currentDate.innerText = `${months[currMonth]} ${currYear}`;
+        daysTag.innerHTML = liTag;
+    }
+    renderCalendar();
+
+    //click event sa icons
+    prevNextIcon.forEach(icon => {
+        icon.addEventListener("click", () => {
+            currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
+
+            if (currMonth < 0 || currMonth > 11) {
+                date = new Date(currYear, currMonth);
+                currYear = date.getFullYear(); //updates current year with new date year
+                currMonth = date.getMonth(); //updates current month with new date month
+            } else { //pass new date as date value
+                date = new Date();
+            }
+            renderCalendar();
+        });
+    });
+
+    // Function to dynamically populate the table
+    function populateTable(data) {
+        const tbody = document.getElementById('gym-data');
+        tbody.innerHTML = ''; // Clear the table before appending new data
+
+        data.forEach(item => {
+            // Convert Upcoming_Payment_Date to a Date object
+            const paymentDate = new Date(item.Upcoming_Payment_Date);
+
+            // Format as "Tue Dec 03 2024"
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            const formattedDate = paymentDate.toLocaleDateString('en-US', options);
+
+            // Create a table row
+            const tr = document.createElement('tr');
+            tr.classList.add('bg-customGray', 'hover:bg-gray-600');
+
+            // Insert table data cells with the response data
+            tr.innerHTML = `
+                <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.gym_admin}</td>
+                <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.amount}</td>
+                <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${formattedDate}</td>
+                <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">${item.Subscription}</td>
+                <td class="p-3 border-b border-border_color text-center font-normal text-[12px] align-middle">
+                    <span class="bg-50 text-white px-2 py-1 rounded-full ${item.membership_status === 'Active' ? 'bg-green-600' : 'bg-gray-500'}">
+                        ${item.membership_status}
+                    </span>
+                </td>
+            `;
+            // Append the row to the table body
+            tbody.appendChild(tr);
+        });
+    }
+
+
+    // Function to fetch data using Axios
+    function fetchGymData() {
+        axios.get('http://localhost:3000/getVerifiedAdmins')
+            .then(response => {
+                // Populate the table with data from the response
+                populateTable(response.data);
+                populatePlans();
+            })
+            .catch(error => {
+                console.error('There was an error fetching the gym data!', error);
+            });
+    }
+
+    // Fetch the data when the page loads
+
+    // --------------------For the Chart----------------
+
+    // --------------------For the Chart----------------
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            datasets: [
+                {
+                    label: 'Sales Amount',
+                    data: [/* your sales data */],
+                    backgroundColor: 'rgba(245, 127, 39, 0.5)',
+                    borderColor: 'rgba(285, 147, 49, 0.5)',
+                    borderWidth: 1,
+                    yAxisID: 'y' // Associate this dataset with the first y-axis
+                },
+                {
+                    label: 'Registered Gyms',
+                    data: [/* your gym data */],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y1' // Associate this dataset with the second y-axis
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    position: 'left', // The first y-axis for sales
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                },
+                y1: {
+                    beginAtZero: true,
+                    position: 'right', // The second y-axis for gyms
+                    grid: {
+                        drawOnChartArea: false, // Prevent grid lines from overlapping
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff'
+                    }
+                }
+            }
+        }
+    });
+
+    // Fetch data using Axios
+    axios.get('http://localhost:3000/getSales')
+        .then(response => {
+            const salesData = response.data;
+
+            // Initialize arrays for monthly sales and registered gyms with 12 slots (one for each month)
+            const monthlySales = Array(12).fill(0);  // For sales amounts
+            const GymsRegistered = Array(12).fill(0);  // For gym registrations
+
+            // Iterate over the API response to populate the respective months
+            salesData.forEach(sale => {
+                monthlySales[sale.month - 1] = parseFloat(sale.total_amount); // Assign total amount to correct month
+                GymsRegistered[sale.month - 1] = sale.gym_count; // Assign gym count to correct month
+            });
+
+
+
+            // Ensure chart is updated after data fetch
+            myChart.data.datasets[0].data = monthlySales;  // First bar: Sales amounts
+            myChart.data.datasets[1].data = GymsRegistered;  // Second bar: Gym registrations
+
+            // Debugging: Check if the chart dataset is being updated correctly
+            console.log("Updated Dataset for Gyms Registered: ", myChart.data.datasets[1].data);
+
+            myChart.update();  // Refresh the chart with new data
+        })
+        .catch(error => {
+            console.error("Error fetching sales data: ", error);
+        });
+
+
+    let currentPage = 1;
+    const pageSize = 10; // Set the number of plans to display per page
+
+    async function populatePlans(page = 1) {
+        const productID = 'PROD-4VR73311L4870944G';  // Your product ID here
+        try {
+            // Make a GET request to the backend to get all plans
+            const response = await axios.get(`http://localhost:3000/admin/get-plans?productID=${productID}`);
+            const allPlans = response.data;
+
+            // Calculate start and end indices for current page
+            const start = (page - 1) * pageSize;
+            const end = start + pageSize;
+            const paginatedPlans = allPlans.slice(start, end);
+
+            // Clear previous plans from the table
+            const plansContainer = document.getElementById('plansContainer');
+            plansContainer.innerHTML = '';
+
+            // Display paginated plans in the table
+            paginatedPlans.forEach(plan => {
+                const planRow = document.createElement('tr');
+                planRow.classList.add('border-b', 'bg-customGray', 'hover:bg-gray-600');
+                planRow.innerHTML = `
+                        <td class="py-2 border-b border-border_color px-4 text-[12px] font-normal">${plan.id}</td>
+                        <td class="py-2 border-b border-border_color px-4 text-[12px] font-normal">${plan.name}</td>
+                        <td class="py-2 border-b border-border_color px-4 text-[12px] font-normal">${plan.status}</td>
+                        <td class="py-2 border-b border-border_color px-4 text-[12px] font-normal">${plan.description}</td>
+                    `;
+                plansContainer.appendChild(planRow);
+            });
+
+            // Update pagination controls
+            updatePaginationControls(page, allPlans.length);
+
+        } catch (error) {
+            console.error('Error fetching plans:', error);
+        }
+    }
+    function updatePaginationControls(page, totalPlans) {
+        const totalPages = Math.ceil(totalPlans / pageSize);
+
+        document.getElementById('prevPage').disabled = page <= 1;
+        document.getElementById('nextPage').disabled = page >= totalPages;
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        populatePlans(currentPage);
+    }
+
+
+    // Modal functionality
+    const modal = document.getElementById("modal");
+    const openModalButton = document.getElementById("openModalButton");
+    const closeModalButton = document.getElementById("closeModalButton");
+
+    openModalButton.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+        document.getElementById("productID").value = "PROD-4VR73311L4870944G";
+    });
+
+    closeModalButton.addEventListener("click", () => {
+        modal.classList.add("hidden");
+    });
+
+    // Handle form submission
+    document.getElementById("createPlanForm").addEventListener("submit", async function (event) {
+        event.preventDefault();  // Prevent the form from submitting the traditional way
+
+        const planName = document.getElementById("planName").value;
+        const price = document.getElementById("price").value;
+        const intervalUnit = document.getElementById("intervalUnit").value;
+        const intervalCount = document.getElementById("intervalCount").value;
+        const productID = document.getElementById("productID").value;
+        const Description = document.getElementById("Description").value;
+
+
+        try {
+            // Send POST request to backend /create-plan endpoint
+            const response = await axios.post('http://localhost:3000/admin/create-plan', {
+                planName,
+                price,
+                intervalUnit,
+                intervalCount,
+                productID,
+                Description
+            });
+
+            // Display success message
+            document.getElementById("message").innerText = `Plan created successfully! Plan ID: ${response.data.planID}`;
+            insertSubscriptionPlan(planName,price,intervalUnit,Description);
+            setTimeout(() => {
+                window.location.href = 'adminDashboard.html';
+            }, 2500);
+        } catch (error) {
+            // Handle errors
+            console.error('Error creating plan:', error);
+            document.getElementById("message").innerText = 'Error creating plan. Please try again.';
+        }
+    });
+
+    async function insertSubscriptionPlan(planName, price, intervalUnit, Description) {
+        try {
+            let duration_months;
+            if (intervalUnit == "MONTH") {
+                duration_months = 1;
+            } else if (intervalUnit == "QUARTERLY") {
+                duration_months = 3;
+            } else if (intervalUnit == "YEAR") {
+                duration_months = 12;
+            }
+
+
+            const response = await axios.post('http://localhost:3000/insertPlan', {
+                plan_name: planName,
+                price: price,
+                duration_months: duration_months,
+                description: Description,
+            });
+
+            console.log('Subscription added successfully:', response.data);
+        } catch (error) {
+            console.error('Error adding subscription:', error);
+        }
+    }
+
+
+
+    window.onload = fetchGymData;
+</script>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Pending Registrations</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="../../dist/tailwind.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="/frontend/scripts/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    .page_title {
+        border-bottom: 2px solid;
+        border-image: linear-gradient(to right, #EC7E4A 50%, transparent 50%) 1;
+    }
+
+    .sidebar,
+    .sidebar-links {
+        overflow-x: hidden;
+    }
+
+    .sidebar:hover .Menu {
+        opacity: 1;
+    }
+
+    .sidebar:hover .menu-separator {
+        transition-delay: 0s;
+        transform: scaleX(0);
+    }
+
+    #success-toast{
+        z-index: 9000;
+    }
+</style>
+
+<body class="min-h-screen bg-[#343639] font-customFont ">
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span class="self-center text-xl font-semibold sm:text-2xl text-white">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="mr-6 mt-1">
+                            <button>
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-div_color rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="adminProfile.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="editProfile.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="index.html" onclick="removeCookie('accessToken');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="adminDashboard.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="Registered.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="shield-checkmark-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Verified Gyms</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="Pending.html"
+                        class="flex items-center p-2 text-white bg-customGray rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="timer-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Pending Gyms</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+    <div id="content_container" class="sm:ml-64 text-white">
+
+        <div class="m-4 p-4 mt-20">
+            <span class="text-2xl font-semibold text-gray-100">Pending Gym Registrations</span>
+
+            <div class="bg-gray-800 border border-gray-700 shadow-lg rounded-lg p-6 mt-6 mr-10">
+                <div class="space-y-6" id="gym-registration-cards">
+                    <!-- Cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Popup for viewing the permit -->
+    <div id="view_permit" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white hidden">
+        <div class="popup-content">
+            <button onclick="close_Img()" class="text-right text-4xl text-white hover:text-gray-400">x</button>
+            <img id="permit_image" src="" class="w-96 mt-4" alt="permit_image">
+        </div>
+    </div>
+    <div id="success-toast"
+        class="fixed top-5 right-5 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+        <div class="flex items-center">
+            <!-- Ensures the circle stays round even if the text is long -->
+            <div class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full flex-shrink-0">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12l5 5L20 7"></path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h2 class="text-lg font-semibold text-green-600">Success</h2>
+                <p id="success-message-toast" class="text-sm text-gray-600">Your success message here</p>
+            </div>
+            <button id="close-success-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>
+<!-- <script src="../../scripts/registration.js"></script> -->
+<script src="../../scripts/trainer.js">//responsive</script>
+<script>
+    // Function to fetch pending gym registrations
+    function fetchPendingGyms() {
+        axios.get('https://capstone-erxk.onrender.com/getPendingGyms')
+            .then(response => {
+                const gyms = response.data;
+                const gymContainer = document.getElementById('gym-registration-cards');
+
+                // Clear any existing content
+                gymContainer.innerHTML = '';
+
+                // Loop through each gym data and create HTML elements
+                gyms.forEach(gym => {
+                    const gymCard = document.createElement('div');
+                    gymCard.className = 'flex flex-col md:flex-row bg-gray-700 p-6 rounded-lg shadow-md';
+
+                    gymCard.innerHTML = `
+                    <div class="flex-shrink-0">
+                        <img src="https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${gym.img_path}" alt="Gym Logo" class="w-24 h-24 rounded-full object-cover border border-gray-600">
+                    </div>
+                    <div class="flex flex-col justify-between md:flex-grow md:ml-6">
+                        <div class="text-gray-300">
+                            <h3 class="font-bold text-lg">${gym.gym_name}</h3>
+                            <p class="text-sm text-gray-400">Owner: ${gym.Owner_name}</p>
+                            <p class="text-sm text-gray-400">Email: ${gym.email}</p>
+                            <p class="text-sm text-gray-400">Contact: ${gym.contact_no}</p>
+                            <p class="text-sm text-gray-400">Address: ${gym.street_address}</p>
+                            <p class="text-sm text-gray-400">
+                                Business Permit: ${gym.document_path ? 'Yes' : 'No'} 
+                                ${gym.document_path ? `<button class="text-purple-500 underline" onclick="view_Permit('https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${gym.document_path}')">[View Permit]</button>` : ''}
+                            </p>
+                        </div>
+                        <div class="mt-4 flex items-center space-x-4">
+                            <button onclick="approve('${gym.gym_id}')" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500">Approve</button>
+                            <button class="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-600">Reject</button>
+                        </div>
+                    </div>
+                `;
+
+                    gymContainer.appendChild(gymCard);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching gyms:', error);
+            });
+    }
+
+
+    function view_Permit(imagePath) {
+        const permitImage = document.getElementById('permit_image');
+        permitImage.src = imagePath; // Set the source of the image to the path
+        const viewPermit = document.getElementById('view_permit');
+        viewPermit.classList.remove('hidden'); // Show the popup
+    }
+
+    // Function to close the image popup
+    function close_Img() {
+        const viewPermit = document.getElementById('view_permit');
+        viewPermit.classList.add('hidden'); // Hide the popup
+    }
+
+    function approve(id) {
+        const formData = {
+            gym_id: id
+        };
+        axios.put('https://capstone-erxk.onrender.com/ApproveGym', formData)
+            .then(response => {
+                showToast("success", `Gym approved! The owner must complete the payment process to finalize the registration.`);
+                setTimeout(() => {
+                    window.location.href = '../../views/admin/Pending.html'
+                }, 9000)
+            })
+            .catch(error => {
+                console.error('Error updating the status:', error.message);
+            });
+    }
+
+    function showToast(type, message) {
+        const toast = document.getElementById('success-toast'); // You seem to be using only success toast for both types
+        const messageElement = document.getElementById('success-message-toast'); // Adjust accordingly for error
+
+        // Set the message
+        messageElement.textContent = message;
+
+        // Show and slide in the toast
+        toast.classList.remove('hidden', 'translate-x-full'); // Remove hidden and off-screen translation
+        toast.classList.add('translate-x-0'); // Move the toast in view
+
+        // Auto-hide the toast after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');  // Slide toast out to the right
+            setTimeout(() => {
+                toast.classList.add('hidden'); // Hide completely after the transition
+            }, 300);  // Wait for the transition to complete before hiding
+        }, 9000); // Ensure this is set to 3000 ms (3 seconds) for visibility
+    }
+    // Fetch gyms when the page loads
+    window.onload = fetchPendingGyms;
+</script>

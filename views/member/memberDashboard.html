@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Portal</title>
+    <link rel="stylesheet" href="../../dist/tailwind.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"></script> -->
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/frontend/scripts/auth.js"></script>
+    <style>
+        /* Additional modal styles for enhanced UI/UX */
+        #proposalModal .rounded-full {
+            border-radius: 9999px;
+        }
+
+        #proposalModal .shadow-md {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #proposalModal .transform {
+            transform: translateY(0);
+        }
+
+        #proposalModal .transition-all {
+            transition: all 0.2s ease-in-out;
+        }
+
+        #proposalModal .hover\\:scale-105:hover {
+            transform: scale(1.05);
+        }
+
+        .shadow-custom {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 4px #464646;
+        }
+
+        .shadow-inner-custom {
+            box-shadow: inset 0 1px 4px #464646;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen font-[Poppins] bg-customGray text-white">
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:bg-gradient-to-br from-white to-customOrange bg-clip-text text-transparent">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="relative mr-6 mt-1">
+                            <button id="notificationButton">
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div id="notificationDropdown"
+                                class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                                <div class="py-2 px-4 bg-gray-300 border-b border-gray-200 text-gray-700 font-bold">
+                                    Notifications
+                                </div>
+                                <div id="notificationList" class="max-h-80 overflow-y-auto">
+                                    <!-- Notification Items will be dynamically populated here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="memberProfile.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="memberTrainer.html"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Trainer</a>
+                                </li>
+                                <li>
+                                    <a href="memberDashboard.html"
+                                        onclick="removeCookie('accessToken', 'meal_template_id', 'workout_template_id', 'member_id');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 bg-customGray text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="maps.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="locate-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Maps</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="workoutPlan.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="barbell-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Workout Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="memberMealplan.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="egg-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Meal Plan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trainerlist.html"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="people-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Trainers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="chats.html"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="chatbubbles-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Chat</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="settings-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Dashboard Content -->
+    <div class="sm:ml-64">
+        <div class="m-4 p-4 mt-20">
+            <h1 class="text-[15px]">Good evening,</h1>
+            <span class="nameChange text-[18px] font-bold">Member Full Name</span>
+            <h1>
+                <span class="greetChange text-[12px]">You've done a great job today!</span>
+            </h1>
+        </div>
+        <div class="flex flex-col md:flex-col">
+            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4" id="workoutSectioncontainer">
+                <!--Workout tasks-->
+                <div class="flex flex-col md:flex-row">
+                    <div class="flex flex-col md:flex-col">
+                        <!--Progress Bar-->
+                        <div
+                            class="flex flex-row gap-4 justify-between md:gap-4 md:justify-center bg-[#373D41] p-6 rounded-tl-lg shadow-custom text-center border border-[#464646]">
+                            <div class="flex flex-col text-left justify-center">
+                                <h2 class="text-md font-semibold">Today's Workout Plan</h2>
+                                <h3 class="text-[10px] font-light mt-1">Let's be productive!</h3>
+                                <h3 class="text-[10px] font-light mt-1" id="WorkoutsFinished"></h3>
+                            </div>
+
+                            <!-- Gauge Component -->
+                            <div class="relative w-24 h-24">
+                                <svg class="rotate-[135deg] w-full h-full" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background Circle (Gauge) -->
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#343639]"
+                                        stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <!-- Gauge Progress -->
+                                    <circle id="gauge-progress" cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-orange-600" stroke-width="1.5"
+                                        stroke-dasharray="0 100" stroke-linecap="round"></circle>
+                                </svg>
+
+                                <!-- Value Text -->
+                                <div
+                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                    <span id="gauge-value" class="text-1xl font-bold text-white">0%</span>
+                                </div>
+                            </div>
+                            <!-- End Gauge Component -->
+
+                        </div>
+
+                        <!-- Daily Tasks -->
+                        <div class="bg-[#373D41] rounded-bl-lg p-5 shadow-inner max-w-lg mx-auto">
+                            <div class="max-w-lg mx-auto">
+                                <div class="flex flex-row md:flex-row justify-between items-center">
+                                    <div>
+                                        <h1 class="text-md font-medium">Tasks list</h1>
+                                    </div>
+                                    <div class="inline-flex space-x-2 items-center">
+                                        <div class="inline-flex space-x-1 items-center text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span id="current-date" class="text-sm font-normal md:block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--tasks-->
+                                <div id="tasks"
+                                    class="my-6 md:my-6 lg:my-6 xl:my-10 overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900">
+                                    <!-- Task cards will be populated here -->
+                                </div>
+                                <p class="text-xs text-slate-500 text-center">Last updated just now</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="max-w-lg mx-auto bg-div_color" id="workout-container">
+                        <div class="mt-5 ml-2 p-2 text-xl font-medium">
+                            <h1>Today's workout</h1>
+                        </div>
+                        <!-- Workouts Section -->
+                        <div class="p-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900"
+                            id="workouts-section">
+                            <!-- Workout cards will be dynamically added here -->
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <!-- Calendar Component -->
+                <div class="flex-1 md:w-1/2 bg-[#373D41] shadow-custom border border-[#464646] rounded-md">
+                    <div class="p-3">
+                        <div class="px-2 flex items-center justify-between">
+                            <span tabindex="0" class="focus:outline-none text-sm font-bold text-white"
+                                id="monthYear">October 2020</span>
+                            <div class="flex items-center">
+                                <button aria-label="calendar backward" id="prevButton"
+                                    class="focus:text-gray-400 hover:text-gray-400 text-gray-800 dark:text-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-chevron-left" width="20" height="20"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="15 6 9 12 15 18" />
+                                    </svg>
+                                </button>
+                                <button aria-label="calendar forward" id="nextButton"
+                                    class="focus:text-gray-400 hover:text-gray-400 ml-2 text-gray-800 dark:text-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="icon icon-tabler icon-tabler-chevron-right" width="20" height="20"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="9 6 15 12 9 18" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-8 overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Mo</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-whie">
+                                                    Tu</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    We</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Th</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Fr</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Sa</p>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            <div class="w-full flex justify-center">
+                                                <p class="text-sm font-medium text-center text-white">
+                                                    Su</p>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="calendarBody">
+                                    <!-- Days will be generated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="eventDetails" class="py-3 md:px-4 px-4 bg-[#373D41] border-t border-[#464646] rounded-b">
+                        <div class="px-2">
+                            <!-- Example Events -->
+                            <div class="border-b pb-2 border-gray-400">
+                                <p class="text-xl font-semibold pt-1 leading-4 text-gray-600 dark:text-gray-300">
+                                    Workouts
+                                    for this day</p>
+                            </div><br>
+                            <div class="border-b pb-2 border-gray-400">
+                                <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
+                                <a tabindex="0"
+                                    class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Test</a>
+                                <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Test details
+                                </p>
+                            </div>
+                            <div class="border-b pb-2 border-gray-400 pt-3">
+                                <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
+                                <a tabindex="0"
+                                    class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Lorem
+                                    Ipsum</a>
+                                <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Details
+                                    about Lorem Ipsum</p>
+                            </div>
+                            <div class="border-b pb-2 border-gray-400 pt-3">
+                                <p class="text-xs font-light leading-3 text-gray-500 dark:text-gray-300">9:00 AM</p>
+                                <a tabindex="0"
+                                    class="focus:outline-none text-sm font-medium leading-5 text-gray-800 dark:text-gray-100 mt-1">Lorem
+                                    Ipsum</a>
+                                <p class="text-xs pt-1 leading-4 text-gray-600 dark:text-gray-300">Details
+                                    about Lorem Ipsum</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 md:flex-row  m-4 p-4" id="mealContainer">
+                <!--Meal tasks-->
+                <div class="flex flex-col md:flex-row">
+                    <div class="flex flex-col md:flex-col">
+                        <!--Progress Bar-->
+                        <div
+                            class="flex flex-row gap-4 justify-between md:gap-4 md:justify-center bg-[#373D41] p-6 rounded-tl-lg shadow-custom text-center border border-[#464646]">
+                            <div class="flex flex-col text-left justify-center">
+                                <h2 class="text-md font-semibold">Today's Meal Plan</h2>
+                                <h3 class="text-[10px] font-light mt-1">Let's be healthy!</h3>
+                                <h3 class="text-[10px] font-light mt-1" id="MealsFinished"></h3>
+                            </div>
+
+                            <!-- Gauge Component -->
+                            <div class="relative w-24 h-24">
+                                <svg class="rotate-[135deg] w-full h-full" viewBox="0 0 36 36"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Background Circle (Gauge) -->
+                                    <circle cx="18" cy="18" r="16" fill="none" class="stroke-current text-[#343639]"
+                                        stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <!-- Gauge Progress for Meals -->
+                                    <circle id="meal-gauge-progress" cx="18" cy="18" r="16" fill="none"
+                                        class="stroke-current text-orange-600" stroke-width="1.5"
+                                        stroke-dasharray="0 100" stroke-linecap="round"></circle>
+                                </svg>
+
+                                <!-- Value Text for Meals -->
+                                <div
+                                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                    <span id="meal-gauge-value" class="text-1xl font-bold text-white">0%</span>
+                                </div>
+                            </div>
+
+                            <!-- End Gauge Component -->
+
+                        </div>
+
+                        <!-- Daily Meals -->
+                        <div class="bg-[#373D41] h-full rounded-bl-lg p-5 shadow-inner max-w-lg">
+                            <div class="max-w-lg mx-auto">
+                                <div class="flex flex-row md:flex-row justify-between items-center">
+                                    <div>
+                                        <h1 class="text-md font-medium">Meal list</h1>
+                                    </div>
+                                    <div class="inline-flex space-x-2 items-center">
+                                        <div class="inline-flex space-x-1 items-center text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span id="current-date" class="text-sm font-normal md:block"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--meals-->
+                                <div id="meals-tasks"
+                                    class="my-6 md:my-6 lg:my-6 xl:my-10 overflow-hidden md:overflow-hidden overflow-y-auto md:overflow-y-auto scrollbar-thin md:scrollbar-thin scrollbar-track-[#373D41] md:scrollbar-track-[#373D41] scrollbar-thumb-slate-900 md:scrollbar-thumb-slate-900">
+                                    <!-- Task cards will be populated here -->
+                                </div>
+                                <p class="text-xs text-slate-500 text-center">Last updated just now</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="max-w-full mx-auto bg-div_color">
+                        <div class="mt-5 ml-2 p-2 text-xl font-medium">
+                            <h1>Today's meal</h1>
+                        </div>
+                        <!-- Meals Section -->
+                        <div id="meal-container"
+                            class="p-2 grid grid-cols-1 md:grid-cols-3 gap-4 h-auto bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900"
+                            style="min-height: 200px; width: 100%;">
+                            <!-- Dynamic cards will be injected here, or a placeholder message when empty -->
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposal Modal -->
+    <div id="proposalModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div
+            class="relative bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl max-w-lg w-full border border-gray-200 dark:border-gray-700">
+            <!-- Modal Content -->
+            <div class="mb-6">
+                <h2 class="text-xl font-extrabold text-gray-900 dark:text-gray-100 mb-2">Proposal Details</h2>
+                <p id="proposalPlanType" class="text-sm text-gray-700 dark:text-gray-300 mb-1"></p>
+                <p id="proposalPrice" class="text-sm text-gray-700 dark:text-gray-300 mb-1"></p>
+                <p id="proposalDuration" class="text-sm text-gray-700 dark:text-gray-300"></p>
+            </div>
+            <!-- Divider -->
+            <div class="border-t border-gray-300 dark:border-gray-700 my-4"></div>
+            <!-- Accept/Decline Buttons -->
+            <div class="flex justify-between items-center">
+                <!-- Accept Button with Revised Text -->
+                <button id="acceptProposalBtn"
+                    class="px-5 py-2 bg-gradient-to-r from-green-400 to-green-500 text-white rounded-full shadow-md transform transition-all duration-200 hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L9 11.586l6.293-6.293a1 1 0 011.414 0z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Accept & Proceed to Payment
+                </button>
+                <!-- Decline Button -->
+                <button id="declineProposalBtn"
+                    class="px-5 py-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-full shadow-md transform transition-all duration-200 hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Decline
+                </button>
+            </div>
+            <!-- Close Modal Button -->
+            <button id="closeProposalModal"
+                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-300 transition ease-in-out duration-150">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</body>
+
+<script src="../../scripts/calendar.js"></script>
+<script src="../../scripts/member.js"></script>
+<script src="../../scripts/trainer.js">//paras responsive sa sidebar og header</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const uid = userId;
+        let member_id = 0
+        let firstname = null;
+        let lastname = null;
+        let weight = null;
+        let bodytype = null;
+        let Duration;
+        let plan_type;
+        let Price;
+        let Proposal_id;
+        let planId;
+        let mealPlanId
+        let trainer_id;
+
+        //member_id
+        //mealPlanId
+        const currentDate = new Date();
+        // Fetch and assign member information when the page loads
+        fetchMemberInfo();
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Days to milliseconds
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function fetchMemberInfo() {
+            axios.get('http://localhost:3000/getMemberInfo', {
+                params: {
+                    account_id: uid
+                }
+            })
+                .then(response => {
+                    const memberData = response.data[0]; // Assuming the response data contains the member info
+                    console.log(memberData)
+                    // Assign the data to variables
+                    firstname = memberData.firstname;
+                    lastname = memberData.lastname;
+                    weight = memberData.weight;
+                    bodytype = memberData.bodytype;
+                    member_id = memberData.member_id
+
+                    // Optionally, update the DOM with the fetched data
+                    document.querySelector('.nameChange').textContent = `${firstname} ${lastname}`;
+                    setCookie('member_id', member_id, 1);
+                    setCookie('firstname', firstname, 1);
+                    setCookie('lastname', lastname, 1);
+                    setCookie('bodytype', bodytype, 1);
+                    setCookie('weight', weight, 1);
+                    console.log(`Member: ${firstname} ${lastname}, Weight: ${weight}, Bodytype: ${bodytype}, ID: ${member_id}`);
+                    fetchMemberPlanInfo(member_id);
+                })
+                .catch(error => {
+                    console.error('Error fetching member info:', error);
+                });
+        }
+
+
+        // Format the date (e.g., "October 15, 2024")
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = currentDate.toLocaleDateString('en-US', options);
+        // Set the content of the span to the formatted date
+        document.getElementById('current-date').innerText = formattedDate;
+
+
+        function fetchMemberPlanInfo(member_id) {
+            console.log("Fetching workout and meal plan info...");
+
+            // First call to get workout plan info
+            axios.get('http://localhost:3000/getPlan', {
+                params: { member_id: member_id }
+            })
+                .then(response => { 
+                    if (response.data && response.data.length > 0 && response.data[0].computed_status == "Active") { // Check if data exists and has elements
+                        planId = response.data[0].plan_id;
+                        trainer_id = response.data[0].trainer_id;
+                        console.log("---->")
+                        console.log(response.data[0].computed_status)
+
+                        console.log("Workout trainer id:", trainer_id);
+                        console.log("Workout plan id:", planId);
+                        setCookie('workout_template_id', planId, 1);
+                        setCookie('member_id', member_id, 1);
+                        // Call functions related to workout plan
+                        populateWorkoutCards(member_id);
+                        populateTaskList(planId, member_id);
+                        updateGauge(planId, member_id);
+                    } else {
+                        console.log("No workout plan found for this member.");
+                        const workoutContainer = document.getElementById("workouts-section")
+                        const tasksContainer = document.getElementById('tasks');
+                        const placeholder = document.createElement('div');
+                        tasksContainer.innerHTML = ''; // Clear the existing tasks
+                        workoutContainer.innerHTML = '';
+                        workoutContainer.className = "flex justify-center items-center h-[600px] bg-div_color overflow-y-auto scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+                        workoutContainer.innerHTML = '<p class="text-center bg-50 p-2 mx-10 text-white rounded-lg">No workout plan assigned.</p>';
+                        tasksContainer.innerHTML = '<p class="text-center bg-50 mx-12 rounded-lg text-white p-2">No workouts for this day.</p>';
+                    }
+
+                    // Second call to get meal plan info
+                    return axios.get('http://localhost:3000/getMealPlanId', {
+                        params: { member_id: member_id }
+                    });
+                })
+                .then(response => {
+                    if (response.data && response.data.length > 0 && response.data[0].computed_status == "Active") { // Check if data exists and has elements
+                        const mealPlanId = response.data[0].plan_id;
+                        trainer_id = response.data[0].trainer_id;
+                        console.log("Meal plan found for this member")
+                        setCookie('meal_template_id', mealPlanId, 1);
+                        setCookie('member_id', member_id, 1);
+                        //populateMealCards(mealPlanId, member_id);
+                        populateMeals(mealPlanId, member_id)
+                        populateMealTaskList(mealPlanId, member_id)
+                        updateMealGauge(mealPlanId)
+                        displayDynamicDashboard()
+                    } else {
+                        console.log("No meal plan found for this member.");
+                        const mealsContainer = document.querySelector('#meal-container');
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'text-center text-gray-300 text-lg';
+                        placeholder.innerText = "No meal plan assigned";
+                        mealsContainer.appendChild(placeholder);
+                        displayDynamicDashboard()
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching plan info:', error);
+                });
+        }
+
+        function displayDynamicDashboard() {
+            const mealPlanId = getCookie("meal_template_id")
+            const workoutPlanId = getCookie("workout_template_id")
+            console.log("x-x-x--x-x-")
+            console.log(workoutPlanId)
+            console.log("x-x-x--x-x-")
+            if (mealPlanId && !workoutPlanId) {
+                console.log("THIS USER IS ASSIGNED WITH MEAL PLAN ONLY")
+                const workoutContainer = document.getElementById("workoutSectioncontainer")
+                workoutContainer.classList.add("hidden")
+
+            }
+            else if (workoutPlanId && !mealPlanId) {
+                const mealContainer = document.getElementById("mealContainer")
+                mealContainer.classList.add("hidden")
+                console.log("THIS USER IS ASSIGNED WITH WORKOUT PLAN")
+            }
+            else if (mealPlanId && workoutPlanId) {
+                console.log("THIS USER IS ASSIGNED WITH COMPREHENSIVE PLAN")
+            }
+        }
+
+
+
+        const notificationButton = document.getElementById('notificationButton');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationList = document.getElementById('notificationList');
+
+        function fetchNotifications() {
+            axios.get(`http://localhost:3000/retrieveNotifications?member_id=${member_id}`)
+                .then(response => {
+                    // Display message if no notifications are available
+                    if (!response.data || response.data === "null" || (Array.isArray(response.data) && response.data.length === 0)) {
+                        notificationList.innerHTML = '<div class="py-2 px-4 text-sm text-gray-500">No new notifications</div>';
+                    } else {
+                        const notifications = response.data[0];
+                        notificationList.innerHTML = ''; // Clear existing notifications
+
+                        notifications.forEach(notification => {
+                            const notificationItem = document.createElement('div');
+                            notificationItem.classList.add('py-2', 'px-4', 'hover:bg-orange-300', 'cursor-pointer', 'border-b', 'border-gray-200');
+
+                            notificationItem.innerHTML = `
+                    <div class="text-sm font-medium text-gray-800">${notification.message}</div>
+                    <div class="text-xs text-gray-500">${formatDate(notification.created_at)}</div>
+                `;
+
+                            // Optional: Mark the notification as read on click
+                            notificationItem.addEventListener('click', () => {
+                                Proposal_id = notification.proposal_id;
+                                markNotificationAsRead(notification.proposal_id);
+                            });
+
+                            notificationList.appendChild(notificationItem);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching notifications:', error));
+        }
+        // Function to format the date as "Month Day, Year - Time"
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+
+            // Format the date part
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString(undefined, options);
+
+            // Format the time part
+            const formattedTime = date.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            return `${formattedDate} - ${formattedTime}`;
+        }
+        // Function to mark notification as read and show proposal details in a modal
+        async function markNotificationAsRead(proposalId) {
+            try {
+                // Fetch the proposal data using the member_id from the notification
+                const response = await fetch(`http://localhost:3000/retrieveProposals?member_id=${member_id}&proposal_id=${proposalId}`);
+
+                const data = await response.json();
+
+                if (data && data.length > 0 && data[0].length > 0) {
+                    const proposal = data[0][0]; // Access the first proposal in the array
+
+                    // Populate the modal with relevant proposal details
+                    document.getElementById('proposalPlanType').textContent = `Plan Type: ${proposal.plan_type}`;
+                    document.getElementById('proposalPrice').textContent = `Price: ${proposal.price} PHP`;
+                    document.getElementById('proposalDuration').textContent = `Duration: ${proposal.duration} weeks`;
+                    Duration = proposal.duration
+                    plan_type = proposal.plan_type
+                    Price = proposal.price
+
+                    // Show the modal
+                    document.getElementById('proposalModal').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error retrieving proposal:', error);
+            }
+        }
+
+        // Event listener to close the proposal modal
+        document.getElementById('closeProposalModal').addEventListener('click', () => {
+            document.getElementById('proposalModal').classList.add('hidden');
+        });
+
+        notificationButton.addEventListener('click', () => {
+            notificationDropdown.classList.toggle('hidden');
+            // Only fetch notifications when the dropdown is opened
+            if (!notificationDropdown.classList.contains('hidden')) {
+                fetchNotifications();
+            }
+        });
+
+
+        // Close the dropdown if clicked outside
+        document.addEventListener('click', (event) => {
+            if (!notificationDropdown.contains(event.target) && !notificationButton.contains(event.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+        function removeCookie(token, mealTemplateId, workoutTemplateId, memberId) {
+            document.cookie = token + '=; Max-Age=0; path=/';
+            document.cookie = mealTemplateId + '=; Max-Age=0; path=/';
+            document.cookie = workoutTemplateId + '=; Max-Age=0; path=/';
+            document.cookie = memberId + '=; Max-Age=0; path=/';
+        }
+
+        document.getElementById('acceptProposalBtn').addEventListener('click', async () => {
+            try {
+                const price = Price;
+                const planType = plan_type;
+                const duration = Duration;
+
+                console.log(price);
+                console.log(planType);
+                console.log(duration);
+
+                // Insert the contract and wait for the response
+                const response = await axios.post('http://localhost:3000/insertContracts', {
+                    proposal_id: Proposal_id,
+                    weeks: duration,
+                    status: 'On going'
+                });
+
+                const contract_id = response.data.contract_id;
+
+                // After the contract is successfully inserted, call the insertClientPayment function
+                await insertClientPayment(contract_id);
+
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                alert('There was an error processing your payment. Please try again.');
+            }
+        });
+
+
+        async function insertClientPayment(Contract_id) {
+            try {
+                const contract_id = Contract_id; // Replace with actual contract ID
+                const price = Price;
+                const planType = plan_type
+                const duration = Duration
+                console.log(price)
+                console.log(planType)
+                console.log(duration)
+
+                const response = await axios.post('http://localhost:3000/clientPayment', {
+                    contract_id: contract_id,
+                    price: price,
+                    planType: planType,
+                    duration: duration
+                });
+
+                const result = response.data;
+                window.location.href = result; // Redirect to PayPal
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                alert('There was an error processing your payment. Please try again.');
+            }
+        }
+        const apiKey = 'b215bcf167msh2177b646f9dc93ap1acd4fjsn5ebfbecff2a3'; // Replace with your exerciseDB API key
+
+        const fetchExerciseGifUrl = async (exerciseId) => {
+            try {
+                const response = await axios.get(`https://exercisedb.p.rapidapi.com/exercises/exercise/${exerciseId}`, {
+                    headers: {
+                        'X-RapidAPI-Key': apiKey, // Replace with your RapidAPI key
+                        'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com'
+                    }
+                });
+                return response.data.gifUrl; // Ensure this path matches the response structure
+            } catch (error) {
+                console.error('Error fetching exercise details:', error);
+                return null; // Return null if there was an error
+            }
+        };
+
+
+        const fetchWorkoutData = async (planId, memberId) => {
+            try {
+                const response = await axios.get(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${memberId}`);
+                console.log(planId + " " + memberId)
+                console.log("responeee")
+                console.log(response.data)
+                // Check if response data exists and has content
+                if (!response.data || response.data.length === 0) {
+                    console.warn('No workout data available for the given plan and member.');
+                    return []; // Return empty array if no data is available
+                }
+
+                return response.data[0]; // Adjust if needed, based on your response structure
+            } catch (error) {
+                console.error('Error fetching workout data:', error);
+                return []; // Return empty array on error
+            }
+        };
+
+        const fetchMealOfTheDay = async (planId, memberId) => {
+            try {
+                const response = await axios.get(`http://localhost:3000/getMealoftheDay`, {
+                    params: { plan_id: planId, member_id: memberId }
+                });
+                // Check if response data is null
+                return response.data === null ? null : response.data;
+                console.log(response.data)
+            } catch (error) {
+                console.error("Error fetching meal data:", error);
+                return null; // Return null on error as well
+            }
+        };
+
+
+        const populateMeals = async (planId, memberId) => {
+            const mealData = await fetchMealOfTheDay(planId, memberId);
+            console.log("Meal Data:", mealData);
+
+            const mealsContainer = document.querySelector('#meal-container');
+            mealsContainer.innerHTML = ''; // Clear previous content
+
+            // Check if mealData is structured correctly
+            if (!mealData || !Array.isArray(mealData[0]) || mealData[0].length === 0) {
+                // Change class list to flex for centering the message
+                mealsContainer.className = "flex justify-center items-center h-auto bg-div_color overflow-hidden scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+
+                // Placeholder message
+                const placeholder = document.createElement('div');
+                placeholder.className = 'text-center bg-50 p-2 mx-10 text-white rounded-lg text-lg';
+                placeholder.innerText = "No meal plan available for today.";
+                mealsContainer.appendChild(placeholder);
+
+                return; // Exit function if no data
+            }
+
+            const meals = mealData[0]; // Assuming meal data is the first item
+            meals.forEach(meal => {
+                console.log("Meal item:", meal);
+                console.log(meal.filename)
+                const mealCard = document.createElement('div');
+                mealCard.className = 'bg-div_color rounded-3xl shadow-lg overflow-hidden transition-transform transform hover:scale-105 flex flex-col';
+
+                mealCard.innerHTML = `
+                     <div class='h-40 bg-cover bg-center' style='background-image:url("https://svzdiwldgosxswszgale.supabase.co/storage/v1/object/public/uploads/${meal.filename}");'></div>
+                    <div class='flex-1 p-4 sm:p-6 flex flex-col justify-between'>
+                        <div>
+                            <h3 class='font-bold text-white text-lg mb-2'>${meal.meal_name}</h3>
+                            <p class='text-gray-300 text-sm font-medium mb-2'>${meal.classification}</p>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="flex flex-col items-center p-2 bg-50 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Calories</span>
+                                    <p class='text-lg text-white'>${meal.calories || 'N/A'}g</p>
+                                </div>
+                                <div class="flex flex-col items-center p-2 bg-orange-600 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Protein</span>
+                                    <p class='text-lg text-white'>${meal.protein}g</p>
+                                </div>
+                                <div class="flex flex-col items-center p-2 bg-orange-600 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Carbs</span>
+                                    <p class='text-lg text-white'>${meal.carbs}g</p>
+                                </div>
+                                <div class="flex flex-col items-center p-2 bg-50 rounded-md">
+                                    <span class='text-[10px] font-bold text-white'>Fat</span>
+                                    <p class='text-lg text-white'>${meal.fats}g</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                mealsContainer.appendChild(mealCard);
+            });
+        };
+
+
+
+        // Call the populateMeals function with the appropriate planId and memberId
+        // populateMeals(planId, memberId); // Uncomment and use the actual IDs as needed
+
+        // Modal HTML structure (initially without dynamic content)
+        const createWorkoutCard = async (exercise) => {
+            // Modal HTML structure
+            const modalHTML = `
+        <div id="gifModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white rounded-lg shadow-lg p-5">
+                <span id="closeModal" class="cursor-pointer text-red-500 font-bold float-right">X</span>
+                <img id="modalGifImage" src="" alt="Exercise GIF" class="w-full h-auto object-cover rounded-lg">
+            </div>
+        </div>
+        `;
+
+            // Insert modal into the body if it doesn't exist
+            if (!document.getElementById('gifModal')) {
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+            }
+
+            return `
+                <div class="bg-[#373D41] rounded-lg shadow-inner-custom text-center max-w-sm mx-auto">
+                    <img src="https://assets.clevelandclinic.org/transform/26568096-7fcc-4713-898d-ca1ed6c84895/exerciseHowOften-944015592-770x533-1_jpg"
+                        alt="Push-up" class="rounded-t-lg w-full h-auto object-cover border-t border-[#464646]">
+                    <div class="flex flex-col text-left justify-center py-4 px-4">
+                        <h2 class="text-white text-xl font-semibold mb-2">${exercise.exercise_name}</h2>
+                        <p class="text-slate-400 text-sm">Target: ${exercise.target_muscle_group}</p>
+                        <p class="text-slate-400 text-sm mb-4">Secondary Muscles: ${exercise.secondaryMuscles}</p>
+                        <button id="showGif" data-exercise-id="${exercise.exercise_id}" class="bg-50 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg mx-auto w-full transition duration-300 ease-in-out">View Exercise GIF</button>
+                    </div>
+                </div>
+            `;
+        };
+
+        // Event listeners for modal functionality
+        document.addEventListener('click', async (e) => {
+            if (e.target && e.target.id === 'showGif') {
+                const exerciseId = e.target.getAttribute('data-exercise-id');
+                console.log("Fetching GIF for exercise ID:", exerciseId);
+
+                // Fetch the GIF URL from RapidAPI
+                const gifUrl = await fetchExerciseGifUrl(exerciseId);
+
+                if (gifUrl) {
+                    // Update the image in the modal with the fetched GIF URL
+                    document.getElementById('modalGifImage').src = gifUrl;
+                    document.getElementById('gifModal').classList.remove('hidden');
+                } else {
+                    console.error("Failed to load GIF.");
+                }
+            }
+
+            if (e.target && e.target.id === 'closeModal') {
+                document.getElementById('gifModal').classList.add('hidden');
+            }
+        });
+
+        // Event listeners for modal functionality
+        document.addEventListener('click', (e) => {
+            if (e.target && e.target.id === 'showGif') {
+                document.getElementById('gifModal').classList.remove('hidden');
+            }
+            if (e.target && e.target.id === 'closeModal') {
+                document.getElementById('gifModal').classList.add('hidden');
+            }
+        });
+
+
+        const populateWorkoutCards = async (member_id) => {
+            const workoutData = await fetchWorkoutData(planId, member_id);
+            console.log("-------------");
+            console.log(workoutData);
+
+            const workoutsSection = document.getElementById('workouts-section');
+            workoutsSection.innerHTML = ''; // Clear previous content
+
+            // Check if workoutData is null or empty
+            if (!workoutData || workoutData.length === 0) {
+                // Change class list to flex for centering the message
+                workoutsSection.className = "flex justify-center items-center h-[600px] bg-div_color overflow-y-auto scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+                workoutsSection.innerHTML = '<p class="text-center bg-50 p-2 mx-10 text-white rounded-lg">No workouts available for today.</p>';
+            } else {
+                // Reset the class list to grid layout when there are workouts
+                workoutsSection.className = "p-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] bg-div_color overflow-y-auto scrollbar-thin scrollbar-track-[#373D41] scrollbar-thumb-slate-900";
+
+                // If workoutData exists and has workouts, populate them
+                for (const exercise of workoutData) {
+                    const workoutCard = await createWorkoutCard(exercise);
+                    workoutsSection.innerHTML += workoutCard;
+                }
+            }
+        };
+
+
+
+
+
+
+        // Function to fetch workout of the day data
+        const fetchWorkoutOfTheDay = async (planId, memberId) => {
+            try {
+                const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${memberId}`);
+
+                // Check if the fetch was successful
+                if (!response.ok) {
+                    console.error("Network response was not ok.");
+                    return [];
+                }
+
+                const data = await response.json();
+
+                // Check if data exists and is non-empty
+                if (!data || data.length === 0) {
+                    console.warn("No workout data available for the given plan and member.");
+                    return [];
+                }
+
+                return data[0]; // Assuming you only need the first array of exercises
+            } catch (error) {
+                console.error("Error fetching workout data:", error);
+                return []; // Return an empty array on error
+            }
+        };
+
+        // Function to populate the task cards dynamically
+        const populateTaskList = async (planId, member_id) => {
+            const tasksContainer = document.getElementById('tasks');
+            tasksContainer.innerHTML = ''; // Clear the existing tasks
+
+            const workoutData = await fetchWorkoutOfTheDay(planId, member_id);
+            if (!workoutData || !workoutData[0] || workoutData[0].length === 0) {
+                tasksContainer.innerHTML = '<p class="text-center bg-50 mx-12 rounded-lg text-white p-2">No workouts for this day.</p>';
+                return;
+            }
+
+            workoutData.forEach(exercise => {
+                const taskCard = createTaskCard(exercise, member_id);
+                tasksContainer.innerHTML += taskCard; // Add each task card to the container
+            });
+        };
+        const populateMealTaskList = async (planId, member_id) => {
+            const tasksContainer = document.getElementById('meals-tasks');
+            tasksContainer.innerHTML = ''; // Clear the existing tasks
+
+            const mealData = await fetchMealOfTheDay(planId, member_id);
+            console.log(mealData)
+            // Check if mealData is null or empty
+            if (!mealData || !mealData[0] || mealData[0].length === 0) {
+                tasksContainer.innerHTML = '<p class="text-center bg-50 mx-12 rounded-lg text-white p-2">No tasks for this day.</p>';
+                return;
+            }
+
+            // If mealData exists and has tasks, populate them
+            mealData[0].forEach(meal => {
+                const taskCard = createMealTaskCard(meal, member_id);
+                tasksContainer.innerHTML += taskCard; // Add each task card to the container
+            });
+        };
+
+        // Function to create task card dynamically
+        const createTaskCard = (exercise, member_id) => {
+            const { exercise_name, repetitions, sets, status } = exercise;
+            // Set icon based on status
+            console.log(member_id)
+            console.log(trainer_id)
+
+            const statusIcon = status === "completed" ? `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    class="w-6 h-6 text-green-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ` : `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    class="w-6 h-6 text-slate-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                </svg>
+            `;
+
+            const actionButton = status !== "completed" ? `
+            <button class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600" onclick="markAsDone('${exercise.status_id}', '${exercise_name}', '${member_id}', '${firstname}', '${trainer_id}')">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+        ` : '';
+
+            // Create task HTML
+            return `
+                <div class="flex justify-between items-center border-b border-[#343639] py-3 mx-12 px-2 border-l-4 border-l-transparent">
+                    <div class="inline-flex items-center space-x-2">
+                        <div>${statusIcon}</div>&nbsp&nbsp&nbsp&nbsp
+                        <div>
+                            <p class="font-medium">${exercise_name}</p>
+                            <p class="text-sm text-slate-400">Reps: ${repetitions},<br> Sets: ${sets}</p>
+                        </div>
+                    </div>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    ${actionButton} 
+                </div>
+            `;
+        };
+        const createMealTaskCard = (meals, member_id) => {
+            const { meal_name, classification, status } = meals;
+
+            const statusIcon = status === "completed" ? `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    class="w-6 h-6 text-green-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            ` : `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                    class="w-6 h-6 text-slate-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 12h16" />
+                </svg>
+            `;
+
+            // Conditionally render the button if status is not "completed"
+            const actionButton = status !== "completed" ? `
+                <button class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600" onclick="markMealAsDone('${meals.status_id}', '${meal_name}', '${member_id}', '${firstname}', '${trainer_id}')">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
+            ` : '';
+
+            // Create task HTML
+            return `
+                <div class="flex justify-between items-center border-b border-[#343639] py-3 px-2 border-l-4 border-l-transparent">
+                    <div class="inline-flex items-center space-x-2">
+                        <div>${statusIcon}</div>
+                        <div>
+                            <p class="font-medium">${meal_name}</p>
+                            <p class="text-sm text-slate-400">Classification: ${classification}</p>
+                        </div>&nbsp&nbsp
+                    </div>
+                    ${actionButton} <!-- Conditionally rendered button -->
+                </div>
+            `;
+        };
+
+        // Fetch workout status and update the gauge
+        async function updateGauge(planId, memberId) {
+            try {
+                const response = await fetch(`http://localhost:3000/WorkoutOftheDay?plan_id=${planId}&member_id=${memberId}`);
+
+                // Check if the fetch was successful
+                if (!response.ok) {
+                    console.error("Network response was not ok.");
+                    updateGaugeUI(0, 0); // Update UI to show 0% if the request fails
+                    return;
+                }
+
+                const data = await response.json();
+                const workouts = data && Array.isArray(data) && data[0] ? data[0] : [];
+
+                const totalWorkouts = workouts.length;
+                const completedWorkouts = workouts.filter(workout => workout.status === "completed").length;
+                console.log("workouts");
+                console.log(`${completedWorkouts}/${totalWorkouts} completed`);
+
+                // Update the UI to reflect workout completion status
+                document.getElementById("WorkoutsFinished").textContent = `${completedWorkouts}/${totalWorkouts} completed`;
+                const percentage = totalWorkouts > 0 ? (completedWorkouts / totalWorkouts) * 100 : 0;
+
+                // Update the gauge display
+                updateGaugeUI(percentage);
+
+            } catch (error) {
+                console.error('Error fetching workout data:', error);
+                updateGaugeUI(0); // Set gauge to 0% on error
+            }
+        }
+
+        // Function to handle gauge UI updates
+        function updateGaugeUI(percentage) {
+            const gaugeProgress = document.getElementById('gauge-progress');
+            const gaugeValue = document.getElementById('gauge-value');
+
+            // Update SVG stroke-dasharray and gauge percentage text
+            gaugeProgress.style.strokeDasharray = `${percentage} 100`;
+            gaugeValue.innerText = `${Math.round(percentage)}%`;
+        }
+
+        async function updateMealGauge(planId) {
+            console.log(`Updating meal gauge for plan ID: ${planId}`); // Confirm function is called
+            try {
+                // Use Axios to fetch data
+                const response = await axios.get(`http://localhost:3000/getMealoftheDay`, {
+                    params: {
+                        member_id: member_id,
+                        plan_id: planId
+                    }
+                });
+
+                // Access the first inner array to get the meals, handle null or empty response
+                const meals = response.data && response.data[0] ? response.data[0] : [];
+                const totalMeals = meals.length;
+                const completedMeals = meals.filter(meal => meal.status === "completed").length; // Count completed meals
+
+                console.log(`Total meals: ${totalMeals}, Completed meals: ${completedMeals}`);
+
+                // Update text showing meals progress
+                document.getElementById("MealsFinished").textContent = totalMeals > 0
+                    ? `${completedMeals}/${totalMeals} meals completed`
+                    : "No meals planned for today";
+
+                // Calculate percentage
+                const percentage = totalMeals > 0 ? (completedMeals / totalMeals) * 100 : 0;
+
+                // Update gauge
+                const mealGaugeProgress = document.getElementById('meal-gauge-progress');
+                const mealGaugeValue = document.getElementById('meal-gauge-value');
+
+                // Update SVG stroke-dasharray and inner text
+                mealGaugeProgress.style.strokeDasharray = `${percentage} 100`;
+                mealGaugeValue.innerText = `${Math.round(percentage)}%`;
+
+            } catch (error) {
+                console.error('Error fetching meal data:', error);
+                // Display fallback UI message on error
+                document.getElementById("MealsFinished").textContent = "Unable to load meal data";
+                document.getElementById('meal-gauge-value').innerText = "0%";
+                document.getElementById('meal-gauge-progress').style.strokeDasharray = "0 100";
+            }
+        }
+
+    });
+
+    const markAsDone = async (status_id, workout, member_id, member_name, trainer_id) => {
+        // Here you would typically make an API call to update the status on the server
+        console.log(workout)
+        console.log(member_id)
+        console.log(member_name)
+        console.log(trainer_id)
+        try {
+            const response = await axios.put(`http://localhost:3000/updateExerciseStatus`, {
+                status_id: status_id,
+                status: 'completed'
+            });
+
+            if (response.status === 200) {
+                // Update the UI accordingly, e.g., re-fetch data or update the status locally
+                console.log('Exercise marked as completed');
+                insertActivity(workout, member_id, member_name, trainer_id);
+            } else {
+                console.error('Failed to mark exercise as completed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const markMealAsDone = async (status_id, meal, member_id, member_name, trainer_id) => {
+        // Here you would typically make an API call to update the status on the server
+        console.log("DEBUG START---")
+        console.log(meal)
+        console.log(member_id)
+        console.log(member_name)
+        console.log(trainer_id)
+        console.log("DEBUG END---")
+        try {
+            const response = await axios.put(`http://localhost:3000/updateMealStatus`, {
+                status_id: status_id,
+                status: 'completed'
+            });
+
+            if (response.status === 200) {
+                // Update the UI accordingly, e.g., re-fetch data or update the status locally
+                console.log('Meal marked as completed');
+                insertMealActivity(meal, member_id, member_name, trainer_id);
+            } else {
+                console.error('Failed to mark meal as completed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const insertActivity = async (workout, member_id, member_name, trainer_id) => {
+        // Here you would typically make an API call to update the status on the server
+        try {
+            const response = await axios.post(`http://localhost:3000/insertActivity`, {
+                member_id: member_id,
+                trainer_id: trainer_id,
+                message: `completed the ${workout} workout`
+            });
+
+            if (response.status === 200) {
+                // Update the UI accordingly, e.g., re-fetch data or update the status locally
+                console.log('Activity successfully inserted');
+                window.location.href = 'memberDashboard.html'
+            } else {
+                console.error('Failed to mark exercise as completed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    const insertMealActivity = async (meal, member_id, member_name, trainer_id) => {
+        // Here you would typically make an API call to update the status on the server
+        try {
+            const response = await axios.post(`http://localhost:3000/insertActivity`, {
+                member_id: member_id,
+                trainer_id: trainer_id,
+                message: `just finished their ${meal} meal. Progress is on track!`
+            });
+
+            if (response.status === 200) {
+                // Update the UI accordingly, e.g., re-fetch data or update the status locally
+                console.log('Activity successfully inserted');
+                window.location.href = 'memberDashboard.html'
+            } else {
+                console.error('Failed to mark exercise as completed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+    function removeCookie(token, id, template_item_id) {
+        document.cookie = token + '=; Max-Age=0; path=/';
+        document.cookie = template_item_id + '=; Max-Age=0; path=/';
+        document.cookie = id + '=; Max-Age=0; path=/';
+    }
+
+
+
+</script>
+
+</html>

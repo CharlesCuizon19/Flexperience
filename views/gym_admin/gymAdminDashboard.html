@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link href="../../dist/tailwind.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="/frontend/scripts/auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aldrich&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+        .page_title {
+            border-bottom: 2px solid;
+            border-image: linear-gradient(to right, #EC7E4A 50%, transparent 50%) 1;
+        }
+
+        .sidebar,
+        .sidebar-links {
+            overflow-x: hidden;
+        }
+
+        .sidebar:hover .Menu {
+            opacity: 1;
+        }
+
+        .sidebar:hover .menu-separator {
+            transition-delay: 0s;
+            transform: scaleX(0);
+        }
+
+        #view_pending th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: #EC7E4A;
+            color: white;
+        }
+
+        #view_pending tr:nth-child(even) {
+            background-color: #5F6163;
+        }
+
+        #view_pending td,
+        #view_pending th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .calendar {
+            padding: 20px;
+        }
+
+        .calendar .days {
+            margin-bottom: 15px;
+        }
+
+        .calendar .weeks li {
+            font-weight: 500;
+        }
+
+
+        .calendar ul {
+            display: flex;
+            list-style: none;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .calendar ul li {
+            position: relative;
+            width: calc(100% / 7);
+        }
+
+        .calendar .days li {
+            z-index: 1;
+            font-weight: 300;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .days li.inactive {
+            color: #aaa;
+        }
+
+        .days li.active {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .calendar .days li::before {
+            position: absolute;
+            content: "";
+            height: 30px;
+            width: 30px;
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .days li:hover::before {
+            background: #878787;
+        }
+
+        .days li.active::before {
+            background: #EC7E4A;
+        }
+
+        #error-toast{
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-[#343639] font-[Poppins]">
+
+    <!--Header-->
+    <nav class="fixed top-0 z-50 w-full shadow-md dark:bg-customGray">
+        <div class="px-3 py-3 lg:px-5 lg:pl-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center justify-start rtl:justify-end">
+                    <button data-drawer-target="logo-sidebar" id="sidebarToggle" data-drawer-toggle="logo-sidebar"
+                        aria-controls="logo-sidebar" type="button"
+                        class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-customGray dark:focus:ring-gray-600">
+                        <span class="sr-only">Open sidebar</span>
+                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+                            </path>
+                        </svg>
+                    </button>
+                    <a href="#" class="flex ms-2 md:me-24">
+                        <img src="../../img/LOGOTESTING.svg" class="h-8 me-3" alt="Flexperiece Logo" />
+                        <span
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">FLEXPERIENCE</span>
+                    </a>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center ms-3">
+                        <div class="mr-6 mt-1">
+                            <button>
+                                <ion-icon name="notifications" class="notif text-white text-xl"></ion-icon>
+                            </button>
+                        </div>
+                        <div>
+                            <button type="button" id="userDropdownToggle"
+                                class="flex text-sm bg-div_color rounded-full focus:ring-4 focus:ring-gray-300"
+                                aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="w-8 h-8 rounded-full" src="../../img/heinzprof.jpg" alt="user photo">
+                            </button>
+                        </div>
+                        <div class="absolute top-[70%] right-0 z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-customGray dark:divide-gray-600"
+                            id="dropdown-user">
+                            <div class="px-4 py-3" role="none">
+                                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                                    Heinz Padilla
+                                </p>
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                                    heinzpadilla2024@flexperience.com
+                                </p>
+                            </div>
+                            <ul class="py-1" role="none">
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Earnings</a>
+                                </li>
+                                <li>
+                                    <a href="index.html" onclick="removeCookie('accessToken');"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                                        role="menuitem">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!--Sidebar-->
+    <aside id="logo-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 mt-4 transition-transform -translate-x-full bg-customOrange sm:translate-x-0 rounded-l-lg dark:bg-customOrange aria-label="
+        Sidebar">
+        <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-customOrange">
+            <ul class="space-y-2 font-medium">
+                <li>
+                    <a href="#"
+                        class="flex items-center p-2 bg-customGray text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="home-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Dashboard</span>
+                    </a>
+                </li>
+                <!--Pending Gym Registration-->
+                <li>
+                    <a href="../gym_admin/pendingGym.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="timer-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Pendings</span>
+                    </a>
+                </li>
+                <!--Approved Gym-->
+                <li>
+                    <a href="../gym_admin/registeredGym.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="checkmark-circle-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Approved</span>
+                    </a>
+                </li>
+                <!-- Verified Gym -->
+                <li>
+                    <a href="../gym_admin/registeredTrainer.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="shield-checkmark-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Verified</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../gym_admin/membershipDashboard.html"
+                        class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-customGray dark:hover:bg-customGray group"
+                        onclick="setActive(this)">
+                        <ion-icon name="shield-checkmark-outline"
+                            class="w-5 h-5 text-white transition duration-75 dark:text-white group-hover:text-customGray dark:group-hover:text-white"
+                            aria-hidden="true"></ion-icon>
+                        <span class="mt-1 ms-3">Subscription</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </aside>
+
+    <div class="sm:ml-64">
+        <div class="m-4 p-6 border-dashed mt-20">
+            <h1 class="text-4xl font-bold text-white mb-2">Good day gym admin! <span id="user-name"></span>!
+            </h1>
+            <p class="dark:text-gray-300 text-gray-700">Welcome to your dashboard. Pag trabaho na boss</p>
+        </div>
+
+        <div class="flex justify-around gap-10 text-white w-auto h-auto m-4">
+            <div class="flex flex-col gap-5 md:flex md:flex-col md:gap-2">
+                <div class="flex flex-col sm:flex sm:flex-col md:flex md:flex-row gap-2">
+                    <div
+                        class="text-center md:text-left text-white text-md w-auto py-10 px-10 border-2 border-border_color shadow-md bg-div_color hover:shadow-lg rounded-lg duration-300">
+                        <div class="flex flex-col gap-2 md:flex md:flex-col md:gap-2 items-center justify-center">
+                            <div class="md:flex md:flex-row md:gap-2 flex flex-row gap-2 text-center justify-center">
+                                <span class="text-lg font-customFont">
+                                    <i class="fas fa-check-double mr-2"></i>Registered Gym(s)
+                                </span>
+                            </div>
+                            <div>
+                                <span class="font-bold ml-3">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="text-center md:text-left text-white text-md w-auto py-10 px-10 border-2 border-border_color shadow-md bg-div_color hover:shadow-lg rounded-lg duration-300">
+                        <div class="flex flex-col gap-2 md:flex md:flex-col md:gap-2 items-center justify-center">
+                            <div class="md:flex md:flex-row md:gap-2 flex flex-row gap-2 text-center justify-center">
+                                <span class="text-lg font-customFont">
+                                    <i class="fas fa-clock mr-2"></i>Pending Gym Registration(s)
+                                </span>
+                            </div>
+                            <div>
+                                <span class="font-bold ml-3">1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="text-center md:text-left text-white text-md w-auto py-10 px-10 border-2 border-border_color shadow-md bg-div_color hover:shadow-lg rounded-lg duration-300">
+                        <span class="text-lg font-customFont">
+                            <i class="fas fa-user mr-2"></i>Registered Trainer(s)
+                        </span><br><br>
+                        <span class="font-bold ml-3">1</span>
+                    </div>
+                </div>
+                <div class="flex justify-between gap-5">
+                    <a href="register.html"
+                        class="text-center w-full bg-div_color border border-50 rounded-lg font-customFont py-5 shadow-lg shadow-black hover:shadow-none hover:bg-[#d47142] hover:text-2xl hover:font-bold duration-300">
+                        <i class="fas fa-plus-circle mr-2"></i>Register Gym
+                    </a>
+                    <a href="registerTrainer.html"
+                        class="text-center w-full bg-div_color border border-50 rounded-lg font-customFont py-5 shadow-lg shadow-black hover:shadow-none hover:bg-[#d47142] hover:text-2xl hover:font-bold duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>Register Trainer
+                    </a>
+                    <a href="#" id="registerMemberLink"
+                        class="text-center w-full bg-div_color border border-50 rounded-lg font-customFont py-5 shadow-lg shadow-black hover:shadow-none hover:bg-[#d47142] hover:text-2xl hover:font-bold duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>Record Walk-In Fees
+                    </a>
+                    <a href="#" id="openModalBtn"
+                        class="text-center w-full bg-div_color border border-50 rounded-lg font-customFont py-5 shadow-lg shadow-black hover:shadow-none hover:bg-[#d47142] hover:text-2xl hover:font-bold duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>Record On-Site Trainer Payments
+                    </a>
+                </div>
+            </div>
+        </div><br><br>
+
+        <h1 class="text-white text-3xl ml-10 font-bold mb-4 mt-10">Monthly Sales and Member Registrations Overview</h1>
+
+        <!-- Dropdown for Gym Selection -->
+        <div class="flex items-center ml-10 space-x-4">
+            <label for="gymDropdown" class="text-white">Select Gym:</label>
+            <select id="gymDropdown" class="bg-div_color text-white border-border_color border-2 rounded-lg p-2">
+                <!-- Dropdown options will be dynamically populated -->
+            </select>
+        </div>
+
+        <div class="p-4 pl-[22px] shadow-md">
+            <div class="flex space-x-6">
+                <div class="bg-div_color p-6 rounded-lg shadow-xl max-w-3xl border-border_color border-2 w-full">
+                    <canvas id="amountChart" class="bg-div_color"></canvas>
+                </div>
+
+                <div class="bg-div_color p-6 rounded-lg shadow-xl max-w-3xl border-border_color border-2 w-full">
+                    <canvas id="membersChart" class="bg-div_color"></canvas>
+                </div>
+            </div>
+
+            <div class="p-4 pl-[22px] shadow-md">
+                <h2 class="text-white text-2xl ml-10 font-bold mb-4 mt-10">Sales Trends Overview</h2>
+                <canvas id="lineChart" class="bg-div_color"></canvas>
+            </div>
+
+            <!-- Table Section -->
+
+            <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
+                <h2 class="text-white text-2xl font-bold mb-4">Trainers</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-div_color rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-50 text-white">
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Experience</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Rates</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trainerTableBody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
+                <h2 class="text-white text-2xl font-bold mb-4">Member Registrations Overview</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-div_color rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-50 text-white">
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Membership Type</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Date Started</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Date End</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Registration Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="memberTableBody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div id="assignModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Assign Client</h2>
+                    <div class="mb-4">
+                        <label for="searchId" class="text-sm text-gray-600">Search for an account ID</label>
+                        <div class="relative mt-2">
+                            <input id="searchId" type="text" class="w-full px-4 py-2 border border-gray-300 rounded"
+                                placeholder="Enter member ID" oninput="fetchFilteredResults()" />
+                            <!-- Dropdown -->
+                            <ul id="dropdownList"
+                                class="absolute left-0 right-0 bg-white border border-gray-300 rounded mt-2 max-h-48 overflow-auto hidden">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="plan" class="text-sm text-gray-600">Choose Plan</label>
+                        <select id="plan" class="w-full px-4 py-2 border border-gray-300 rounded mt-2">
+                            <option value="">Select a plan</option>
+                            <option value="Workout Plan">Workout Plan</option>
+                            <option value="Meal Plan">Meal Plan</option>
+                            <option value="Comprehensive Plan">Comprehensive Plan</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+                            onclick="closeModal()">
+                            Cancel
+                        </button>
+                        <button class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded"
+                            onclick="submitModal()">
+                            Assign
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="error-toast"
+                class="fixed top-5 right-5 bg-white border-l-4 border-orange-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+                <div class="flex items-center">
+                    <div class="flex items-center justify-center w-8 h-8 bg-orange-500 rounded-full">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h2 class="text-lg font-semibold text-orange-600">Client Unavailable</h2>
+                        <p id="error-message-toast" class="text-sm text-gray-600">Your error message here</p>
+                    </div>
+                    <button id="close-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div id="paymentModal"
+                class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-700">Record Payment</h2>
+                        <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- Modal Content -->
+                    <form id="paymentForm">
+                        <!-- Search for Client -->
+                        <div class="mb-4 relative">
+                            <label for="gymSelect2" class="block text-gray-700">Select Gym</label>
+                            <select id="gymSelect2" class="w-full border border-gray-300 rounded-lg p-2" required>
+                                <option value="">-- Choose a Gym --</option>
+                                <!-- Gym options will be populated here dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-4 relative">
+                            <label for="clientSearch" class="block text-gray-600 font-medium mb-1">Search for a
+                                Client</label>
+                            <div class="flex items-center">
+                                <input type="text" id="clientSearch" placeholder="Enter client username"
+                                    class="border border-gray-300 rounded-l-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    oninput="fetchClientSuggestions(this.value)">
+                            </div>
+                            <!-- Dropdown for suggestions -->
+                            <div id="clientDropdown"
+                                class="absolute left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-md max-h-48 overflow-y-auto hidden z-10">
+                                <!-- Dynamic options will be appended here -->
+                            </div>
+                        </div>
+
+
+
+                        <!-- Search for Trainer -->
+                        <div class="mb-4">
+                            <label for="trainerDropdown" class="block text-gray-600 font-medium mb-1">Select a
+                                Trainer</label>
+                            <div class="relative">
+                                <select id="trainerDropdown"
+                                    class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                    <option value="">Loading trainers...</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <!-- Amount Paid -->
+                        <div class="mb-4">
+                            <label for="amountPaid" class="block text-gray-600 font-medium mb-1">Amount Paid</label>
+                            <input type="number" id="amountPaid" placeholder="Enter amount"
+                                class="border border-gray-300 rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                                Save Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
+                <h2 class="text-white text-2xl font-bold mb-4">Trainer Payments Log</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-div_color rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-50 text-white">
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Client Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Trainer Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Payment Method</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Amount</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Payment Date</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Payment Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="PaymentsLogTableBody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="p-4 mt-10 bg-div_color rounded-lg shadow-xl">
+                <h2 class="text-white text-2xl font-bold mb-4">Gym Commission</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-div_color rounded-lg shadow-md">
+                        <thead>
+                            <tr class="bg-50 text-white">
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Name</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Month</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Total Sales</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Member Registered</th>
+                                <th class="px-6 py-3 border-b border-gray-600 text-left">Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commissionTableBody">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="registerMemberModal"
+            class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex items-center justify-center">
+            <div class="bg-white rounded-lg p-8 w-full max-w-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Register Member</h2>
+
+                <form id="registerMemberForm">
+                    <div class="mb-4">
+                        <label for="gymSelect" class="block text-gray-700">Select Gym</label>
+                        <select id="gymSelect" class="w-full border border-gray-300 rounded-lg p-2" required>
+                            <option value="">-- Choose a Gym --</option>
+                            <!-- Gym options will be populated here dynamically -->
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="memberName" class="block text-gray-700">Member Name</label>
+                        <input type="text" id="memberName" class="w-full border border-gray-300 rounded-lg p-2"
+                            required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="membershipType" class="block text-gray-700">Membership Type</label>
+                        <select id="membershipType" class="w-full border border-gray-300 rounded-lg p-2">
+                            <option value="Session">Session</option>
+                            <option value="Monthly">Monthly</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="amount_paid" class="block text-gray-700">Amount Paid</label>
+                        <input type="number" id="amount_paid" class="w-full border border-gray-300 rounded-lg p-2"
+                            placeholder="Enter amount" min="5" step="5" required>
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-50 text-white rounded-lg">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="clientModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div class="bg-white rounded-lg w-1/2 max-h-[80vh] overflow-y-auto p-6 shadow-lg">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center border-b pb-2">
+                    <h2 class="text-xl font-semibold">Trainer's Clients</h2>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div id="modalContent" class="mt-4">
+                    <p class="text-gray-500">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-toast"
+            class="fixed top-5 right-5 z-50 bg-white border-l-4 border-green-500 text-gray-800 max-w-md w-full p-4 rounded-lg shadow-lg hidden transition-all duration-300 ease-in-out transform translate-x-full">
+            <div class="flex items-center">
+                <div class="flex items-center justify-center w-8 h-8 bg-green-500 rounded-full">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12l5 5L20 7"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h2 class="text-lg font-semibold text-green-600">Success</h2>
+                    <p id="success-message-toast" class="text-sm text-gray-600">Your success message here</p>
+                </div>
+                <button id="close-success-toast-btn" class="ml-auto text-gray-500 hover:text-gray-700">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script src="../../scripts/trainer.js">//header / sidebar responsive</script>
+<script src="../../scripts/gymAdmin.js"></script>
+<script>
+    window.onload = async function () {
+
+
+        fetchGymAdminInfo()
+        setTimeout(() => {
+            const days = getCookie('days_remaining');
+            console.log("days")
+            console.log(days)
+            if (days < 1) {
+                window.location.href = "membershipDashboard.html"
+            }
+        }, 2000);
+        // JavaScript to open and close the modal
+        const registerMemberLink = document.getElementById('registerMemberLink');
+        const registerMemberModal = document.getElementById('registerMemberModal');
+        const closeModal = document.getElementById('closeModal');
+        const registerMemberForm = document.getElementById('registerMemberForm');
+        let id;
+        // Open the modal when clicking the Register Member link
+        registerMemberLink.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent the default link behavior
+            registerMemberModal.classList.remove('hidden');
+            loadGyms();
+        });
+
+        // Close the modal when clicking the Cancel button
+        closeModal.addEventListener('click', () => {
+            registerMemberModal.classList.add('hidden');
+        });
+
+        // Close the modal when clicking outside the modal content
+        window.addEventListener('click', (e) => {
+            if (e.target === registerMemberModal) {
+                registerMemberModal.classList.add('hidden');
+            }
+        });
+
+
+        registerMemberForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get input values
+            const name = document.getElementById('memberName').value;
+            const membershipType = document.getElementById('membershipType').value;
+            const amountPaid = document.getElementById('amount_paid').value;
+            const gym_id = document.getElementById('gymSelect').value;
+            const data = {
+                gym_id: gym_id,
+                name: name,
+                membership_type: membershipType,
+                amount_paid: amountPaid,
+            };
+            console.log("dataaa:")
+            console.log(data)
+            try {
+
+                const response = await axios.post('http://localhost:3000/insertMemberRegistration', data);
+
+                if (response.status === 200) {
+                    showToastNotification("All set! Member registered and good to go!")
+
+                    setTimeout(() => {
+                        registerMemberModal.classList.add('hidden');
+                        registerMemberForm.reset();
+                    }, 3000);
+
+                }
+            } catch (error) {
+                console.error('Error registering member:', error);
+                alert('There was an error registering the member.');
+            }
+        });
+
+
+        async function loadGyms() {
+            try {
+                // Replace '14' with the specific admin_id if dynamic; otherwise, use variable
+                const response = await axios.get(`http://localhost:3000/getAdminGyms?id=${id}`);
+                const gyms = response.data;
+
+                // Get the dropdown element
+                const gymSelect = document.getElementById('gymSelect');
+                // Clear any existing options (except the placeholder)
+                gymSelect.innerHTML = '<option value="">-- Choose a Gym --</option>';
+
+                // Populate the dropdown with gym options
+                gyms.forEach(gym => {
+                    console.log(gym.gym_name)
+                    const option = document.createElement('option');
+                    option.value = gym.gym_id;
+                    option.textContent = gym.gym_name;
+                    gymSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching gyms:', error);
+                alert('Could not load gyms. Please try again laterrr.');
+            }
+        }
+        async function loadGyms2() {
+            try {
+                // Replace '14' with the specific admin_id if dynamic; otherwise, use variable
+                const response = await axios.get(`http://localhost:3000/getAdminGyms?id=${id}`);
+                const gyms = response.data;
+
+                // Get the dropdown element
+                const gymSelect = document.getElementById('gymSelect2');
+                // Clear any existing options (except the placeholder)
+                gymSelect.innerHTML = '<option value="">-- Choose a Gym --</option>';
+
+                // Populate the dropdown with gym options
+                gyms.forEach(gym => {
+                    console.log(gym.gym_name)
+                    const option = document.createElement('option');
+                    option.value = gym.gym_id;
+                    option.textContent = gym.gym_name;
+                    gymSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching gyms:', error);
+                alert('Could not load gyms. Please try again laterrr.');
+            }
+        }
+
+        const status = getQueryParam('status');
+        if (status === 'gym_registered') {
+            // Show your toast notification
+            showToastNotification("Gym has been successfully registered!");
+        }
+
+        // Function to show toast notification
+        function showToastNotification(message) {
+            const toast = document.getElementById("success-toast");
+            const messageElement = document.getElementById("success-message-toast");
+            messageElement.textContent = message;
+
+            // Show the toast
+            toast.classList.remove("hidden");
+            toast.classList.remove("translate-x-full");
+            toast.classList.add("translate-x-0");
+
+            // Hide the toast after 3 seconds
+            setTimeout(() => {
+                hideToast();
+            }, 4000);
+            //clearUrlParams()
+        }
+
+        // Function to hide the toast
+        function hideToast() {
+            const toast = document.getElementById("success-toast");
+            toast.classList.add("translate-x-full");
+
+            // Optionally hide it after transition
+            setTimeout(() => {
+                toast.classList.add("hidden");
+            }, 300); // Match this with your transition duration
+        }
+
+        async function fetchGymAdminInfo() {
+            try {
+                console.log("--" + userId)
+                const response = await axios.get('http://localhost:3000/getGymAdminInfo', {
+                    params: {
+                        account_id: userId
+                    }
+                });
+                const data = response.data[0]; // Assuming the response data contains the member info
+                console.log(data)
+                id = data.admin_id
+                setCookie('userId', userId, 1); // Expires in 1 day
+                setCookie('gymAdminId', data.admin_id, 1); // Expires in 1 day
+                setCookie('plan_name', data.subscription, 1); // Expires in 1 day
+                setCookie('description', data.description, 1); // Expires in 1 day
+                setCookie('payment_date', data.next_payment_date, 1); // Expires in 1 day
+                setCookie('subscription_id', data.subscription_id, 1); // Expires in 1 day
+                setCookie('amount', data.amount, 1); // Expires in 1 day
+                setCookie('days_remaining', data.days_remaining, 1); // Expires in 1 day
+                setCookie('eligibility', data.eligibility_status, 1); // Expires in 1 day
+                loadGyms()
+                loadGyms2()
+                return data.admin_id; // Return the admin_id
+            } catch (error) {
+                console.error('Error fetching gym admin info:', error.message);
+            }
+        }
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Days to milliseconds
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+        function clearUrlParams() {
+            const url = new URL(window.location);
+            url.searchParams.delete('status'); // Remove the 'status' parameter
+            window.history.replaceState({}, document.title, url); // Update the URL without reloading
+        }
+
+        // Modal toggle logic
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const paymentModal = document.getElementById('paymentModal');
+
+        openModalBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            paymentModal.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            paymentModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside of it
+        paymentModal.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                paymentModal.classList.add('hidden');
+            }
+        });
+
+    }
+    async function fetchClientSuggestions() {
+        const clientDropdown = document.getElementById('clientDropdown');
+        const clientSearchInputVal = document.getElementById('clientSearch').value;
+
+        // If input is empty, hide the dropdown and clear its content
+        if (clientSearchInputVal.trim() === '') {
+            clientDropdown.classList.add('hidden');
+            clientDropdown.innerHTML = '';
+            return;
+        }
+
+        try {
+            // Fetch data from the API using the input directly in the query string
+            const response = await axios.get(`http://localhost:3000/getSearchFilter?member_id=${clientSearchInputVal}`);
+            const data = response.data[0];
+
+            // Clear previous dropdown content
+            clientDropdown.innerHTML = '';
+            clientDropdown.classList.remove('hidden'); // Ensure dropdown is visible
+
+            // Check if there are results
+            if (data.length === 0) {
+                const noResultsItem = document.createElement('li');
+                noResultsItem.textContent = 'No results found';
+                noResultsItem.className = 'px-4 py-2 text-gray-500';
+                clientDropdown.appendChild(noResultsItem);
+            } else {
+                // Populate dropdown with the returned data
+                data.forEach((item) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${item.firstname} ${item.lastname}`; // Set text as name
+                    listItem.dataset.memberId = item.member_id; // Store member_id in a data attribute
+                    listItem.className = 'px-4 py-2 hover:bg-gray-200 cursor-pointer';
+
+                    // Handle item selection
+                    listItem.onclick = () => {
+                        document.getElementById('clientSearch').value = `${item.firstname} ${item.lastname}`;
+                        console.log('Selected Member ID:', item.member_id); // Log the member_id
+                        document.getElementById('clientSearch').dataset.memberId = item.member_id; // Store member_id in dataset
+                        alert(document.getElementById('clientSearch').dataset)
+                        clientDropdown.classList.add('hidden'); // Hide dropdown after selection
+                        clientDropdown.innerHTML = ''; // Clear dropdown
+                    };
+
+                    clientDropdown.appendChild(listItem);
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+
+            // Handle fetch error
+            clientDropdown.innerHTML = '<li class="px-4 py-2 text-red-500">Error loading results</li>';
+            clientDropdown.classList.remove('hidden');
+        }
+    }
+
+
+    // Example function to handle item selection
+    function selectMember(item) {
+        document.getElementById('clientSearch').value = `${item.firstname} ${item.lastname}`; // Display name
+        const clientDropdown = document.getElementById('clientDropdown');
+        clientDropdown.classList.add('hidden'); // Hide dropdown after selection
+        clientDropdown.innerHTML = ''; // Clear dropdown
+    }
+
+
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+        const clientSearchInput = document.getElementById('clientSearch');
+        const clientDropdown = document.getElementById('clientDropdown');
+
+        if (!clientSearchInput.contains(event.target) && !clientDropdown.contains(event.target)) {
+            clientDropdown.classList.add('hidden');
+        }
+    });
+
+    document.getElementById('paymentForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting
+
+        // Get the values of the form fields
+        const selectedGym = document.getElementById('gymSelect2').value;
+        const clientSearch = document.getElementById('clientSearch').value;
+        const memberId = document.getElementById('clientSearch').dataset.memberId; // Get stored member_id
+        const selectedTrainer = document.getElementById('trainerDropdown').value;
+        const amountPaid = document.getElementById('amountPaid').value;
+
+        // Log the data
+        console.log('Selected Gym:', selectedGym);
+        console.log('Client Name:', clientSearch);
+        console.log('Selected Member ID:', memberId); // Log member_id
+        console.log('Selected Trainer:', selectedTrainer);
+        console.log('Amount Paid:', amountPaid);
+
+        const paymentDetails = {
+            member_id: memberId,
+            gym_id: selectedGym, // ID from the radio button value
+            trainer_id: selectedTrainer,
+            payment_method: "Cash",
+            amount: amountPaid
+        };
+        console.log(paymentDetails)
+        // Call your backend to get the PayPal approval URL using axios
+        axios.post('http://localhost:3000/insertclientToGymAdminPaymentCash', paymentDetails)
+            .then(response => {
+                alert("Payment Recorded Successfully!")
+                window.location.reload()
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+
+
+</script>
